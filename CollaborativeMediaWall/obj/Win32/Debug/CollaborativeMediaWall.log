@@ -2,59 +2,12 @@
   ofApp.cpp
   Info: Boost.Config is older than your compiler version - probably nothing bad will happen - but you may wish to look for an update Boost version.  Define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE to suppress this message.
   Info: Boost.Config is older than your compiler version - probably nothing bad will happen - but you may wish to look for an update Boost version.  Define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE to suppress this message.
-  ofxBaseGui.cpp
-  ofxButton.cpp
-  ofxColorPicker.cpp
-  ofxGuiGroup.cpp
-  ofxInputField.cpp
-  ofxLabel.cpp
-  Info: Boost.Config is older than your compiler version - probably nothing bad will happen - but you may wish to look for an update Boost version.  Define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE to suppress this message.
-  Info: Boost.Config is older than your compiler version - probably nothing bad will happen - but you may wish to look for an update Boost version.  Define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE to suppress this message.
-  Info: Boost.Config is older than your compiler version - probably nothing bad will happen - but you may wish to look for an update Boost version.  Define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE to suppress this message.
-  Info: Boost.Config is older than your compiler version - probably nothing bad will happen - but you may wish to look for an update Boost version.  Define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE to suppress this message.
-  Info: Boost.Config is older than your compiler version - probably nothing bad will happen - but you may wish to look for an update Boost version.  Define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE to suppress this message.
-  Info: Boost.Config is older than your compiler version - probably nothing bad will happen - but you may wish to look for an update Boost version.  Define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE to suppress this message.
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxInputField.cpp(276,23): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxInputField.cpp(265): message : while compiling class template member function 'void ofxInputField<float>::moveCursor(int)'
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxInputField.cpp(368): message : see reference to function template instantiation 'void ofxInputField<float>::moveCursor(int)' being compiled
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxGui\src\ofxInputField.cpp(805): message : see reference to class template instantiation 'ofxInputField<float>' being compiled
-  ofxPanel.cpp
-  ofxSlider.cpp
-  ofxSliderGroup.cpp
-  Info: Boost.Config is older than your compiler version - probably nothing bad will happen - but you may wish to look for an update Boost version.  Define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE to suppress this message.
-  Info: Boost.Config is older than your compiler version - probably nothing bad will happen - but you may wish to look for an update Boost version.  Define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE to suppress this message.
-  ofxToggle.cpp
-  Info: Boost.Config is older than your compiler version - probably nothing bad will happen - but you may wish to look for an update Boost version.  Define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE to suppress this message.
-  Info: Boost.Config is older than your compiler version - probably nothing bad will happen - but you may wish to look for an update Boost version.  Define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE to suppress this message.
-  ofxCvColorImage.cpp
-  ofxCvContourFinder.cpp
-  ofxCvFloatImage.cpp
-  ofxCvGrayscaleImage.cpp
-  ofxCvHaarFinder.cpp
-  ofxCvImage.cpp
-  Info: Boost.Config is older than your compiler version - probably nothing bad will happen - but you may wish to look for an update Boost version.  Define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE to suppress this message.
-  Info: Boost.Config is older than your compiler version - probably nothing bad will happen - but you may wish to look for an update Boost version.  Define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE to suppress this message.
-  Info: Boost.Config is older than your compiler version - probably nothing bad will happen - but you may wish to look for an update Boost version.  Define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE to suppress this message.
-  Info: Boost.Config is older than your compiler version - probably nothing bad will happen - but you may wish to look for an update Boost version.  Define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE to suppress this message.
-  Info: Boost.Config is older than your compiler version - probably nothing bad will happen - but you may wish to look for an update Boost version.  Define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE to suppress this message.
-  Info: Boost.Config is older than your compiler version - probably nothing bad will happen - but you may wish to look for an update Boost version.  Define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE to suppress this message.
-  ofxCvShortImage.cpp
-  Info: Boost.Config is older than your compiler version - probably nothing bad will happen - but you may wish to look for an update Boost version.  Define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE to suppress this message.
-  ofxXmlSettings.cpp
-  Info: Boost.Config is older than your compiler version - probably nothing bad will happen - but you may wish to look for an update Boost version.  Define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE to suppress this message.
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxXmlSettings\src\ofxXmlSettings.cpp(575,2): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxXmlSettings\src\ofxXmlSettings.cpp(583,2): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-  tinyxml.cpp
-  tinyxmlerror.cpp
-  tinyxmlparser.cpp
      Creating library bin\CollaborativeMediaWall_debug.lib and object bin\CollaborativeMediaWall_debug.exp
   CollaborativeMediaWall.vcxproj -> D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\bin\CollaborativeMediaWall_debug.exe
   
   	                   2	D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\libs\fmod\lib\vs\Win32\
-  	    New File  		 1544704	D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\libs\fmod\lib\vs\Win32\fmod.dll
-  	    New File  		 1733120	D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\libs\fmod\lib\vs\Win32\fmodL.dll
+  	  *EXTRA File 		 6018560	D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\bin\FreeImage.dll
   
   	                   1	D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\libs\FreeImage\lib\vs\Win32\
   	  *EXTRA File 		 1544704	D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\bin\fmod.dll
   	  *EXTRA File 		 1733120	D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\bin\fmodL.dll
-  	    New File  		 6018560	D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\libs\FreeImage\lib\vs\Win32\FreeImage.dll
