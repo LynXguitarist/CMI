@@ -2,82 +2,96 @@
 
 //--------------------------------------------------------------
 void ofApp::setup() {
-    ofBackground(255, 255, 255);
-    ofSetVerticalSync(true);
-    frameByframe = false;
+	//gallery::setup();
+	dir.listDir("images/");
+	dir.allowExt("jpg");
+	dir.sort(); // in linux the file system doesn't return file lists ordered in alphabetical order
 
-    // Uncomment this to show movies with alpha channels
-    // fingerMovie.setPixelFormat(OF_PIXELS_RGBA);
+	//allocate the vector to have as many ofImages as files
+	if (dir.size()) {
+		items.assign(dir.size(), ofImage());
+		video.assign(dir.size(), ofVideoPlayer());
+	}
 
-    fingerMovie.load("movies/fingers.mov");
-    fingerMovie.setLoopState(OF_LOOP_NORMAL);
-    fingerMovie.play();
+	//items[i].bAllocated() -> verifica se imagem loaded, se nao, porque video
+
+	videoInt = 0;
+
+	// you can now iterate through the files and load them into the ofImage vector
+	for (int i = 0; i < (int)dir.size(); i++) {
+		items[i].load(dir.getPath(i));
+
+		if (!items[i].bAllocated()) {
+			video[videoInt].load(dir.getPath(i));
+			video[videoInt].setLoopState(OF_LOOP_NORMAL);
+			video[videoInt].setVolume(0);
+			videoInt++;
+		}
+	}
+	currentItem = 0;
+
+	ofBackground(ofColor::white);
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
-    fingerMovie.update();
+	video[currentVideo].update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
+	//gallery::draw();
 
-    ofSetHexColor(0xFFFFFF);
+	if (dir.size() > 0) {
+		ofSetColor(ofColor::white);
 
-    fingerMovie.draw(20, 20);
-    ofSetHexColor(0x000000);
-    ofPixels& pixels = fingerMovie.getPixels();
+		if (!items[currentItem].bAllocated()) {
+			if (!video[currentVideo].isPlaying()) {
+				video[currentVideo].play();
+			}
+			video[currentVideo].draw(300, 50);
 
-    int vidWidth = pixels.getWidth();
-    int vidHeight = pixels.getHeight();
-    int nChannels = pixels.getNumChannels();
+			if (video[currentVideo].getCurrentFrame() >= 40) {
+				video[currentVideo].firstFrame();
+			}
+		}
+		else {
+			video[currentVideo].stop();
+			items[currentItem].draw(300, 50);
+		}
 
-    // let's move through the "RGB(A)" char array
-    // using the red pixel to control the size of a circle.
-    for (int i = 4; i < vidWidth; i += 8) {
-        for (int j = 4; j < vidHeight; j += 8) {
-            unsigned char r = pixels[(j * 320 + i) * nChannels];
-            float val = 1 - ((float)r / 255.0f);
-            ofDrawCircle(400 + i, 20 + j, 10 * val);
-        }
-    }
+		ofSetColor(ofColor::grey);
+	}
 
 
-    ofSetHexColor(0x000000);
-    ofDrawBitmapString("press f to change", 20, 320);
-    if (frameByframe) ofSetHexColor(0xCCCCCC);
-    ofDrawBitmapString("mouse speed position", 20, 340);
-    if (!frameByframe) ofSetHexColor(0xCCCCCC); else ofSetHexColor(0x000000);
-    ofDrawBitmapString("keys <- -> frame by frame ", 190, 340);
-    ofSetHexColor(0x000000);
+	ofSetColor(ofColor::gray);
+	for (int i = 0; i < (int)dir.size(); i++) {
+		if (i == currentItem) {
+			ofSetColor(ofColor::red);
+		}
+		else {
+			ofSetColor(ofColor::black);
+		}
 
-    ofDrawBitmapString("frame: " + ofToString(fingerMovie.getCurrentFrame()) + "/" + ofToString(fingerMovie.getTotalNumFrames()), 20, 380);
-    ofDrawBitmapString("duration: " + ofToString(fingerMovie.getPosition() * fingerMovie.getDuration(), 2) + "/" + ofToString(fingerMovie.getDuration(), 2), 20, 400);
-    ofDrawBitmapString("speed: " + ofToString(fingerMovie.getSpeed(), 2), 20, 420);
-
-    if (fingerMovie.getIsMovieDone()) {
-        ofSetHexColor(0xFF0000);
-        ofDrawBitmapString("end of movie", 20, 440);
-    }
+		string fileInfo = "file " + ofToString(i + 1) + " = " + dir.getName(i);
+		ofDrawBitmapString(fileInfo, 50, i * 20 + 50);
+		ofDrawBitmapString(ofToString(currentVideo) + " - " + ofToString(video[currentVideo].getCurrentFrame()), 300,50);
+	}
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key) {
-    switch (key) {
-    case 'f':
-        frameByframe = !frameByframe;
-        fingerMovie.setPaused(frameByframe);
-        break;
-    case OF_KEY_LEFT:
-        fingerMovie.previousFrame();
-        break;
-    case OF_KEY_RIGHT:
-        fingerMovie.nextFrame();
-        break;
-    case '0':
-        fingerMovie.firstFrame();
-        break;
-    }
+	//gallery::keyPressed(key, dir, currentItem);
+	if (dir.size() > 0) {
+		if (!items[currentItem].bAllocated()) {
+			video[currentVideo].stop();
+			currentVideo++;
+			currentVideo %= videoInt;
+		}
+
+		currentItem++;
+		currentItem %= dir.size();
+	}
 }
 
 //--------------------------------------------------------------
@@ -87,36 +101,23 @@ void ofApp::keyReleased(int key) {
 
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y) {
-    if (!frameByframe) {
-        int width = ofGetWidth();
-        float pct = (float)x / (float)width;
-        float speed = (2 * pct - 1) * 5.0f;
-        fingerMovie.setSpeed(speed);
-    }
+
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button) {
-    if (!frameByframe) {
-        int width = ofGetWidth();
-        float pct = (float)x / (float)width;
-        fingerMovie.setPosition(pct);
-    }
+
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button) {
-    if (!frameByframe) {
-        fingerMovie.setPaused(true);
-    }
+
 }
 
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button) {
-    if (!frameByframe) {
-        fingerMovie.setPaused(false);
-    }
+
 }
 
 //--------------------------------------------------------------
