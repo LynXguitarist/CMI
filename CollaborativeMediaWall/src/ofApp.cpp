@@ -37,7 +37,7 @@ void ofApp::draw() {
 			if (!isVideoPlaying) {
 				video.load(items[currentItem]);
 				video.play();
-				
+
 				video.setVolume(0);
 				video.setLoopState(OF_LOOP_NORMAL);
 
@@ -53,8 +53,6 @@ void ofApp::draw() {
 			image.draw(300, 50);
 			isVideoPlaying = false;
 		}
-
-		ofSetColor(ofColor::grey);
 	}
 
 	// UI
@@ -69,6 +67,7 @@ void ofApp::draw() {
 
 		string fileInfo = "file " + ofToString(i + 1) + " = " + dir.getName(i);
 		ofDrawBitmapString(fileInfo, 50, i * 20 + 50);
+		//frames
 		ofDrawBitmapString(ofToString(video.getCurrentFrame()), 300, 50);
 	}
 }
