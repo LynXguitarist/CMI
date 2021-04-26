@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ofMain.h"
-#include "gallery.h"
 #include "shlwapi.h";
 
 class ofApp : public ofBaseApp {
@@ -26,11 +25,12 @@ public:
 
 	// we will have a dynamic number of images, based on the content of a directory:
 	ofDirectory dir;
-	vector<ofImage> items;
+	vector<string> items;
 
-	vector<ofVideoPlayer> video;
-	int videoInt;
-	int currentVideo;
+	ofImage image;
+	
+	ofVideoPlayer video;
+	bool isVideoPlaying;
 
 	int currentItem;
 };

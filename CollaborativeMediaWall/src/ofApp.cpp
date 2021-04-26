@@ -9,24 +9,12 @@ void ofApp::setup() {
 
 	//allocate the vector to have as many ofImages as files
 	if (dir.size()) {
-		items.assign(dir.size(), ofImage());
-		video.assign(dir.size(), ofVideoPlayer());
+		items.assign(dir.size(), string());
 	}
-
-	//items[i].bAllocated() -> verifica se imagem loaded, se nao, porque video
-
-	videoInt = 0;
 
 	// you can now iterate through the files and load them into the ofImage vector
 	for (int i = 0; i < (int)dir.size(); i++) {
-		items[i].load(dir.getPath(i));
-
-		if (!items[i].bAllocated()) {
-			video[videoInt].load(dir.getPath(i));
-			video[videoInt].setLoopState(OF_LOOP_NORMAL);
-			video[videoInt].setVolume(0);
-			videoInt++;
-		}
+		items[i] = dir.getPath(i);
 	}
 	currentItem = 0;
 
@@ -35,35 +23,41 @@ void ofApp::setup() {
 
 //--------------------------------------------------------------
 void ofApp::update() {
-	video[currentVideo].update();
+	if (isVideoPlaying)
+		video.update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-	//gallery::draw();
-
 	if (dir.size() > 0) {
 		ofSetColor(ofColor::white);
 
-		if (!items[currentItem].bAllocated()) {
-			if (!video[currentVideo].isPlaying()) {
-				video[currentVideo].play();
-			}
-			video[currentVideo].draw(300, 50);
+		image = ofImage(items[currentItem]);
+		if (!image.bAllocated()) { // not image
+			if (!isVideoPlaying) {
+				video.load(items[currentItem]);
+				video.play();
+				
+				video.setVolume(0);
+				video.setLoopState(OF_LOOP_NORMAL);
 
-			if (video[currentVideo].getCurrentFrame() >= 40) {
-				video[currentVideo].firstFrame();
+				isVideoPlaying = true;
 			}
+
+			if (video.getCurrentFrame() >= 50)
+				video.firstFrame();
+
+			video.draw(300, 50);
 		}
 		else {
-			video[currentVideo].stop();
-			items[currentItem].draw(300, 50);
+			image.draw(300, 50);
+			isVideoPlaying = false;
 		}
 
 		ofSetColor(ofColor::grey);
 	}
 
-
+	// UI
 	ofSetColor(ofColor::gray);
 	for (int i = 0; i < (int)dir.size(); i++) {
 		if (i == currentItem) {
@@ -75,7 +69,7 @@ void ofApp::draw() {
 
 		string fileInfo = "file " + ofToString(i + 1) + " = " + dir.getName(i);
 		ofDrawBitmapString(fileInfo, 50, i * 20 + 50);
-		ofDrawBitmapString(ofToString(currentVideo) + " - " + ofToString(video[currentVideo].getCurrentFrame()), 300,50);
+		ofDrawBitmapString(ofToString(video.getCurrentFrame()), 300, 50);
 	}
 }
 
@@ -83,14 +77,11 @@ void ofApp::draw() {
 void ofApp::keyPressed(int key) {
 	//gallery::keyPressed(key, dir, currentItem);
 	if (dir.size() > 0) {
-		if (!items[currentItem].bAllocated()) {
-			video[currentVideo].stop();
-			currentVideo++;
-			currentVideo %= videoInt;
-		}
-
 		currentItem++;
 		currentItem %= dir.size();
+
+		video.stop();
+		isVideoPlaying = false;
 	}
 }
 

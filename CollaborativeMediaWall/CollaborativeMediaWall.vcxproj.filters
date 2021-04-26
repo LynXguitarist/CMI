@@ -70,23 +70,23 @@
     <ClCompile Include="..\..\..\..\addons\ofxXmlSettings\libs\tinyxmlparser.cpp">
       <Filter>addons\ofxXmlSettings\libs</Filter>
     </ClCompile>
-    <ClCompile Include="Item.cpp">
-      <Filter>src\cmw\items</Filter>
+    <ClCompile Include="src\gallery\Gallery.cpp">
+      <Filter>src\gallery</Filter>
     </ClCompile>
-    <ClCompile Include="user.cpp">
-      <Filter>src\cmw\user_project</Filter>
+    <ClCompile Include="src\item\Metadata.cpp">
+      <Filter>src\item</Filter>
     </ClCompile>
-    <ClCompile Include="project.cpp">
-      <Filter>src\cmw\user_project</Filter>
+    <ClCompile Include="src\item\Item.cpp">
+      <Filter>src\item</Filter>
     </ClCompile>
-    <ClCompile Include="Metadata.cpp">
-      <Filter>src\cmw\items</Filter>
+    <ClCompile Include="src\user_project\Project.cpp">
+      <Filter>src\user_project</Filter>
     </ClCompile>
-    <ClCompile Include="Gallery.cpp">
-      <Filter>src\cmw\gallery</Filter>
+    <ClCompile Include="src\user_project\User.cpp">
+      <Filter>src\user_project</Filter>
     </ClCompile>
-    <ClCompile Include="VideoPlayer.cpp">
-      <Filter>src\cmw\videoPlayer</Filter>
+    <ClCompile Include="src\videoPlayer\VideoPlayer.cpp">
+      <Filter>src\videoPlayer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -252,20 +252,17 @@
     <Filter Include="addons\ofxXmlSettings\libs">
       <UniqueIdentifier>{687714A8-1662-FA1C-261F-50F0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\cmw">
-      <UniqueIdentifier>{62bf6615-5f51-405d-ac19-6337a9f8fa32}</UniqueIdentifier>
+    <Filter Include="src\gallery">
+      <UniqueIdentifier>{a14d70ce-71f8-4ae3-a992-ef231a3dac2c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\cmw\items">
-      <UniqueIdentifier>{c41511dc-751e-4856-abda-d2b2378e800e}</UniqueIdentifier>
+    <Filter Include="src\item">
+      <UniqueIdentifier>{4e3536ee-07ba-4458-a317-7aa8ed5bcaf9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\cmw\user_project">
-      <UniqueIdentifier>{8bc80ccb-3a22-40ed-b470-a24615f71c52}</UniqueIdentifier>
+    <Filter Include="src\user_project">
+      <UniqueIdentifier>{2cb7f1f5-3c6c-40c5-8556-109335f97efd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\cmw\gallery">
-      <UniqueIdentifier>{3636e87d-df5e-49d4-aa76-c1c432a37e32}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\cmw\videoPlayer">
-      <UniqueIdentifier>{4076c094-812a-4307-a680-cfb73c04711b}</UniqueIdentifier>
+    <Filter Include="src\videoPlayer">
+      <UniqueIdentifier>{d34e8979-0b6b-40a2-a75e-1c10f14f6e48}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1193,14 +1190,23 @@
     <ClInclude Include="..\..\..\..\addons\ofxXmlSettings\libs\tinyxml.h">
       <Filter>addons\ofxXmlSettings\libs</Filter>
     </ClInclude>
-    <ClInclude Include="Item.h">
-      <Filter>src\cmw\items</Filter>
+    <ClInclude Include="src\gallery\Gallery.h">
+      <Filter>src\gallery</Filter>
     </ClInclude>
-    <ClInclude Include="VideoPlayer.h">
-      <Filter>src\cmw\videoPlayer</Filter>
+    <ClInclude Include="src\item\Item.h">
+      <Filter>src\item</Filter>
     </ClInclude>
-    <ClInclude Include="Gallery.h">
-      <Filter>src\cmw\gallery</Filter>
+    <ClInclude Include="src\item\Metadata.h">
+      <Filter>src\item</Filter>
+    </ClInclude>
+    <ClInclude Include="src\user_project\Project.h">
+      <Filter>src\user_project</Filter>
+    </ClInclude>
+    <ClInclude Include="src\user_project\User.h">
+      <Filter>src\user_project</Filter>
+    </ClInclude>
+    <ClInclude Include="src\videoPlayer\VideoPlayer.h">
+      <Filter>src\videoPlayer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
