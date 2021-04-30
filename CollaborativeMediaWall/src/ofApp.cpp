@@ -2,24 +2,27 @@
 
 //--------------------------------------------------------------
 void ofApp::setup() {
-	gallery.setup();
+	//gallery.setup();
 
-	//gui->addButton("Ola");
+	gui = new ofxDatGui(0, 0);
+
+	gui->addHeader("Header");
+	gui->addButton("Ola");
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
-	gallery.update();
+	//gallery.update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-	gallery.draw();
+	//gallery.draw();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key) {
-	gallery.keyPressed(key);
+	//gallery.keyPressed(key);
 }
 
 //--------------------------------------------------------------

@@ -1,6 +1,6 @@
 #pragma once
 #include "ofMain.h"
-//#include "ofxDatGui.h"
+#include "ofxDatGui.h"
 #include "Gallery.h"
 
 class ofApp : public ofBaseApp {
@@ -24,7 +24,7 @@ public:
 	void gotMessage(ofMessage msg);
 
 	// Addons
-	//ofxDatGui* gui;
+	ofxDatGui* gui;
 
 	// Auxiliar classes
 	Gallery gallery;
