@@ -1,7 +1,7 @@
 #pragma once
-
 #include "ofMain.h"
-#include "shlwapi.h";
+//#include "ofxDatGui.h"
+#include "Gallery.h"
 
 class ofApp : public ofBaseApp {
 
@@ -23,15 +23,9 @@ public:
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
 
-	// we will have a dynamic number of images, based on the content of a directory:
-	ofDirectory dir;
-	vector<string> items;
+	// Addons
+	//ofxDatGui* gui;
 
-	ofImage image;
-	
-	ofVideoPlayer video;
-	bool isVideoPlaying;
-
-	int currentItem;
+	// Auxiliar classes
+	Gallery gallery;
 };
-
