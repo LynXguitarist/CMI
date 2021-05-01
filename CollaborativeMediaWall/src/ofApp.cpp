@@ -6,8 +6,8 @@ void ofApp::setup() {
 
 	gui = new ofxDatGui(0, 0);
 
-	gui->addHeader("Header");
-	gui->addButton("Ola");
+	menu();
+	
 }
 
 //--------------------------------------------------------------
@@ -73,5 +73,19 @@ void ofApp::gotMessage(ofMessage msg) {
 
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo) {
+
+}
+
+//------------------------GUI_Functions----------------------//
+void ofApp::menu() {
+	gui->addHeader("Collaborative Media Wall")->setWidth(ofGetViewportWidth());
+	gui->getHeader()->setDraggable(false);
+	
+	gui->addButton("User")->setWidth(ofGetViewportWidth() / 2);
+	gui->addButton("Project")->setPosition(gui->getButton("User", "")->getWidth(), gui->getHeader()->getHeight());
+	gui->getButton("Project")->setWidth(ofGetViewportWidth() / 2);
+}
+
+void userProfile() {
 
 }

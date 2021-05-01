@@ -23,6 +23,9 @@ public:
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
 
+	//------------------------GUI_Functions----------------------//
+	void menu();
+
 	// Addons
 	ofxDatGui* gui;
 
