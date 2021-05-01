@@ -2,27 +2,28 @@
 
 //--------------------------------------------------------------
 void ofApp::setup() {
-	//gallery.setup();
+	gallery.setup();
 
 	gui = new ofxDatGui(0, 0);
+	galleryScroll = new ofxDatGuiScrollView("gallery", 10);
 
 	menu();
-	
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
-	//gallery.update();
+	gallery.update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-	//gallery.draw();
+	gallery.draw();
+
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key) {
-	//gallery.keyPressed(key);
+	gallery.keyPressed(key);
 }
 
 //--------------------------------------------------------------
@@ -81,11 +82,13 @@ void ofApp::menu() {
 	gui->addHeader("Collaborative Media Wall")->setWidth(ofGetViewportWidth());
 	gui->getHeader()->setDraggable(false);
 	
-	gui->addButton("User")->setWidth(ofGetViewportWidth() / 2);
-	gui->addButton("Project")->setPosition(gui->getButton("User", "")->getWidth(), gui->getHeader()->getHeight());
+	/*
+	gui->addButton("Items")->setWidth(ofGetViewportWidth() / 2);
+	gui->addButton("Project")->setPosition(gui->getButton("Items", "")->getWidth(), gui->getHeader()->getHeight());
 	gui->getButton("Project")->setWidth(ofGetViewportWidth() / 2);
+	*/
 }
 
-void userProfile() {
-
+void ofApp::galleryUI() {
+	
 }

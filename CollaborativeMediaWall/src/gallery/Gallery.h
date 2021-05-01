@@ -1,5 +1,6 @@
 #pragma once
 #include "ofMain.h"
+#include "ofxXmlSettings.h"
 
 class Gallery : public ofBaseApp
 {
@@ -20,6 +21,8 @@ public:
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
 
+	void handleItems();
+
 	// Array of items(path)
 	ofDirectory dir;
 	vector<string> items;
@@ -33,5 +36,8 @@ public:
 	// VideoPlayer object
 	ofVideoPlayer video;
 	bool isVideoPlaying;
+
+	//Xml object
+	ofxXmlSettings document;
 };
 

@@ -25,10 +25,12 @@ public:
 
 	//------------------------GUI_Functions----------------------//
 	void menu();
+	void galleryUI();
 
 	// Addons
 	ofxDatGui* gui;
+	ofxDatGuiScrollView* galleryScroll;
 
-	// Auxiliar classes
+	//------------------------Auxiliar_classes-------------------//
 	Gallery gallery;
 };

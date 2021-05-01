@@ -2,6 +2,8 @@
 
 //--------------------------------------------------------------
 void Gallery::setup() {
+	handleItems();
+	
 	dir.listDir("images/");
 	dir.allowExt("jpg");
 	dir.sort(); // in linux the file system doesn't return file lists ordered in alphabetical order
@@ -131,4 +133,32 @@ void Gallery::gotMessage(ofMessage msg) {
 //--------------------------------------------------------------
 void Gallery::dragEvent(ofDragInfo dragInfo) {
 
+}
+
+void Gallery::handleItems() {
+	if (document.loadFile("data_xml/users.xml")) {
+		ofLogError("Abriu");
+	}
+	else {
+		ofLogError("Nao abriu");
+	}
+
+	document.pushTag("users");
+	int numberOfUsers = document.getNumTags("user");
+
+	for (int i = 0; i < numberOfUsers; i++) {
+		document.pushTag("user", i);
+
+		int id = document.getValue("id", 0);
+		ofDrawBitmapString("id: " + ofToString(id), 20, 20);
+
+		string name = document.getValue("name", "");
+		ofDrawBitmapString("name: " + name, 20, 30);
+
+		document.popTag();
+	}
+
+	document.popTag(); //pop position
+
+	ofDrawBitmapString("NumberOfUsers: " + ofToString(numberOfUsers), 10, 10);
 }
