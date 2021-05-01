@@ -1,36 +1,69 @@
-﻿  ofApp.cpp
+﻿  main.cpp
+  ofApp.cpp
   Info: Boost.Config is older than your compiler version - probably nothing bad will happen - but you may wish to look for an update Boost version.  Define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE to suppress this message.
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiSlider.h(339,38): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiMatrix.h(184,27): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiMatrix.h(208,31): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiMatrix.h(211,31): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiMatrix.h(223,31): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiMatrix.h(229,28): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiMatrix.h(235,28): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiMatrix.h(242,27): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiMatrix.h(276,27): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiMatrix.h(283,31): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiTimeGraph.h(91,28): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiTimeGraph.h(105,28): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiTimeGraph.h(116,28): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiTimeGraph.h(127,28): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiTimeGraph.h(286,28): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiTimeGraph.h(288,21): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiScrollView.h(123,27): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiScrollView.h(147,27): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiScrollView.h(217,27): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiScrollView.h(312,35): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiScrollView.h(319,27): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiScrollView.h(330,27): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiScrollView.h(339,40): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(97,35): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(107,35): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(121,28): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(197,27): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(404,28): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(454,27): warning C4018: '<': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(483,38): warning C4018: '>=': signed/unsigned mismatch
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(521,27): warning C4018: '<': signed/unsigned mismatch
+  Info: Boost.Config is older than your compiler version - probably nothing bad will happen - but you may wish to look for an update Boost version.  Define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE to suppress this message.
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiSlider.h(339,38): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiSlider.h(339,38): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiMatrix.h(184,27): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiMatrix.h(184,27): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiMatrix.h(208,31): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiMatrix.h(208,31): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiMatrix.h(211,31): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiMatrix.h(211,31): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiMatrix.h(223,31): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiMatrix.h(223,31): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiMatrix.h(229,28): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiMatrix.h(229,28): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiMatrix.h(235,28): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiMatrix.h(235,28): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiMatrix.h(242,27): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiMatrix.h(242,27): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiMatrix.h(276,27): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiMatrix.h(276,27): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiMatrix.h(283,31): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiMatrix.h(283,31): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiTimeGraph.h(91,28): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiTimeGraph.h(91,28): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiTimeGraph.h(105,28): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiTimeGraph.h(105,28): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiTimeGraph.h(116,28): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiTimeGraph.h(116,28): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiTimeGraph.h(127,28): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiTimeGraph.h(127,28): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiTimeGraph.h(286,28): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiTimeGraph.h(288,21): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiTimeGraph.h(286,28): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiTimeGraph.h(288,21): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiScrollView.h(123,27): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiScrollView.h(123,27): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiScrollView.h(147,27): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiScrollView.h(147,27): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiScrollView.h(217,27): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiScrollView.h(217,27): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiScrollView.h(312,35): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiScrollView.h(312,35): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiScrollView.h(319,27): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiScrollView.h(319,27): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiScrollView.h(330,27): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiScrollView.h(330,27): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiScrollView.h(339,40): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiScrollView.h(339,40): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(97,35): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(97,35): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(107,35): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(107,35): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(121,28): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(121,28): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(197,27): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(197,27): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(404,28): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(404,28): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(454,27): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(454,27): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(483,38): warning C4018: '>=': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(483,38): warning C4018: '>=': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(521,27): warning C4018: '<': signed/unsigned mismatch (compiling source file src\main.cpp)
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(521,27): warning C4018: '<': signed/unsigned mismatch (compiling source file src\ofApp.cpp)
   CollaborativeMediaWall.vcxproj -> D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\bin\CollaborativeMediaWall_debug.exe
   
   	                   2	D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\libs\fmod\lib\vs\Win32\
