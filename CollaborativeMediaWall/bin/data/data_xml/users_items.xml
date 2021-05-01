@@ -1,0 +1,13 @@
+<users_items>
+	<user_items>
+		<user>1</user>
+		<items>
+			<item>
+				<id>1</id>
+			</item>
+			<item>
+				<id>2</id>
+			</item>
+		</items>
+	</user_items>
+</users_items>
