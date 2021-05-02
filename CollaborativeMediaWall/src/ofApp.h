@@ -29,7 +29,10 @@ public:
 
 	// Addons
 	ofxDatGui* gui;
-	ofxDatGuiScrollView* galleryScroll;
+	//ofxDatGuiScrollView* view;
+
+	//------------------------Events-----------------------------//
+	void onTextInputEvent(ofxDatGuiTextInputEvent e);
 
 	//------------------------Auxiliar_classes-------------------//
 	Gallery gallery;

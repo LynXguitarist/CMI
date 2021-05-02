@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void Gallery::setup() {
 	handleItems();
-	
+
 	dir.listDir("images/");
 	dir.allowExt("jpg");
 	dir.sort(); // in linux the file system doesn't return file lists ordered in alphabetical order
@@ -18,8 +18,7 @@ void Gallery::setup() {
 		items[i] = dir.getPath(i);
 	}
 	currentItem = 0;
-
-	ofBackground(ofColor::white);
+	itemsSize = (int)dir.size();
 }
 
 //--------------------------------------------------------------
@@ -30,57 +29,54 @@ void Gallery::update() {
 
 //--------------------------------------------------------------
 void Gallery::draw() {
-	if (dir.size() > 0) {
-		ofSetColor(ofColor::white);
+	int x = 0; // postion in the x
+	int y = 50;
 
-		image = ofImage(items[currentItem]);
+	int size = currentItem + 3;
+	if (size > itemsSize)
+		size = itemsSize;
+
+	for (int i = currentItem; i < size; i++) {
+		image = ofImage(items[i]);
 		if (!image.bAllocated()) { // not image
-			if (!isVideoPlaying) {
-				video.load(items[currentItem]);
-				video.play();
+			video.load(items[i]);
+			video.play();
+			video.setPaused(true);
 
-				video.setVolume(0);
-				video.setLoopState(OF_LOOP_NORMAL);
+			video.setPosition(0.5);
 
-				isVideoPlaying = true;
-			}
-
-			if (video.getCurrentFrame() >= 50)
-				video.firstFrame();
-
-			video.draw(300, 50);
-		}
-		else {
-			image.draw(300, 50);
-			isVideoPlaying = false;
-		}
-	}
-
-	// UI
-	ofSetColor(ofColor::gray);
-	for (int i = 0; i < (int)dir.size(); i++) {
-		if (i == currentItem) {
-			ofSetColor(ofColor::red);
-		}
-		else {
-			ofSetColor(ofColor::black);
+			image.setFromPixels(video.getPixels());
 		}
 
-		string fileInfo = "file " + ofToString(i + 1) + " = " + dir.getName(i);
-		ofDrawBitmapString(fileInfo, 50, i * 20 + 50);
-		//frames
-		ofDrawBitmapString(ofToString(video.getCurrentFrame()), 300, 50);
+		int imageWidth = 300;
+		int position = x * imageWidth + 75;
+		if (position + imageWidth >= ofGetViewportWidth()) {
+			y += image.getHeight() + 50;
+			x = 0;
+			position = x * (imageWidth + 75);
+		}
+		else if (position == 0) {
+			position = 75;
+		}
+
+		image.draw(position, 50 + y, imageSize, imageSize);
+		x++;
 	}
 }
 
 //--------------------------------------------------------------
 void Gallery::keyPressed(int key) {
-	if (dir.size() > 0) {
-		currentItem++;
-		currentItem %= dir.size();
-
-		video.stop();
-		isVideoPlaying = false;
+	if (GetKeyState(VK_RIGHT)) {
+		if (currentItem < itemsSize - 3) {
+			currentItem++;
+			currentItem %= itemsSize;
+		}
+	}
+	else if (GetKeyState(VK_LEFT)) {
+		if (currentItem >= 1) {
+			currentItem--;
+			currentItem %= itemsSize;
+		}
 	}
 }
 
@@ -112,7 +108,7 @@ void Gallery::mouseReleased(int x, int y, int button) {
 
 //--------------------------------------------------------------
 void Gallery::mouseEntered(int x, int y) {
-
+	// use this to trigger event on video-> moving icon
 }
 
 //--------------------------------------------------------------

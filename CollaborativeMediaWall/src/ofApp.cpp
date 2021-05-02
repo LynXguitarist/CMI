@@ -2,12 +2,14 @@
 
 //--------------------------------------------------------------
 void ofApp::setup() {
-	gallery.setup();
+	ofBackground(ofColor::grey);
 
 	gui = new ofxDatGui(0, 0);
-	galleryScroll = new ofxDatGuiScrollView("gallery", 10);
 
 	menu();
+	galleryUI();
+
+	gallery.setup();
 }
 
 //--------------------------------------------------------------
@@ -18,7 +20,7 @@ void ofApp::update() {
 //--------------------------------------------------------------
 void ofApp::draw() {
 	gallery.draw();
-
+	//view->draw();
 }
 
 //--------------------------------------------------------------
@@ -90,5 +92,17 @@ void ofApp::menu() {
 }
 
 void ofApp::galleryUI() {
+	// search input
+	ofxDatGuiTextInput* search = gui->addTextInput("Pesquisa por:", "");
+	search->onTextInputEvent(this, &ofApp::onTextInputEvent);
+	search->setWidth(ofGetViewportWidth() / 2, 100);
+
 	
+}
+
+//------------------------Events-----------------------------//
+void ofApp::onTextInputEvent(ofxDatGuiTextInputEvent e)
+{
+	cout << "the input field changed to: " << e.text << endl;
+
 }

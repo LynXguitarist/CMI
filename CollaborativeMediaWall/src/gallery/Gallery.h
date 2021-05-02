@@ -23,9 +23,12 @@ public:
 
 	void handleItems();
 
+	int imageSize = (ofGetViewportWidth() - 200)/3;
+
 	// Array of items(path)
 	ofDirectory dir;
 	vector<string> items;
+	int itemsSize;
 
 	// Current item
 	int currentItem;
