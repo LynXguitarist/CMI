@@ -36,16 +36,21 @@ void Gallery::draw() {
 	if (size > itemsSize)
 		size = itemsSize;
 
+	bool isVideoLoaded = false;
 	for (int i = currentItem; i < size; i++) {
-		image = ofImage(items[i]);
-		if (!image.bAllocated()) { // not image
+		image = ofImage(items[i]); // init image
+
+		if (!image.bAllocated()) { // not image - is video
 			video.load(items[i]);
 			video.play();
+			video.setVolume(0);
+
 			video.setPaused(true);
 
 			video.setPosition(0.5);
 
 			image.setFromPixels(video.getPixels());
+			isVideoLoaded = true;
 		}
 
 		int imageWidth = 300;
@@ -58,10 +63,14 @@ void Gallery::draw() {
 		else if (position == 0) {
 			position = 75;
 		}
-
-		image.draw(position, 50 + y, imageSize, imageSize);
+		/*
+		if (!image.bAllocated())
+			video.draw(position, 50 + y, imageSize, imageSize);
+		else*/
+			image.draw(position, 50 + y, imageSize, imageSize);
 		x++;
 	}
+
 }
 
 //--------------------------------------------------------------
@@ -78,6 +87,11 @@ void Gallery::keyPressed(int key) {
 			currentItem %= itemsSize;
 		}
 	}
+	else if (GetKeyState(VK_SPACE)) {
+		if (video.isPlaying()) {
+			video.setPaused(video.isPaused());
+		}
+	}
 }
 
 //--------------------------------------------------------------
@@ -87,6 +101,8 @@ void Gallery::keyReleased(int key) {
 
 //--------------------------------------------------------------
 void Gallery::mouseMoved(int x, int y) {
+	// use this to trigger event on video-> moving icon
+
 
 }
 
@@ -98,8 +114,37 @@ void Gallery::mouseDragged(int x, int y, int button) {
 //--------------------------------------------------------------
 void Gallery::mousePressed(int x, int y, int button) {
 
-}
+	cout << "\nVideo Loaded? " + ofToString(video.isLoaded());
+	if (video.isLoaded()) {
 
+		int image_x = 0; // postion in the x
+
+		int size = currentItem + 3;
+		if (size > itemsSize)
+			size = itemsSize;
+
+		for (int i = currentItem; i < size; i++) {
+			int imageWidth = 300;
+
+			bool inside_x = (x >= ((image_x * imageWidth) + ((image_x + 1) * 75)) && x <= (((image_x + 1) * 75) + (imageWidth * (image_x + 1))));
+			bool inside_y = (y >= 75 && y <= 75 + imageWidth);
+
+			cout << "\nInsideX: " + ofToString(inside_x);
+
+			if (inside_x && inside_y && !isVideoPlaying) {
+				isVideoPlaying = true;
+				video.firstFrame();
+				video.play();
+			}
+			else {
+				//isVideoPlaying = false;
+				//video.setPaused(true);
+			}
+
+			image_x++;
+		}
+	}
+}
 
 //--------------------------------------------------------------
 void Gallery::mouseReleased(int x, int y, int button) {
@@ -108,7 +153,7 @@ void Gallery::mouseReleased(int x, int y, int button) {
 
 //--------------------------------------------------------------
 void Gallery::mouseEntered(int x, int y) {
-	// use this to trigger event on video-> moving icon
+
 }
 
 //--------------------------------------------------------------

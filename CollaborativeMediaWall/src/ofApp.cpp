@@ -35,7 +35,7 @@ void ofApp::keyReleased(int key) {
 
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y) {
-
+	gallery.mouseMoved(x, y);
 }
 
 //--------------------------------------------------------------
@@ -45,7 +45,7 @@ void ofApp::mouseDragged(int x, int y, int button) {
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button) {
-
+	gallery.mousePressed(x, y, button);
 }
 
 
@@ -83,7 +83,7 @@ void ofApp::dragEvent(ofDragInfo dragInfo) {
 void ofApp::menu() {
 	gui->addHeader("Collaborative Media Wall")->setWidth(ofGetViewportWidth());
 	gui->getHeader()->setDraggable(false);
-	
+
 	/*
 	gui->addButton("Items")->setWidth(ofGetViewportWidth() / 2);
 	gui->addButton("Project")->setPosition(gui->getButton("Items", "")->getWidth(), gui->getHeader()->getHeight());
@@ -97,7 +97,7 @@ void ofApp::galleryUI() {
 	search->onTextInputEvent(this, &ofApp::onTextInputEvent);
 	search->setWidth(ofGetViewportWidth() / 2, 100);
 
-	
+
 }
 
 //------------------------Events-----------------------------//
