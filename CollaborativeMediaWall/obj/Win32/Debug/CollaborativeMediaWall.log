@@ -1,6 +1,7 @@
 ﻿  Gallery.cpp
   Info: Boost.Config is older than your compiler version - probably nothing bad will happen - but you may wish to look for an update Boost version.  Define BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE to suppress this message.
 D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(43,13): warning C4996: 'ofImage_<unsigned char>::bAllocated': Use isAllocated()
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(59,13): warning C4996: 'ofImage_<unsigned char>::bAllocated': Use isAllocated()
   CollaborativeMediaWall.vcxproj -> D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\bin\CollaborativeMediaWall_debug.exe
   
   	                   2	D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\libs\fmod\lib\vs\Win32\

@@ -2,6 +2,8 @@
 #include "ofMain.h"
 #include "ofxXmlSettings.h"
 
+#include "Item.h"
+
 class Gallery : public ofBaseApp
 {
 public:
@@ -23,7 +25,7 @@ public:
 
 	void handleItems();
 
-	int imageSize = (ofGetViewportWidth() - 200)/3;
+	int imageSize = (ofGetViewportWidth() - 200) / 3;
 
 	// Array of items(path)
 	ofDirectory dir;

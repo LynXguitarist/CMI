@@ -40,7 +40,7 @@ void Gallery::draw() {
 	for (int i = currentItem; i < size; i++) {
 		image = ofImage(items[i]); // init image
 
-		if (!image.bAllocated()) { // not image - is video
+		if (!image.bAllocated() && !isVideoPlaying) { // not image - is video
 			video.load(items[i]);
 			video.play();
 			video.setVolume(0);
@@ -53,20 +53,12 @@ void Gallery::draw() {
 			isVideoLoaded = true;
 		}
 
-		int imageWidth = 300;
-		int position = x * imageWidth + 75;
-		if (position + imageWidth >= ofGetViewportWidth()) {
-			y += image.getHeight() + 50;
-			x = 0;
-			position = x * (imageWidth + 75);
-		}
-		else if (position == 0) {
-			position = 75;
-		}
-		/*
-		if (!image.bAllocated())
+		int position = x * imageSize + (x + 1) * 50;
+
+
+		if (!image.bAllocated() && isVideoPlaying)
 			video.draw(position, 50 + y, imageSize, imageSize);
-		else*/
+		else
 			image.draw(position, 50 + y, imageSize, imageSize);
 		x++;
 	}
@@ -114,7 +106,7 @@ void Gallery::mouseDragged(int x, int y, int button) {
 //--------------------------------------------------------------
 void Gallery::mousePressed(int x, int y, int button) {
 
-	cout << "\nVideo Loaded? " + ofToString(video.isLoaded());
+	//cout << "\nVideo Loaded? " + ofToString(video.isLoaded());
 	if (video.isLoaded()) {
 
 		int image_x = 0; // postion in the x
@@ -124,17 +116,22 @@ void Gallery::mousePressed(int x, int y, int button) {
 			size = itemsSize;
 
 		for (int i = currentItem; i < size; i++) {
-			int imageWidth = 300;
 
-			bool inside_x = (x >= ((image_x * imageWidth) + ((image_x + 1) * 75)) && x <= (((image_x + 1) * 75) + (imageWidth * (image_x + 1))));
-			bool inside_y = (y >= 75 && y <= 75 + imageWidth);
+			bool inside_x = (x >= ((image_x * imageSize) + ((image_x + 1) * 75)) && x <= (((image_x + 1) * 75) + (imageSize * (image_x + 1))));
+			bool inside_y = (y >= 75 && y <= 75 + imageSize);
 
-			cout << "\nInsideX: " + ofToString(inside_x);
+			//cout << "\nInsideX: " + ofToString(inside_x);
+
+			cout << "\nX = " + ofToString(x);
+			cout << "\nImage between - " + ofToString(((image_x * imageSize) + ((image_x + 1) * 75)));
+			cout << " and - " + ofToString((((image_x + 1) * 75) + (imageSize * (image_x + 1))));
 
 			if (inside_x && inside_y && !isVideoPlaying) {
 				isVideoPlaying = true;
 				video.firstFrame();
 				video.play();
+
+				cout << "\nWill start playing now...";
 			}
 			else {
 				//isVideoPlaying = false;
