@@ -133,9 +133,9 @@ void Gallery::mousePressed(int x, int y, int button) {
 
 				cout << "\nWill start playing now...";
 			}
-			else {
-				//isVideoPlaying = false;
-				//video.setPaused(true);
+			else if (inside_x && inside_y) {
+				isVideoPlaying = false;
+				video.setPaused(true);
 			}
 
 			image_x++;

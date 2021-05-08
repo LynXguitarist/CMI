@@ -1,11 +1,5 @@
 #include "Item.h"
 
-string Item::getPath()
-{
-	return string();
-}
-
-
 Item::Item(string path, ofImage image, ofVideoPlayer video, bool isVideo, bool isVideoPlaying)
 {
 	this->path = path;
