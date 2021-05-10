@@ -10,12 +10,25 @@ void Gallery::setup() {
 
 	//allocate the vector to have as many ofImages as files
 	if (dir.size()) {
-		items.assign(dir.size(), string());
+		items.assign(dir.size(), &Item("", ofImage(), false, false));
 	}
 
 	// you can now iterate through the files and load them into the ofImage vector
 	for (int i = 0; i < (int)dir.size(); i++) {
-		items[i] = dir.getPath(i);
+		ofImage img = ofImage(dir.getPath(i));
+		bool isVideo = false;
+		if (!img.bAllocated()) {
+			isVideo = true;
+
+			video.load(dir.getPath(i));
+			video.play();
+			video.setPaused(true);
+			video.setPosition(0.5);
+
+			img.setFromPixels(video.getPixels());
+		}
+
+		items[i] = new Item(dir.getPath(i), img, isVideo, false);
 	}
 	currentItem = 0;
 	itemsSize = (int)dir.size();
@@ -36,30 +49,21 @@ void Gallery::draw() {
 	if (size > itemsSize)
 		size = itemsSize;
 
-	bool isVideoLoaded = false;
 	for (int i = currentItem; i < size; i++) {
-		image = ofImage(items[i]); // init image
-
-		if (!image.bAllocated() && !isVideoPlaying) { // not image - is video
-			video.load(items[i]);
-			video.play();
-			video.setVolume(0);
-
-			video.setPaused(true);
-
-			video.setPosition(0.5);
-
-			image.setFromPixels(video.getPixels());
-			isVideoLoaded = true;
-		}
+		string path = items[i]->getPath();
+		bool isCurrVideoPlaying = items[i]->getIsVideoPlaying();
+		image = items[i]->getImage(); // init image
 
 		int position = x * imageSize + (x + 1) * 50;
 
-
-		if (!image.bAllocated() && isVideoPlaying)
+		if (isCurrVideoPlaying) {
+			// moving icon
+			// ou primeiro 50 frames
 			video.draw(position, 50 + y, imageSize, imageSize);
+		}
 		else
 			image.draw(position, 50 + y, imageSize, imageSize);
+
 		x++;
 	}
 
@@ -67,6 +71,7 @@ void Gallery::draw() {
 
 //--------------------------------------------------------------
 void Gallery::keyPressed(int key) {
+	// BUG ver o que
 	if (GetKeyState(VK_RIGHT)) {
 		if (currentItem < itemsSize - 3) {
 			currentItem++;
@@ -106,7 +111,6 @@ void Gallery::mouseDragged(int x, int y, int button) {
 //--------------------------------------------------------------
 void Gallery::mousePressed(int x, int y, int button) {
 
-	//cout << "\nVideo Loaded? " + ofToString(video.isLoaded());
 	if (video.isLoaded()) {
 
 		int image_x = 0; // postion in the x
@@ -120,14 +124,12 @@ void Gallery::mousePressed(int x, int y, int button) {
 			bool inside_x = (x >= ((image_x * imageSize) + ((image_x + 1) * 75)) && x <= (((image_x + 1) * 75) + (imageSize * (image_x + 1))));
 			bool inside_y = (y >= 75 && y <= 75 + imageSize);
 
-			//cout << "\nInsideX: " + ofToString(inside_x);
-
-			cout << "\nX = " + ofToString(x);
-			cout << "\nImage between - " + ofToString(((image_x * imageSize) + ((image_x + 1) * 75)));
-			cout << " and - " + ofToString((((image_x + 1) * 75) + (imageSize * (image_x + 1))));
-
-			if (inside_x && inside_y && !isVideoPlaying) {
+			if (inside_x && inside_y && !items[i]->getIsVideoPlaying()) {
 				isVideoPlaying = true;
+				items[i]->setVideoPlaying(true);
+
+				video.load(items[i]->getPath());
+				video.setVolume(0);
 				video.firstFrame();
 				video.play();
 
@@ -135,6 +137,7 @@ void Gallery::mousePressed(int x, int y, int button) {
 			}
 			else if (inside_x && inside_y) {
 				isVideoPlaying = false;
+				items[i]->setVideoPlaying(false);
 				video.setPaused(true);
 			}
 

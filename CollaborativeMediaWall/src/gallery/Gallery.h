@@ -29,7 +29,7 @@ public:
 
 	// Array of items(path)
 	ofDirectory dir;
-	vector<string> items;
+	vector<Item*> items;
 	int itemsSize;
 
 	// Current item

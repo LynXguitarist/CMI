@@ -6,18 +6,16 @@ class Item
 {
 private:
 	string path;
-	ofImage image; // if video loads one frame
-	ofVideoPlayer video;
+	ofImage image;
 	bool isVideo;
 	bool isVideoPlaying;
 
 public:
-	Item(string path, ofImage image, ofVideoPlayer video, bool isVideo, bool isVideoPlaying);
+	Item(string path, ofImage image, bool isVideo, bool isVideoPlaying);
 	string getPath();
 	ofImage getImage();
-	ofVideoPlayer getVideo();
 	bool getIsVideo();
 	bool getIsVideoPlaying();
-	void setVideoPlaying();
+	void setVideoPlaying(bool isPlaying);
 };
 
