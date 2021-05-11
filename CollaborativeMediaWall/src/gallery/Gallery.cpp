@@ -65,11 +65,11 @@ void Gallery::draw() {
 		}
 		else {
 			if (isMovingIcon && isCurrVideoPlaying) {
-				video.setFrame(currentFrame);
+				video.setPosition(currentFrame);
 				image.setFromPixels(video.getPixels());
 				nextFrame();
-				// waits 1 sec
-				Sleep(100);
+				// waits x secs
+				Sleep(500);
 			}
 			else {
 				image = items[i]->getImage(); // init image
@@ -85,6 +85,7 @@ void Gallery::draw() {
 
 //--------------------------------------------------------------
 void Gallery::keyPressed(int key) {
+	// BUG AO ANDAR PARA TRAS
 	if (GetKeyState(VK_RIGHT)) {
 		if (currentItem < itemsSize - 3) {
 			currentItem++;
