@@ -32,6 +32,8 @@ void Gallery::setup() {
 	}
 	currentItem = 0;
 	itemsSize = (int)dir.size();
+
+	isMovingIcon = true;
 }
 
 //--------------------------------------------------------------
@@ -52,17 +54,29 @@ void Gallery::draw() {
 	for (int i = currentItem; i < size; i++) {
 		string path = items[i]->getPath();
 		bool isCurrVideoPlaying = items[i]->getIsVideoPlaying();
-		image = items[i]->getImage(); // init image
 
 		int position = x * imageSize + (x + 1) * 50;
 
-		if (isCurrVideoPlaying) {
-			// moving icon
-			// ou primeiro 50 frames
+		if (isCurrVideoPlaying && !isMovingIcon) {
+			if (video.getCurrentFrame() >= 50)
+				video.firstFrame();
+
 			video.draw(position, 50 + y, imageSize, imageSize);
 		}
-		else
+		else {
+			if (isMovingIcon && isCurrVideoPlaying) {
+				video.setFrame(currentFrame);
+				image.setFromPixels(video.getPixels());
+				nextFrame();
+				// waits 1 sec
+				Sleep(100);
+			}
+			else {
+				image = items[i]->getImage(); // init image
+			}
+
 			image.draw(position, 50 + y, imageSize, imageSize);
+		}
 
 		x++;
 	}
@@ -71,7 +85,6 @@ void Gallery::draw() {
 
 //--------------------------------------------------------------
 void Gallery::keyPressed(int key) {
-	// BUG ver o que
 	if (GetKeyState(VK_RIGHT)) {
 		if (currentItem < itemsSize - 3) {
 			currentItem++;
@@ -89,6 +102,7 @@ void Gallery::keyPressed(int key) {
 			video.setPaused(video.isPaused());
 		}
 	}
+
 }
 
 //--------------------------------------------------------------
@@ -124,9 +138,16 @@ void Gallery::mousePressed(int x, int y, int button) {
 			bool inside_x = (x >= ((image_x * imageSize) + ((image_x + 1) * 75)) && x <= (((image_x + 1) * 75) + (imageSize * (image_x + 1))));
 			bool inside_y = (y >= 75 && y <= 75 + imageSize);
 
-			if (inside_x && inside_y && !items[i]->getIsVideoPlaying()) {
+			if (inside_x && inside_y && !items[i]->getIsVideoPlaying() && items[i]->getIsVideo()) {
+				if (isVideoPlaying) { // check first if another video is playing
+					items[videoPlaying]->setVideoPlaying(false);
+				}
+
 				isVideoPlaying = true;
 				items[i]->setVideoPlaying(true);
+				videoPlaying = i;
+
+				currentFrame = 0;
 
 				video.load(items[i]->getPath());
 				video.setVolume(0);
@@ -135,7 +156,7 @@ void Gallery::mousePressed(int x, int y, int button) {
 
 				cout << "\nWill start playing now...";
 			}
-			else if (inside_x && inside_y) {
+			else if (inside_x && inside_y && items[i]->getIsVideo()) {
 				isVideoPlaying = false;
 				items[i]->setVideoPlaying(false);
 				video.setPaused(true);
@@ -174,6 +195,17 @@ void Gallery::gotMessage(ofMessage msg) {
 //--------------------------------------------------------------
 void Gallery::dragEvent(ofDragInfo dragInfo) {
 
+}
+
+void Gallery::nextFrame() {
+	if (currentFrame == 0)
+		currentFrame = 0.25f;
+	else if (currentFrame == 0.25f)
+		currentFrame = 0.5f;
+	else if (currentFrame == 0.5f)
+		currentFrame = 0.75f;
+	else if (currentFrame == 0.75f)
+		currentFrame = 0;
 }
 
 void Gallery::handleItems() {

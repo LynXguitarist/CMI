@@ -1,5 +1,6 @@
 #pragma once
 #include "ofMain.h"
+#include<windows.h>
 #include "ofxXmlSettings.h"
 
 #include "Item.h"
@@ -23,6 +24,7 @@ public:
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
 
+	void nextFrame();
 	void handleItems();
 
 	int imageSize = (ofGetViewportWidth() - 200) / 3;
@@ -41,6 +43,9 @@ public:
 	// VideoPlayer object
 	ofVideoPlayer video;
 	bool isVideoPlaying;
+	bool isMovingIcon;
+	int videoPlaying;
+	float currentFrame;
 
 	//Xml object
 	ofxXmlSettings document;
