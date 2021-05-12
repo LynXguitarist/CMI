@@ -1,6 +1,6 @@
 #pragma once
 #include "ofMain.h"
-#include<windows.h>
+#include <windows.h>
 #include "ofxXmlSettings.h"
 
 #include "Item.h"
@@ -25,7 +25,7 @@ public:
 	void gotMessage(ofMessage msg);
 
 	void nextFrame();
-	void handleItems();
+	void handleUserItems(int userId);
 
 	int imageSize = (ofGetViewportWidth() - 200) / 3;
 
@@ -49,5 +49,6 @@ public:
 
 	//Xml object
 	ofxXmlSettings document;
+
 };
 

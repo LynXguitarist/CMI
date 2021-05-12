@@ -1,19 +1,24 @@
 <items>
 	<item>
-		<id>1</id>
+		<id>DSC09302</id>
 		<tags>
-
+			<tag>OF</tag>
 		</tags>
-		<luminace></luminace>
+		<luminace>1</luminace>
 		<color>red</color>
 		<faces>2</faces>
-		<edge></edge>
-		<texture></texture>
-		<times></times>
+		<edge>2</edge>
+		<texture>OF and white background</texture>
+		<times>
+			<object>
+				<name>OF</name>
+				<time>1</time>
+			</object>
+		</times>
 		<rhythm></rhythm>
 	</item>
 	<item>
-		<id>2</id>
+		<id>DSC09305</id>
 		<tags>
 
 		</tags>

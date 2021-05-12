@@ -2,38 +2,14 @@
 
 //--------------------------------------------------------------
 void Gallery::setup() {
-	handleItems();
+	// makes the logs log in console
+	ofLogToConsole();
 
-	dir.listDir("images/");
-	dir.allowExt("jpg");
-	dir.sort(); // in linux the file system doesn't return file lists ordered in alphabetical order
+	// passes the id
+	handleUserItems(1);
 
-	//allocate the vector to have as many ofImages as files
-	if (dir.size()) {
-		items.assign(dir.size(), &Item("", ofImage(), false, false));
-	}
-
-	// you can now iterate through the files and load them into the ofImage vector
-	for (int i = 0; i < (int)dir.size(); i++) {
-		ofImage img = ofImage(dir.getPath(i));
-		bool isVideo = false;
-		if (!img.bAllocated()) {
-			isVideo = true;
-
-			video.load(dir.getPath(i));
-			video.play();
-			video.setPaused(true);
-			video.setPosition(0.5);
-
-			img.setFromPixels(video.getPixels());
-		}
-
-		items[i] = new Item(dir.getPath(i), img, isVideo, false);
-	}
-	currentItem = 0;
-	itemsSize = (int)dir.size();
-
-	isMovingIcon = true;
+	// Vars
+	isMovingIcon = false;
 }
 
 //--------------------------------------------------------------
@@ -69,7 +45,7 @@ void Gallery::draw() {
 				image.setFromPixels(video.getPixels());
 				nextFrame();
 				// waits x secs
-				Sleep(500);
+				Sleep(800);
 			}
 			else {
 				image = items[i]->getImage(); // init image
@@ -209,30 +185,86 @@ void Gallery::nextFrame() {
 		currentFrame = 0;
 }
 
-void Gallery::handleItems() {
-	if (document.loadFile("data_xml/users.xml")) {
-		ofLogError("Abriu");
+void Gallery::handleUserItems(int userId) {
+	string msg = "Abriu";
+	if (document.loadFile("data_xml/users_items.xml")) {
+		(void)ofLog(OF_LOG_NOTICE, msg);
 	}
 	else {
-		ofLogError("Nao abriu");
+		msg = "Não abriu";
+		(void)ofLog(OF_LOG_ERROR, msg);
+		return;
 	}
 
-	document.pushTag("users");
-	int numberOfUsers = document.getNumTags("user");
+	document.pushTag("users_items");
+	int numberOfUsers = document.getNumTags("user_items");
+
+	int numberOfItems = 0;
+	vector<string> user_items;
 
 	for (int i = 0; i < numberOfUsers; i++) {
-		document.pushTag("user", i);
+		document.pushTag("user_items", i);
 
-		int id = document.getValue("id", 0);
-		ofDrawBitmapString("id: " + ofToString(id), 20, 20);
+		if (document.getValue("user", 0) == userId) {
+			// get items
+			document.pushTag("items", i);
+			numberOfItems = document.getNumTags("item");
 
-		string name = document.getValue("name", "");
-		ofDrawBitmapString("name: " + name, 20, 30);
+			user_items.assign(numberOfItems, string());
 
-		document.popTag();
+			for (int j = 0; j < numberOfItems; j++) {
+				document.pushTag("item", j);
+				string itemId = document.getValue("id", "");
+				// add to vector
+				user_items.push_back(itemId);
+
+				document.popTag(); // item
+			}
+		}
+		document.popTag(); // items
+		document.popTag(); // user_items
 	}
 
 	document.popTag(); //pop position
 
-	ofDrawBitmapString("NumberOfUsers: " + ofToString(numberOfUsers), 10, 10);
+	(void)ofLog(OF_LOG_NOTICE, "NumberOfUsers: " + ofToString(numberOfUsers));
+
+	//------------DIR-------------//
+
+	dir.listDir("items/");
+	dir.allowExt("jpg");
+	dir.sort(); // in linux the file system doesn't return file lists ordered in alphabetical order
+
+	//allocate the vector to have as many ofImages as files
+	if (dir.size()) {
+		items.assign(numberOfItems, &Item("", ofImage(), false, false));
+	}
+
+	int counter = 0;
+
+	for (int i = 0; i < (int)dir.size(); i++) {
+		// checks if user has the item
+		string fileName = dir.getName(i);
+		string itemName = fileName.substr(0, fileName.find('.'));
+
+		if (find(user_items.begin(), user_items.end(), itemName) != user_items.end()) {
+			ofImage img = ofImage(dir.getPath(i));
+			bool isVideo = false;
+			if (!img.bAllocated()) {
+				isVideo = true;
+
+				video.load(dir.getPath(i));
+				video.play();
+				video.setPaused(true);
+				video.setPosition(0.5);
+
+				img.setFromPixels(video.getPixels());
+			}
+
+			items[counter++] = new Item(dir.getPath(i), img, isVideo, false);
+		}
+	}
+	currentItem = 0;
+	itemsSize = counter;
+
 }
