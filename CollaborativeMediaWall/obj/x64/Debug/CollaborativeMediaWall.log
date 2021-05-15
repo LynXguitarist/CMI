@@ -6,7 +6,15 @@ D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\libs\openFrameworks\math\ofMatrix4x
 D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\libs\openFrameworks\math\ofMatrix4x4.h(913,12): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\libs\openFrameworks\math\ofMatrix4x4.h(914,12): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\libs\openFrameworks\math\ofMatrix4x4.h(915,12): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(253,12): warning C4996: 'ofImage_<unsigned char>::bAllocated': Use isAllocated()
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiTextInputField.h(173,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiSlider.h(334,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiSlider.h(337,1): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiScrollView.h(74,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiScrollView.h(182,1): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(397,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(456,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(492,1): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(259,12): warning C4996: 'ofImage_<unsigned char>::bAllocated': Use isAllocated()
   CollaborativeMediaWall.vcxproj -> D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\bin\CollaborativeMediaWall_debug.exe
   
   	                   2	D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\libs\fmod\lib\vs\x64\

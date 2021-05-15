@@ -2,6 +2,7 @@
 #include "ofMain.h"
 #include <windows.h>
 #include "ofxXmlSettings.h"
+#include "ofxDatGui.h"
 
 #include "Item.h"
 
@@ -26,6 +27,8 @@ public:
 
 	void nextFrame();
 	void handleUserItems(int userId);
+	void filterItems(string filter);
+	void extractMetadata(ofxDatGuiButtonEvent e);
 
 	int imageSize = (ofGetViewportWidth() - 200) / 3;
 
@@ -49,6 +52,9 @@ public:
 
 	//Xml object
 	ofxXmlSettings document;
+
+	//GUI
+	ofxDatGuiButton* ex1;
 
 };
 

@@ -82,12 +82,6 @@ void ofApp::dragEvent(ofDragInfo dragInfo) {
 void ofApp::menu() {
 	gui->addHeader("Collaborative Media Wall")->setWidth(ofGetViewportWidth());
 	gui->getHeader()->setDraggable(false);
-
-	/*
-	gui->addButton("Items")->setWidth(ofGetViewportWidth() / 2);
-	gui->addButton("Project")->setPosition(gui->getButton("Items", "")->getWidth(), gui->getHeader()->getHeight());
-	gui->getButton("Project")->setWidth(ofGetViewportWidth() / 2);
-	*/
 }
 
 void ofApp::galleryUI() {
@@ -103,5 +97,5 @@ void ofApp::galleryUI() {
 void ofApp::onTextInputEvent(ofxDatGuiTextInputEvent e)
 {
 	cout << "the input field changed to: " << e.text << endl;
-
+	gallery.filterItems(e.text);
 }

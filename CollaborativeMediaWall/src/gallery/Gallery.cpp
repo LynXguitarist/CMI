@@ -8,18 +8,28 @@ void Gallery::setup() {
 	// passes the id
 	handleUserItems(1);
 
+	// Buttons
+	ex1 = new ofxDatGuiButton("Extract Metadata");
+	ex1->setPosition(50, 375);
+	ex1->setIndex(0);
+	ex1->setWidth(100);
+	ex1->onButtonEvent(this, &Gallery::extractMetadata);
+
 	// Vars
 	isMovingIcon = false;
 }
 
 //--------------------------------------------------------------
 void Gallery::update() {
+	ex1->update();
 	if (isVideoPlaying)
 		video.update();
 }
 
 //--------------------------------------------------------------
 void Gallery::draw() {
+	ex1->draw();
+
 	int x = 0; // postion in the x
 	int y = 50;
 
@@ -186,13 +196,11 @@ void Gallery::nextFrame() {
 }
 
 void Gallery::handleUserItems(int userId) {
-	string msg = "Abriu";
 	if (document.loadFile("data_xml/users_items.xml")) {
-		(void)ofLog(OF_LOG_NOTICE, msg);
+		(void)ofLog(OF_LOG_NOTICE, "Open!");
 	}
 	else {
-		msg = "Não abriu";
-		(void)ofLog(OF_LOG_ERROR, msg);
+		(void)ofLog(OF_LOG_ERROR, "Didn't open!");
 		return;
 	}
 
@@ -227,9 +235,7 @@ void Gallery::handleUserItems(int userId) {
 
 	document.popTag(); //pop position
 
-	(void)ofLog(OF_LOG_NOTICE, "NumberOfUsers: " + ofToString(numberOfUsers));
-
-	//------------DIR-------------//
+	//--------------------------------------ofDirectory-------------------------------------------//
 
 	dir.listDir("items/");
 	dir.allowExt("jpg");
@@ -266,5 +272,14 @@ void Gallery::handleUserItems(int userId) {
 	}
 	currentItem = 0;
 	itemsSize = counter;
+
+}
+
+void Gallery::filterItems(string filter)
+{
+	// filter items
+}
+
+void Gallery::extractMetadata(ofxDatGuiButtonEvent e) {
 
 }
