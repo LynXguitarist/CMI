@@ -10,10 +10,10 @@
 		<edge>2</edge>
 		<texture>OF and white background</texture>
 		<times>
-			<object>
+			<time>
 				<name>OF</name>
-				<time>1</time>
-			</object>
+				<numTime>1</numTime>
+			</time>
 		</times>
 		<rhythm></rhythm>
 	</item>

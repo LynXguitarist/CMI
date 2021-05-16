@@ -29,12 +29,14 @@ public:
 	void handleUserItems(int userId);
 	void filterItems(string filter);
 	void extractMetadata(ofxDatGuiButtonEvent e);
+	void importMetadata(ofxDatGuiButtonEvent e);
 
 	int imageSize = (ofGetViewportWidth() - 200) / 3;
 
 	// Array of items(path)
 	ofDirectory dir;
-	vector<Item*> items;
+	vector<Item*> items; // constains the filtered items
+	vector<Item*> auxItems; // constains all the items
 	int itemsSize;
 
 	// Current item
@@ -51,10 +53,14 @@ public:
 	float currentFrame;
 
 	//Xml object
-	ofxXmlSettings document;
+	ofxXmlSettings user_itemsXML;
+	ofxXmlSettings itemsXML;
+
+	ofFileDialogResult windowFileSys;
 
 	//GUI
 	ofxDatGuiButton* ex1;
+	ofxDatGuiButton* im1;
 
 };
 

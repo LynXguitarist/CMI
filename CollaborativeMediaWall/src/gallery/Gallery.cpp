@@ -9,11 +9,19 @@ void Gallery::setup() {
 	handleUserItems(1);
 
 	// Buttons
+	//---------Export
 	ex1 = new ofxDatGuiButton("Extract Metadata");
 	ex1->setPosition(50, 375);
 	ex1->setIndex(0);
 	ex1->setWidth(100);
 	ex1->onButtonEvent(this, &Gallery::extractMetadata);
+
+	//---------Import
+	im1 = new ofxDatGuiButton("Import Metadata");
+	im1->setPosition(150, 375);
+	im1->setIndex(0);
+	im1->setWidth(100);
+	im1->onButtonEvent(this, &Gallery::importMetadata);
 
 	// Vars
 	isMovingIcon = false;
@@ -22,6 +30,8 @@ void Gallery::setup() {
 //--------------------------------------------------------------
 void Gallery::update() {
 	ex1->update();
+	im1->update();
+
 	if (isVideoPlaying)
 		video.update();
 }
@@ -29,6 +39,7 @@ void Gallery::update() {
 //--------------------------------------------------------------
 void Gallery::draw() {
 	ex1->draw();
+	im1->draw();
 
 	int x = 0; // postion in the x
 	int y = 50;
@@ -196,7 +207,7 @@ void Gallery::nextFrame() {
 }
 
 void Gallery::handleUserItems(int userId) {
-	if (document.loadFile("data_xml/users_items.xml")) {
+	if (user_itemsXML.loadFile("data_xml/users_items.xml")) {
 		(void)ofLog(OF_LOG_NOTICE, "Open!");
 	}
 	else {
@@ -204,36 +215,36 @@ void Gallery::handleUserItems(int userId) {
 		return;
 	}
 
-	document.pushTag("users_items");
-	int numberOfUsers = document.getNumTags("user_items");
+	user_itemsXML.pushTag("users_items");
+	int numberOfUsers = user_itemsXML.getNumTags("user_items");
 
 	int numberOfItems = 0;
 	vector<string> user_items;
 
 	for (int i = 0; i < numberOfUsers; i++) {
-		document.pushTag("user_items", i);
+		user_itemsXML.pushTag("user_items", i);
 
-		if (document.getValue("user", 0) == userId) {
+		if (user_itemsXML.getValue("user", 0) == userId) {
 			// get items
-			document.pushTag("items", i);
-			numberOfItems = document.getNumTags("item");
+			user_itemsXML.pushTag("items", i);
+			numberOfItems = user_itemsXML.getNumTags("item");
 
 			user_items.assign(numberOfItems, string());
 
 			for (int j = 0; j < numberOfItems; j++) {
-				document.pushTag("item", j);
-				string itemId = document.getValue("id", "");
+				user_itemsXML.pushTag("item", j);
+				string itemId = user_itemsXML.getValue("id", "");
 				// add to vector
 				user_items.push_back(itemId);
 
-				document.popTag(); // item
+				user_itemsXML.popTag(); // item
 			}
 		}
-		document.popTag(); // items
-		document.popTag(); // user_items
+		user_itemsXML.popTag(); // items
+		user_itemsXML.popTag(); // user_items
 	}
 
-	document.popTag(); //pop position
+	user_itemsXML.popTag(); //pop position
 
 	//--------------------------------------ofDirectory-------------------------------------------//
 
@@ -270,6 +281,9 @@ void Gallery::handleUserItems(int userId) {
 			items[counter++] = new Item(dir.getPath(i), img, isVideo, false);
 		}
 	}
+	// saves the items of the user
+	auxItems = items;
+	
 	currentItem = 0;
 	itemsSize = counter;
 
@@ -277,9 +291,124 @@ void Gallery::handleUserItems(int userId) {
 
 void Gallery::filterItems(string filter)
 {
+	// if filter is empty, items = auxItems
+	if (filter == "") {
+		(void)ofLog(OF_LOG_NOTICE, "Items = AuxItems!");
+		items = auxItems;
+		return;
+	}
 	// filter items
+	int counter = 0;
+	
+
+	if (itemsXML.loadFile("data_xml/items.xml")) {
+		(void)ofLog(OF_LOG_NOTICE, "Open!");
+	}
+	else {
+		(void)ofLog(OF_LOG_ERROR, "Didn't open!");
+		return;
+	}
+	itemsXML.pushTag("items");
+	int numItems = itemsXML.getNumTags("item");
+
+	for (int i = 0; i < numItems; i++) {
+		itemsXML.pushTag("item", i);
+		itemsXML.pushTag("tags");
+
+		int numTags = itemsXML.getNumTags("tag");
+		for (int j = 0; j < numTags; j++) {
+			string tag = itemsXML.getValue("tag", "", j);
+
+			if (tag.find(filter) != std::string::npos) { // add this item
+				(void)ofLog(OF_LOG_NOTICE, "found");
+				
+			}
+		}
+		itemsXML.popTag(); // tags
+		itemsXML.popTag(); // item
+	}
+
+	itemsXML.popTag();
 }
 
 void Gallery::extractMetadata(ofxDatGuiButtonEvent e) {
+	int index = e.target->getIndex();
+	ofxXmlSettings saveFile;
+
+	// get xml for item with id in index
+	if (itemsXML.loadFile("data_xml/items.xml")) {
+		(void)ofLog(OF_LOG_NOTICE, "Open!");
+	}
+	else {
+		(void)ofLog(OF_LOG_ERROR, "Didn't open!");
+		return;
+	}
+	itemsXML.pushTag("items");
+
+	int numberOfItems = itemsXML.getNumTags("item");
+
+
+	for (int i = 0; i < numberOfItems; i++) {
+		itemsXML.pushTag("item", i);
+
+		if (i == index) {
+			saveFile.addTag("tags");
+			saveFile.pushTag("tags");
+			int numTags = itemsXML.getNumTags("tags");
+			itemsXML.pushTag("tags");
+			for (int j = 0; j < numTags; j++) {
+				saveFile.addValue("tag", itemsXML.getValue("tag", "", j));
+			}
+			itemsXML.popTag(); // tags
+			saveFile.popTag(); // tags
+
+			saveFile.addValue("luminace", itemsXML.getValue("luminace", 0));
+			saveFile.addValue("color", itemsXML.getValue("color", ""));
+			saveFile.addValue("faces", itemsXML.getValue("faces", 0));
+			saveFile.addValue("texture", itemsXML.getValue("texture", ""));
+
+			saveFile.addTag("times");
+			saveFile.pushTag("times");
+			int numTimes = itemsXML.getNumTags("times");
+			itemsXML.pushTag("times");
+			for (int j = 0; j < numTimes; j++) {
+				saveFile.addTag("time");
+				saveFile.pushTag("time");
+				itemsXML.pushTag("time");
+
+				saveFile.addValue("name", itemsXML.getValue("name", "", j));
+				saveFile.addValue("numTime", itemsXML.getValue("numTime", 0, j));
+				(void)ofLog(OF_LOG_NOTICE, ofToString(itemsXML.getValue("numTime", 0, j)));
+
+				itemsXML.popTag(); // time
+				saveFile.popTag(); // time
+			}
+			itemsXML.popTag();
+			saveFile.popTag(); // times
+
+			if (items[index]->getIsVideo())
+				saveFile.addValue("rhythm", itemsXML.getValue("rhythm", 0));
+		}
+
+		itemsXML.popTag(); // item
+	}
+
+	itemsXML.popTag();
+
+	// SAVES THE FILE
+	windowFileSys = ofSystemSaveDialog("save.txt", "Save");
+	if (windowFileSys.bSuccess) {
+		string path = windowFileSys.getPath();
+		saveFile.save(path);
+	}
+
+}
+
+void Gallery::importMetadata(ofxDatGuiButtonEvent e)
+{
+	int index = e.target->getIndex();
+	string luminace = ofSystemTextBoxDialog("Luminace", "0");
+	// the user types or import file???
+
 
 }
