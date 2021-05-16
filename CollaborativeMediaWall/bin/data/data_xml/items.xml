@@ -1,33 +1,32 @@
 <items>
-	<item>
-		<id>DSC09302</id>
-		<tags>
-			<tag>OF</tag>
-		</tags>
-		<luminace>1</luminace>
-		<color>red</color>
-		<faces>2</faces>
-		<edge>2</edge>
-		<texture>OF and white background</texture>
-		<times>
-			<time>
-				<name>OF</name>
-				<numTime>1</numTime>
-			</time>
-		</times>
-		<rhythm></rhythm>
-	</item>
-	<item>
-		<id>DSC09305</id>
-		<tags>
-
-		</tags>
-		<luminace></luminace>
-		<color>blue</color>
-		<faces>3</faces>
-		<edge></edge>
-		<texture></texture>
-		<times></times>
-		<rhythm></rhythm>
-	</item>
+    <item>
+        <id>DSC09302</id>
+        <tags>
+            <tag>fd</tag>
+        </tags>
+        <luminace>1</luminace>
+        <color>red</color>
+        <faces>1</faces>
+        <edge>1</edge>
+        <texture>fds</texture>
+        <times>
+            <time>
+                <name>OF</name>
+                <numTime>1</numTime>
+            </time>
+        </times>
+        <rhythm />
+        <tags></tags>
+    </item>
+    <item>
+        <id>DSC09305</id>
+        <tags />
+        <luminace />
+        <color>blue</color>
+        <faces>3</faces>
+        <edge />
+        <texture />
+        <times />
+        <rhythm />
+    </item>
 </items>

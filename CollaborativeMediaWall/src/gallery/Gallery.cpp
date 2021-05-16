@@ -283,7 +283,7 @@ void Gallery::handleUserItems(int userId) {
 	}
 	// saves the items of the user
 	auxItems = items;
-	
+
 	currentItem = 0;
 	itemsSize = counter;
 
@@ -299,7 +299,7 @@ void Gallery::filterItems(string filter)
 	}
 	// filter items
 	int counter = 0;
-	
+
 
 	if (itemsXML.loadFile("data_xml/items.xml")) {
 		(void)ofLog(OF_LOG_NOTICE, "Open!");
@@ -321,7 +321,7 @@ void Gallery::filterItems(string filter)
 
 			if (tag.find(filter) != std::string::npos) { // add this item
 				(void)ofLog(OF_LOG_NOTICE, "found");
-				
+
 			}
 		}
 		itemsXML.popTag(); // tags
@@ -331,6 +331,7 @@ void Gallery::filterItems(string filter)
 	itemsXML.popTag();
 }
 
+// NAO PODE SER PELO INDEX
 void Gallery::extractMetadata(ofxDatGuiButtonEvent e) {
 	int index = e.target->getIndex();
 	ofxXmlSettings saveFile;
@@ -344,9 +345,7 @@ void Gallery::extractMetadata(ofxDatGuiButtonEvent e) {
 		return;
 	}
 	itemsXML.pushTag("items");
-
 	int numberOfItems = itemsXML.getNumTags("item");
-
 
 	for (int i = 0; i < numberOfItems; i++) {
 		itemsXML.pushTag("item", i);
@@ -388,6 +387,8 @@ void Gallery::extractMetadata(ofxDatGuiButtonEvent e) {
 
 			if (items[index]->getIsVideo())
 				saveFile.addValue("rhythm", itemsXML.getValue("rhythm", 0));
+
+			break;
 		}
 
 		itemsXML.popTag(); // item
@@ -404,11 +405,73 @@ void Gallery::extractMetadata(ofxDatGuiButtonEvent e) {
 
 }
 
+// NAO PODE SER PELO INDEX
+// the user types or import file???
 void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 {
 	int index = e.target->getIndex();
-	string luminace = ofSystemTextBoxDialog("Luminace", "0");
-	// the user types or import file???
 
+	string tags = ofSystemTextBoxDialog("Number of tags", "1");
+	int numberOfTags = stoi(tags);
 
+	vector<string> listTags;
+	listTags.assign(numberOfTags, string());
+
+	for (int i = 0; i < numberOfTags; i++) {
+		string tag = ofSystemTextBoxDialog("Tag " + i, "");
+		listTags[i] = tag;
+	}
+
+	string luminace = ofSystemTextBoxDialog("Luminace", "1");
+	string color = ofSystemTextBoxDialog("Color", "red");
+	string faces = ofSystemTextBoxDialog("Faces", "1");
+	string edge = ofSystemTextBoxDialog("Edge", "1");
+	string texture = ofSystemTextBoxDialog("Texture", "");
+	string rhythm = "";
+	if (items[index]->getIsVideo())
+		rhythm = ofSystemTextBoxDialog("Rhythm", "0");
+
+	//stores the info
+
+	if (itemsXML.loadFile("data_xml/items.xml")) {
+		(void)ofLog(OF_LOG_NOTICE, "Open!");
+	}
+	else {
+		(void)ofLog(OF_LOG_ERROR, "Didn't open!");
+		return;
+	}
+
+	itemsXML.pushTag("items");
+	int numberOfItems = itemsXML.getNumTags("item");
+
+	for (int i = 0; i < numberOfItems; i++) {
+		itemsXML.pushTag("item", i);
+
+		if (i == index) {
+			itemsXML.addTag("tags");
+			itemsXML.pushTag("tags");
+			for (int j = 0; j < numberOfTags; j++) {
+				itemsXML.setValue("tag", listTags[j]);
+			}
+			itemsXML.popTag(); // tags
+
+			itemsXML.setValue("luminace", luminace);
+			itemsXML.setValue("color", color);
+			itemsXML.setValue("faces", faces);
+			itemsXML.setValue("edge", edge);
+			itemsXML.setValue("texture", texture);
+
+			if (items[index]->getIsVideo())
+				itemsXML.setValue("rhythm", rhythm);
+
+			break;
+		}
+		itemsXML.popTag(); // item
+	}
+	itemsXML.popTag(); // items
+
+	if (itemsXML.saveFile())
+		(void)ofLog(OF_LOG_NOTICE, "Saved!");
+	else
+		(void)ofLog(OF_LOG_NOTICE, "Didn't save!");
 }
