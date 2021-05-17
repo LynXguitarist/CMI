@@ -5,23 +5,8 @@ void Gallery::setup() {
 	// makes the logs log in console
 	ofLogToConsole();
 
-	// get xml for item
-	if (itemsXML.loadFile("data_xml/items.xml")) {
-		(void)ofLog(OF_LOG_NOTICE, "Open!");
-	}
-	else {
-		(void)ofLog(OF_LOG_ERROR, "Didn't open!");
-		return;
-	}
-
-	// get xml for user_items
-	if (user_itemsXML.loadFile("data_xml/users_items.xml")) {
-		(void)ofLog(OF_LOG_NOTICE, "Open!");
-	}
-	else {
-		(void)ofLog(OF_LOG_ERROR, "Didn't open!");
-		return;
-	}
+	// Init xml objects -> items, user_items
+	initXmlObjects();
 
 	// passes the id
 	handleUserItems(1);
@@ -89,10 +74,8 @@ void Gallery::draw() {
 
 			image.draw(position, 50 + y, imageSize, imageSize);
 		}
-
 		x++;
 	}
-
 }
 
 //--------------------------------------------------------------
@@ -115,7 +98,6 @@ void Gallery::keyPressed(int key) {
 			video.setPaused(video.isPaused());
 		}
 	}
-
 }
 
 //--------------------------------------------------------------
@@ -221,8 +203,32 @@ void Gallery::nextFrame() {
 		currentFrame = 0;
 }
 
-void Gallery::handleUserItems(int userId) {
+void Gallery::initXmlObjects()
+{
+	// get xml for item
+	if (itemsXML.loadFile("data_xml/items.xml")) {
+		(void)ofLog(OF_LOG_NOTICE, "Open!");
+	}
+	else {
+		(void)ofLog(OF_LOG_ERROR, "Didn't open!");
+		return;
+	}
+
+	// get xml for user_items
+	if (user_itemsXML.loadFile("data_xml/users_items.xml")) {
+		(void)ofLog(OF_LOG_NOTICE, "Open!");
+	}
+	else {
+		(void)ofLog(OF_LOG_ERROR, "Didn't open!");
+		return;
+	}
+
+	// init objects, in order to not push the headers everytime
+	itemsXML.pushTag("items");
 	user_itemsXML.pushTag("users_items");
+}
+
+void Gallery::handleUserItems(int userId) {
 	int numberOfUsers = user_itemsXML.getNumTags("user_items");
 
 	int numberOfItems = 0;
@@ -250,8 +256,6 @@ void Gallery::handleUserItems(int userId) {
 		user_itemsXML.popTag(); // items
 		user_itemsXML.popTag(); // user_items
 	}
-
-	user_itemsXML.popTag(); //pop position
 
 	//--------------------------------------ofDirectory-------------------------------------------//
 
@@ -300,7 +304,6 @@ void Gallery::handleUserItems(int userId) {
 void Gallery::generateMetadata(string itemName, ofImage image)
 {
 	int index = -1;
-	itemsXML.pushTag("items");
 	int numberOfItems = itemsXML.getNumTags("item");
 
 	for (int i = 0; i < numberOfItems; i++) {
@@ -355,7 +358,6 @@ void Gallery::generateMetadata(string itemName, ofImage image)
 	// rhythm
 
 	itemsXML.popTag(); // item
-	itemsXML.popTag(); // items
 }
 
 string Gallery::filter2DAux(string itemName)
@@ -418,18 +420,9 @@ void Gallery::filterItems(string filter)
 		items = auxItems;
 		return;
 	}
+
 	// filter items
 	int counter = 0;
-
-
-	if (itemsXML.loadFile("data_xml/items.xml")) {
-		(void)ofLog(OF_LOG_NOTICE, "Open!");
-	}
-	else {
-		(void)ofLog(OF_LOG_ERROR, "Didn't open!");
-		return;
-	}
-	itemsXML.pushTag("items");
 	int numItems = itemsXML.getNumTags("item");
 
 	for (int i = 0; i < numItems; i++) {
@@ -448,14 +441,19 @@ void Gallery::filterItems(string filter)
 		itemsXML.popTag(); // tags
 		itemsXML.popTag(); // item
 	}
-
-	itemsXML.popTag();
 }
 
 void Gallery::filterByColor(float hue)
 {
-	// percorrer o xml de items
-	// filtrar por items em que color = hue
+	int numberOfItems = itemsXML.getNumTags("item");
+	for (int i = 0; i < numberOfItems; i++) {
+		itemsXML.pushTag("item", i);
+		float color = itemsXML.getValue("color", 0);
+		if (color == hue) {
+			// this item will apear
+		}
+		itemsXML.popTag(); // item
+	}
 }
 
 // NAO PODE SER PELO INDEX
@@ -463,17 +461,15 @@ void Gallery::extractMetadata(ofxDatGuiButtonEvent e) {
 	int index = e.target->getIndex();
 	ofxXmlSettings saveFile;
 
-	itemsXML.pushTag("items");
 	int numberOfItems = itemsXML.getNumTags("item");
-
 	for (int i = 0; i < numberOfItems; i++) {
 		itemsXML.pushTag("item", i);
-
 		if (i == index) {
 			saveFile.addTag("tags");
 			saveFile.pushTag("tags");
-			int numTags = itemsXML.getNumTags("tags");
+
 			itemsXML.pushTag("tags");
+			int numTags = itemsXML.getNumTags("tag");
 			for (int j = 0; j < numTags; j++) {
 				saveFile.addValue("tag", itemsXML.getValue("tag", "", j));
 			}
@@ -481,7 +477,7 @@ void Gallery::extractMetadata(ofxDatGuiButtonEvent e) {
 			saveFile.popTag(); // tags
 
 			saveFile.addValue("luminance", itemsXML.getValue("luminance", 0));
-			saveFile.addValue("color", itemsXML.getValue("color", ""));
+			saveFile.addValue("color", itemsXML.getValue("color", 0));
 			saveFile.addValue("faces", itemsXML.getValue("faces", 0));
 			saveFile.addValue("texture", itemsXML.getValue("texture", ""));
 
@@ -511,9 +507,6 @@ void Gallery::extractMetadata(ofxDatGuiButtonEvent e) {
 
 		itemsXML.popTag(); // item
 	}
-
-	itemsXML.popTag(); // items
-
 	// SAVES THE FILE
 	windowFileSys = ofSystemSaveDialog("save.txt", "Save");
 	if (windowFileSys.bSuccess) {
@@ -535,12 +528,12 @@ void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 	listTags.assign(numberOfTags, string());
 
 	for (int i = 0; i < numberOfTags; i++) {
-		string tag = ofSystemTextBoxDialog("Tag " + ofToString(i), "");
+		string tag = ofSystemTextBoxDialog("Tag " + ofToString(i + 1), "");
 		listTags[i] = tag;
 	}
 
-	string luminance = ofSystemTextBoxDialog("luminance", "1");
-	string color = ofSystemTextBoxDialog("Color", "red");
+	string luminance = ofSystemTextBoxDialog("Luminance", "1");
+	string color = ofSystemTextBoxDialog("Color", "0");
 	string faces = ofSystemTextBoxDialog("Faces", "1");
 	string edge = ofSystemTextBoxDialog("Edge", "1");
 	string texture = ofSystemTextBoxDialog("Texture", "");
@@ -548,14 +541,12 @@ void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 	if (items[index]->getIsVideo())
 		rhythm = ofSystemTextBoxDialog("Rhythm", "0");
 
-	itemsXML.pushTag("items");
 	int numberOfItems = itemsXML.getNumTags("item");
-
 	for (int i = 0; i < numberOfItems; i++) {
 		itemsXML.pushTag("item", i);
-
 		if (i == index) {
 			itemsXML.pushTag("tags");
+			itemsXML.removeTag("tag"); // Removes previous tags
 			for (int j = 0; j < numberOfTags; j++) {
 				itemsXML.setValue("tag", listTags[j], j);
 			}
@@ -569,11 +560,12 @@ void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 
 			if (items[index]->getIsVideo())
 				itemsXML.setValue("rhythm", rhythm);
+
+			itemsXML.popTag(); // item
 			break;
 		}
 		itemsXML.popTag(); // item
 	}
-	itemsXML.popTag(); // items
 	// Saves file
 	if (itemsXML.saveFile())
 		(void)ofLog(OF_LOG_NOTICE, "Saved!");

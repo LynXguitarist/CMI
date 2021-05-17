@@ -30,6 +30,7 @@ public:
 
 	void nextFrame();
 
+	void initXmlObjects();
 	void handleUserItems(int userId);
 	void generateMetadata(string itemName, ofImage image);
 	string filter2DAux(string itemName);
