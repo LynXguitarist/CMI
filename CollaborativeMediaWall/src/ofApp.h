@@ -30,11 +30,12 @@ public:
 	// Addons
 	ofxDatGui* gui;
 	ofxDatGuiToggle* isMovingIcon;
-	//ofxDatGuiScrollView* view;
+	ofxDatGuiColorPicker* colorPicker;
 
 	//------------------------Events-----------------------------//
 	void onTextInputEvent(ofxDatGuiTextInputEvent e);
 	void onToggleEvent(ofxDatGuiToggleEvent e);
+	void onColorPickerEvent(ofxDatGuiColorPickerEvent e);
 
 	//------------------------Auxiliar_classes-------------------//
 	Gallery gallery;

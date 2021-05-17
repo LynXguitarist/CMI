@@ -324,8 +324,8 @@ void Gallery::generateMetadata(string itemName, ofImage image)
 	// color && luminance
 	ofPixels& pixels = image.getPixels();
 
-	double avgColor = 0;
-	double avgLuminance = 0;
+	float avgColor = 0;
+	float avgLuminance = 0;
 
 	int pixelSize = pixels.size();
 	for (int i = 0; pixelSize; i++) {
@@ -450,6 +450,12 @@ void Gallery::filterItems(string filter)
 	}
 
 	itemsXML.popTag();
+}
+
+void Gallery::filterByColor(float hue)
+{
+	// percorrer o xml de items
+	// filtrar por items em que color = hue
 }
 
 // NAO PODE SER PELO INDEX

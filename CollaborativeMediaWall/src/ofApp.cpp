@@ -15,6 +15,7 @@ void ofApp::setup() {
 //--------------------------------------------------------------
 void ofApp::update() {
 	isMovingIcon->update();
+	colorPicker->update();
 
 	gallery.update();
 }
@@ -22,6 +23,7 @@ void ofApp::update() {
 //--------------------------------------------------------------
 void ofApp::draw() {
 	isMovingIcon->draw();
+	colorPicker->draw();
 
 	gallery.draw();
 }
@@ -89,17 +91,21 @@ void ofApp::menu() {
 }
 
 void ofApp::galleryUI() {
-	// search input
+	// Search_input
 	ofxDatGuiTextInput* search = gui->addTextInput("Pesquisa por:", "");
 	search->onTextInputEvent(this, &ofApp::onTextInputEvent);
 	search->setWidth(ofGetViewportWidth() / 2, 100);
 
-	//-------------Toggle_isMovingIcon
+	// Toggle_isMovingIcon
 	isMovingIcon = new ofxDatGuiToggle("Display moving icon?");
 	isMovingIcon->setPosition(search->getWidth(), gui->getHeader()->getHeight());
 	isMovingIcon->setWidth(150);
 	isMovingIcon->onToggleEvent(this, &ofApp::onToggleEvent);
 
+	// Color_Picker
+	colorPicker = new ofxDatGuiColorPicker("Filter by color", ofColor::black);
+	colorPicker->setPosition(search->getWidth() + isMovingIcon->getWidth(), gui->getHeader()->getHeight());
+	colorPicker->onColorPickerEvent(this, &ofApp::onColorPickerEvent);
 }
 
 //------------------------Events-----------------------------//
@@ -116,4 +122,10 @@ void ofApp::onToggleEvent(ofxDatGuiToggleEvent e)
 	isMovingIcon->setChecked(!isMovingIcon->getChecked());
 	// change the bool in gallery
 	gallery.toggleMovingIcon(isMovingIcon->getChecked());
+}
+
+void ofApp::onColorPickerEvent(ofxDatGuiColorPickerEvent e) {
+	float hue = e.color.getHue();
+	gallery.filterByColor(hue);
+
 }

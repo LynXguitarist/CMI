@@ -35,6 +35,7 @@ public:
 	string filter2DAux(string itemName);
 
 	void filterItems(string filter);
+	void filterByColor(float hue);
 
 	void extractMetadata(ofxDatGuiButtonEvent e);
 	void importMetadata(ofxDatGuiButtonEvent e);
