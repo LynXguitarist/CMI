@@ -5,6 +5,24 @@ void Gallery::setup() {
 	// makes the logs log in console
 	ofLogToConsole();
 
+	// get xml for item
+	if (itemsXML.loadFile("data_xml/items.xml")) {
+		(void)ofLog(OF_LOG_NOTICE, "Open!");
+	}
+	else {
+		(void)ofLog(OF_LOG_ERROR, "Didn't open!");
+		return;
+	}
+
+	// get xml for user_items
+	if (user_itemsXML.loadFile("data_xml/users_items.xml")) {
+		(void)ofLog(OF_LOG_NOTICE, "Open!");
+	}
+	else {
+		(void)ofLog(OF_LOG_ERROR, "Didn't open!");
+		return;
+	}
+
 	// passes the id
 	handleUserItems(1);
 
@@ -206,15 +224,55 @@ void Gallery::nextFrame() {
 		currentFrame = 0;
 }
 
-void Gallery::handleUserItems(int userId) {
-	if (user_itemsXML.loadFile("data_xml/users_items.xml")) {
-		(void)ofLog(OF_LOG_NOTICE, "Open!");
-	}
-	else {
-		(void)ofLog(OF_LOG_ERROR, "Didn't open!");
-		return;
+void Gallery::generateMetadata(string itemName, ofImage image)
+{
+	int index = -1;
+	itemsXML.pushTag("items");
+	int numberOfItems = itemsXML.getNumTags("item");
+
+	for (int i = 0; i < numberOfItems; i++) {
+		itemsXML.pushTag("item", i);
+		string id = itemsXML.getValue("id", "", i);
+		// verify if item exists in xml
+		if (id == itemName) {
+			index = i;
+			break;
+		}
+		itemsXML.popTag(); // item
 	}
 
+	if (index == -1)
+		return;
+
+	itemsXML.pushTag("item", index);
+	// saves the id - itemName
+	itemsXML.setValue("id", itemName);
+
+	// color && luminance
+	ofPixels& pixels = image.getPixels();
+
+	double avgColor = 0;
+	double avgLuminance = 0;
+
+	int pixelSize = pixels.size();
+	for (int i = 0; pixelSize; i++) {
+		avgColor += pixels.getColor(pixels[i]).getHue();
+		avgLuminance += pixels.getColor(pixels[i]).getBrightness();
+	}
+	avgColor = avgColor / pixelSize;
+	avgLuminance = avgLuminance / pixelSize;
+
+	itemsXML.setValue("luminance", avgLuminance);
+	itemsXML.setValue("color", avgColor);
+
+	// faces
+
+
+	itemsXML.popTag(); // item
+	itemsXML.popTag(); // items
+}
+
+void Gallery::handleUserItems(int userId) {
 	user_itemsXML.pushTag("users_items");
 	int numberOfUsers = user_itemsXML.getNumTags("user_items");
 
@@ -279,6 +337,8 @@ void Gallery::handleUserItems(int userId) {
 			}
 
 			items[counter++] = new Item(dir.getPath(i), img, isVideo, false);
+			// generate metadata if not already generated
+			//generateMetadata(itemName, img);
 		}
 	}
 	// saves the items of the user
@@ -336,14 +396,6 @@ void Gallery::extractMetadata(ofxDatGuiButtonEvent e) {
 	int index = e.target->getIndex();
 	ofxXmlSettings saveFile;
 
-	// get xml for item with id in index
-	if (itemsXML.loadFile("data_xml/items.xml")) {
-		(void)ofLog(OF_LOG_NOTICE, "Open!");
-	}
-	else {
-		(void)ofLog(OF_LOG_ERROR, "Didn't open!");
-		return;
-	}
 	itemsXML.pushTag("items");
 	int numberOfItems = itemsXML.getNumTags("item");
 
@@ -361,7 +413,7 @@ void Gallery::extractMetadata(ofxDatGuiButtonEvent e) {
 			itemsXML.popTag(); // tags
 			saveFile.popTag(); // tags
 
-			saveFile.addValue("luminace", itemsXML.getValue("luminace", 0));
+			saveFile.addValue("luminance", itemsXML.getValue("luminance", 0));
 			saveFile.addValue("color", itemsXML.getValue("color", ""));
 			saveFile.addValue("faces", itemsXML.getValue("faces", 0));
 			saveFile.addValue("texture", itemsXML.getValue("texture", ""));
@@ -377,7 +429,6 @@ void Gallery::extractMetadata(ofxDatGuiButtonEvent e) {
 
 				saveFile.addValue("name", itemsXML.getValue("name", "", j));
 				saveFile.addValue("numTime", itemsXML.getValue("numTime", 0, j));
-				(void)ofLog(OF_LOG_NOTICE, ofToString(itemsXML.getValue("numTime", 0, j)));
 
 				itemsXML.popTag(); // time
 				saveFile.popTag(); // time
@@ -394,7 +445,7 @@ void Gallery::extractMetadata(ofxDatGuiButtonEvent e) {
 		itemsXML.popTag(); // item
 	}
 
-	itemsXML.popTag();
+	itemsXML.popTag(); // items
 
 	// SAVES THE FILE
 	windowFileSys = ofSystemSaveDialog("save.txt", "Save");
@@ -402,7 +453,6 @@ void Gallery::extractMetadata(ofxDatGuiButtonEvent e) {
 		string path = windowFileSys.getPath();
 		saveFile.save(path);
 	}
-
 }
 
 // NAO PODE SER PELO INDEX
@@ -418,11 +468,11 @@ void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 	listTags.assign(numberOfTags, string());
 
 	for (int i = 0; i < numberOfTags; i++) {
-		string tag = ofSystemTextBoxDialog("Tag " + i, "");
+		string tag = ofSystemTextBoxDialog("Tag " + ofToString(i), "");
 		listTags[i] = tag;
 	}
 
-	string luminace = ofSystemTextBoxDialog("Luminace", "1");
+	string luminance = ofSystemTextBoxDialog("luminance", "1");
 	string color = ofSystemTextBoxDialog("Color", "red");
 	string faces = ofSystemTextBoxDialog("Faces", "1");
 	string edge = ofSystemTextBoxDialog("Edge", "1");
@@ -431,16 +481,6 @@ void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 	if (items[index]->getIsVideo())
 		rhythm = ofSystemTextBoxDialog("Rhythm", "0");
 
-	//stores the info
-
-	if (itemsXML.loadFile("data_xml/items.xml")) {
-		(void)ofLog(OF_LOG_NOTICE, "Open!");
-	}
-	else {
-		(void)ofLog(OF_LOG_ERROR, "Didn't open!");
-		return;
-	}
-
 	itemsXML.pushTag("items");
 	int numberOfItems = itemsXML.getNumTags("item");
 
@@ -448,14 +488,13 @@ void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 		itemsXML.pushTag("item", i);
 
 		if (i == index) {
-			itemsXML.addTag("tags");
 			itemsXML.pushTag("tags");
 			for (int j = 0; j < numberOfTags; j++) {
-				itemsXML.setValue("tag", listTags[j]);
+				itemsXML.setValue("tag", listTags[j], j);
 			}
 			itemsXML.popTag(); // tags
 
-			itemsXML.setValue("luminace", luminace);
+			itemsXML.setValue("luminance", luminance);
 			itemsXML.setValue("color", color);
 			itemsXML.setValue("faces", faces);
 			itemsXML.setValue("edge", edge);
@@ -463,13 +502,12 @@ void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 
 			if (items[index]->getIsVideo())
 				itemsXML.setValue("rhythm", rhythm);
-
 			break;
 		}
 		itemsXML.popTag(); // item
 	}
 	itemsXML.popTag(); // items
-
+	// Saves file
 	if (itemsXML.saveFile())
 		(void)ofLog(OF_LOG_NOTICE, "Saved!");
 	else

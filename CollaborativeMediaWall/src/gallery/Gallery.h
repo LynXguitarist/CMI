@@ -26,6 +26,7 @@ public:
 	void gotMessage(ofMessage msg);
 
 	void nextFrame();
+	void generateMetadata(string itemName, ofImage image);
 	void handleUserItems(int userId);
 	void filterItems(string filter);
 	void extractMetadata(ofxDatGuiButtonEvent e);

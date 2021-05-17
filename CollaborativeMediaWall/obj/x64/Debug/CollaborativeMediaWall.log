@@ -14,7 +14,8 @@ D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\compone
 D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(397,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(456,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxDatGui-master\src\components\ofxDatGuiGroups.h(492,1): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(270,12): warning C4996: 'ofImage_<unsigned char>::bAllocated': Use isAllocated()
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(257,31): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(328,12): warning C4996: 'ofImage_<unsigned char>::bAllocated': Use isAllocated()
   CollaborativeMediaWall.vcxproj -> D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\bin\CollaborativeMediaWall_debug.exe
   
   	                   2	D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\libs\fmod\lib\vs\x64\
