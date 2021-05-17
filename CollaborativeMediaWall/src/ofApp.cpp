@@ -14,11 +14,15 @@ void ofApp::setup() {
 
 //--------------------------------------------------------------
 void ofApp::update() {
+	isMovingIcon->update();
+
 	gallery.update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
+	isMovingIcon->draw();
+
 	gallery.draw();
 }
 
@@ -90,6 +94,11 @@ void ofApp::galleryUI() {
 	search->onTextInputEvent(this, &ofApp::onTextInputEvent);
 	search->setWidth(ofGetViewportWidth() / 2, 100);
 
+	//-------------Toggle_isMovingIcon
+	isMovingIcon = new ofxDatGuiToggle("Display moving icon?");
+	isMovingIcon->setPosition(search->getWidth(), gui->getHeader()->getHeight());
+	isMovingIcon->setWidth(150);
+	isMovingIcon->onToggleEvent(this, &ofApp::onToggleEvent);
 
 }
 
@@ -98,4 +107,13 @@ void ofApp::onTextInputEvent(ofxDatGuiTextInputEvent e)
 {
 	cout << "the input field changed to: " << e.text << endl;
 	gallery.filterItems(e.text);
+}
+
+void ofApp::onToggleEvent(ofxDatGuiToggleEvent e)
+{
+	// checks or unckecks the button
+	isMovingIcon->toggle();
+	isMovingIcon->setChecked(!isMovingIcon->getChecked());
+	// change the bool in gallery
+	gallery.toggleMovingIcon(isMovingIcon->getChecked());
 }

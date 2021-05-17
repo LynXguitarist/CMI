@@ -40,9 +40,6 @@ void Gallery::setup() {
 	im1->setIndex(0);
 	im1->setWidth(100);
 	im1->onButtonEvent(this, &Gallery::importMetadata);
-
-	// Vars
-	isMovingIcon = false;
 }
 
 //--------------------------------------------------------------
@@ -224,54 +221,6 @@ void Gallery::nextFrame() {
 		currentFrame = 0;
 }
 
-void Gallery::generateMetadata(string itemName, ofImage image)
-{
-	int index = -1;
-	itemsXML.pushTag("items");
-	int numberOfItems = itemsXML.getNumTags("item");
-
-	for (int i = 0; i < numberOfItems; i++) {
-		itemsXML.pushTag("item", i);
-		string id = itemsXML.getValue("id", "", i);
-		// verify if item exists in xml
-		if (id == itemName) {
-			index = i;
-			break;
-		}
-		itemsXML.popTag(); // item
-	}
-
-	if (index == -1)
-		return;
-
-	itemsXML.pushTag("item", index);
-	// saves the id - itemName
-	itemsXML.setValue("id", itemName);
-
-	// color && luminance
-	ofPixels& pixels = image.getPixels();
-
-	double avgColor = 0;
-	double avgLuminance = 0;
-
-	int pixelSize = pixels.size();
-	for (int i = 0; pixelSize; i++) {
-		avgColor += pixels.getColor(pixels[i]).getHue();
-		avgLuminance += pixels.getColor(pixels[i]).getBrightness();
-	}
-	avgColor = avgColor / pixelSize;
-	avgLuminance = avgLuminance / pixelSize;
-
-	itemsXML.setValue("luminance", avgLuminance);
-	itemsXML.setValue("color", avgColor);
-
-	// faces
-
-
-	itemsXML.popTag(); // item
-	itemsXML.popTag(); // items
-}
-
 void Gallery::handleUserItems(int userId) {
 	user_itemsXML.pushTag("users_items");
 	int numberOfUsers = user_itemsXML.getNumTags("user_items");
@@ -346,7 +295,119 @@ void Gallery::handleUserItems(int userId) {
 
 	currentItem = 0;
 	itemsSize = counter;
+}
 
+void Gallery::generateMetadata(string itemName, ofImage image)
+{
+	int index = -1;
+	itemsXML.pushTag("items");
+	int numberOfItems = itemsXML.getNumTags("item");
+
+	for (int i = 0; i < numberOfItems; i++) {
+		itemsXML.pushTag("item", i);
+		string id = itemsXML.getValue("id", "", i);
+		// verify if item exists in xml
+		if (id == itemName) {
+			index = i;
+			break;
+		}
+		itemsXML.popTag(); // item
+	}
+
+	if (index == -1)
+		return;
+
+	itemsXML.pushTag("item", index);
+	// saves the id - itemName
+	itemsXML.setValue("id", itemName);
+
+	// color && luminance
+	ofPixels& pixels = image.getPixels();
+
+	double avgColor = 0;
+	double avgLuminance = 0;
+
+	int pixelSize = pixels.size();
+	for (int i = 0; pixelSize; i++) {
+		avgColor += pixels.getColor(pixels[i]).getHue();
+		avgLuminance += pixels.getColor(pixels[i]).getBrightness();
+	}
+	avgColor = avgColor / pixelSize;
+	avgLuminance = avgLuminance / pixelSize;
+
+	itemsXML.setValue("luminance", avgLuminance);
+	itemsXML.setValue("color", avgColor);
+
+	// faces
+	// finder faces
+	finder.setup("haarcascade_frontalface_default.xml");
+	int faces = finder.findHaarObjects(image);
+
+	itemsXML.addValue("faces", faces);
+	// edges - filter2D
+	string edges = filter2DAux(itemName);
+	if (edges != "")
+		itemsXML.setValue("edges", edges);
+	// texture
+
+	// times
+
+	// rhythm
+
+	itemsXML.popTag(); // item
+	itemsXML.popTag(); // items
+}
+
+string Gallery::filter2DAux(string itemName)
+{
+	// Declare variables
+	Mat src, dst;
+	Mat kernel;
+	Point anchor;
+	double delta;
+	int ddepth;
+	int kernel_size;
+	const char* window_name = "filter2D Demo";
+	// Loads an image
+	src = imread(samples::findFile(itemName), IMREAD_COLOR); // Load an image
+	if (src.empty())
+	{
+		printf(" Error opening image\n");
+		printf(" Program Arguments: [image_name -- default lena.jpg] \n");
+		return "";
+	}
+	// Initialize arguments for the filter
+	anchor = Point(-1, -1);
+	delta = 0;
+	ddepth = -1;
+	// Loop - Will filter the image with different kernel sizes each 0.5 seconds
+	int ind = 0;
+	for (;;)
+	{
+		// Update kernel size for a normalized box filter
+		kernel_size = 3 + 2 * (ind % 5);
+		kernel = Mat::ones(kernel_size, kernel_size, CV_32F) / (float)(kernel_size * kernel_size);
+		// Apply filter
+		filter2D(src, dst, ddepth, kernel, anchor, delta, BORDER_DEFAULT);
+		//imshow(window_name, dst);
+		char c = (char)waitKey(500);
+		// Press 'ESC' to exit the program
+		if (c == 27)
+		{
+			break;
+		}
+		ind++;
+	}
+	string result = "";
+	for (int i = 0; i < dst.rows; i++)
+	{
+		for (int j = 0; j < dst.cols; j++)
+		{
+			result += to_string(dst.at<float>(i, j)) + ", ";
+		}
+	}
+	// returns the matrix in string format
+	return result;
 }
 
 void Gallery::filterItems(string filter)
@@ -381,7 +442,7 @@ void Gallery::filterItems(string filter)
 
 			if (tag.find(filter) != std::string::npos) { // add this item
 				(void)ofLog(OF_LOG_NOTICE, "found");
-
+				// NEED LOGIC HERE
 			}
 		}
 		itemsXML.popTag(); // tags
@@ -512,4 +573,11 @@ void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 		(void)ofLog(OF_LOG_NOTICE, "Saved!");
 	else
 		(void)ofLog(OF_LOG_NOTICE, "Didn't save!");
+}
+
+void Gallery::toggleMovingIcon(bool isMovingIcon)
+{
+	// checks or unchecks the value
+	this->isMovingIcon = isMovingIcon;
+	(void)ofLog(OF_LOG_NOTICE, "IsMovingIcon: " + ofToString(isMovingIcon));
 }

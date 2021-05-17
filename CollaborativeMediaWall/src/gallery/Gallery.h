@@ -3,8 +3,11 @@
 #include <windows.h>
 #include "ofxXmlSettings.h"
 #include "ofxDatGui.h"
+#include <ofxCvHaarFinder.h>
 
 #include "Item.h"
+
+using namespace cv;
 
 class Gallery : public ofBaseApp
 {
@@ -26,11 +29,17 @@ public:
 	void gotMessage(ofMessage msg);
 
 	void nextFrame();
-	void generateMetadata(string itemName, ofImage image);
+
 	void handleUserItems(int userId);
+	void generateMetadata(string itemName, ofImage image);
+	string filter2DAux(string itemName);
+
 	void filterItems(string filter);
+
 	void extractMetadata(ofxDatGuiButtonEvent e);
 	void importMetadata(ofxDatGuiButtonEvent e);
+	void toggleMovingIcon(bool isMovingIcon);
+	
 
 	int imageSize = (ofGetViewportWidth() - 200) / 3;
 
@@ -48,20 +57,21 @@ public:
 
 	// VideoPlayer object
 	ofVideoPlayer video;
-	bool isVideoPlaying;
+	ofxCvHaarFinder finder;
 	bool isMovingIcon;
+	bool isVideoPlaying;
 	int videoPlaying;
 	float currentFrame;
 
-	//Xml object
+	// Xml object
 	ofxXmlSettings user_itemsXML;
 	ofxXmlSettings itemsXML;
 
+	// window explorer
 	ofFileDialogResult windowFileSys;
 
-	//GUI
+	// GUI
 	ofxDatGuiButton* ex1;
 	ofxDatGuiButton* im1;
-
 };
 
