@@ -1,7 +1,7 @@
 #include "Gallery.h"
 
 //--------------------------------------------------------------
-void Gallery::setup() {
+void Gallery::setup(int id) {
 	// makes the logs log in console
 	ofLogToConsole();
 
@@ -9,7 +9,7 @@ void Gallery::setup() {
 	initXmlObjects();
 
 	// passes the id
-	handleUserItems(1);
+	handleUserItems(id);
 
 	// Buttons
 	//---------Export
@@ -19,18 +19,47 @@ void Gallery::setup() {
 	ex1->setWidth(100);
 	ex1->onButtonEvent(this, &Gallery::extractMetadata);
 
+	ex2 = new ofxDatGuiButton("Extract Metadata");
+	ex2->setPosition(100 + imageSize, 375);
+	ex2->setIndex(1);
+	ex2->setWidth(100);
+	ex2->onButtonEvent(this, &Gallery::extractMetadata);
+
+	ex3 = new ofxDatGuiButton("Extract Metadata");
+	ex3->setPosition(200 + imageSize * 2, 375);
+	ex3->setIndex(2);
+	ex3->setWidth(100);
+	ex3->onButtonEvent(this, &Gallery::extractMetadata);
+
 	//---------Import
 	im1 = new ofxDatGuiButton("Import Metadata");
 	im1->setPosition(150, 375);
 	im1->setIndex(0);
 	im1->setWidth(100);
 	im1->onButtonEvent(this, &Gallery::importMetadata);
+
+	im2 = new ofxDatGuiButton("Import Metadata");
+	im2->setPosition(200 + imageSize, 375);
+	im2->setIndex(1);
+	im2->setWidth(100);
+	im2->onButtonEvent(this, &Gallery::importMetadata);
+
+	im3 = new ofxDatGuiButton("Import Metadata");
+	im3->setPosition(300 + imageSize * 2, 375);
+	im3->setIndex(2);
+	im3->setWidth(100);
+	im3->onButtonEvent(this, &Gallery::importMetadata);
 }
 
 //--------------------------------------------------------------
 void Gallery::update() {
 	ex1->update();
+	ex2->update();
+	ex3->update();
+
 	im1->update();
+	im2->update();
+	im3->update();
 
 	if (isVideoPlaying)
 		video.update();
@@ -38,9 +67,6 @@ void Gallery::update() {
 
 //--------------------------------------------------------------
 void Gallery::draw() {
-	ex1->draw();
-	im1->draw();
-
 	int x = 0; // postion in the x
 	int y = 50;
 
@@ -76,11 +102,25 @@ void Gallery::draw() {
 		}
 		x++;
 	}
+	int numItemsDisplay = size - currentItem;
+	if (numItemsDisplay > 0) {
+		ex1->draw();
+		im1->draw();
+	}
+	if (numItemsDisplay > 1) {
+		ex2->draw();
+		im2->draw();
+	}
+	if (numItemsDisplay > 2) {
+		ex3->draw();
+		im3->draw();
+	}
 }
 
 //--------------------------------------------------------------
 void Gallery::keyPressed(int key) {
-	// BUG AO ANDAR PARA TRAS
+	// BUG AO ANDAR PARA TRAS COM MOVING ICON
+	short inc = 1;
 	if (GetKeyState(VK_RIGHT)) {
 		if (currentItem < itemsSize - 3) {
 			currentItem++;
@@ -91,6 +131,7 @@ void Gallery::keyPressed(int key) {
 		if (currentItem >= 1) {
 			currentItem--;
 			currentItem %= itemsSize;
+			inc = -1;
 		}
 	}
 	else if (GetKeyState(VK_SPACE)) {
@@ -98,6 +139,13 @@ void Gallery::keyPressed(int key) {
 			video.setPaused(video.isPaused());
 		}
 	}
+	ex1->setIndex(ex1->getIndex() + inc);
+	ex2->setIndex(ex2->getIndex() + inc * 2);
+	ex3->setIndex(ex3->getIndex() + inc * 3);
+
+	im1->setIndex(im1->getIndex() + inc);
+	im2->setIndex(im2->getIndex() + inc * 2);
+	im3->setIndex(im3->getIndex() + inc * 3);
 }
 
 //--------------------------------------------------------------
@@ -192,6 +240,61 @@ void Gallery::dragEvent(ofDragInfo dragInfo) {
 
 }
 
+//------------------------------Aux_Functions----------------------------------//
+
+void Gallery::filterItems(string filter)
+{
+	// if filter is empty, items = auxItems
+	if (filter == "") {
+		(void)ofLog(OF_LOG_NOTICE, "Items = AuxItems!");
+		items = auxItems;
+		return;
+	}
+
+	// filter items
+	int counter = 0;
+	int numItems = itemsXML.getNumTags("item");
+
+	for (int i = 0; i < numItems; i++) {
+		itemsXML.pushTag("item", i);
+		itemsXML.pushTag("tags");
+
+		int numTags = itemsXML.getNumTags("tag");
+		for (int j = 0; j < numTags; j++) {
+			string tag = itemsXML.getValue("tag", "", j);
+
+			if (tag.find(filter) != std::string::npos) { // add this item
+				(void)ofLog(OF_LOG_NOTICE, "found");
+				// NEED LOGIC HERE
+			}
+		}
+		itemsXML.popTag(); // tags
+		itemsXML.popTag(); // item
+	}
+}
+
+void Gallery::filterByColor(float hue)
+{
+	int numberOfItems = itemsXML.getNumTags("item");
+	for (int i = 0; i < numberOfItems; i++) {
+		itemsXML.pushTag("item", i);
+		float color = itemsXML.getValue("color", 0);
+		if (color == hue) {
+			// this item will apear
+		}
+		itemsXML.popTag(); // item
+	}
+}
+
+void Gallery::toggleMovingIcon(bool isMovingIcon)
+{
+	// checks or unchecks the value
+	this->isMovingIcon = isMovingIcon;
+	(void)ofLog(OF_LOG_NOTICE, "IsMovingIcon: " + ofToString(isMovingIcon));
+}
+
+//------------------------------Private_Fucntions-----------------------------------//
+
 void Gallery::nextFrame() {
 	if (currentFrame == 0)
 		currentFrame = 0.25f;
@@ -257,7 +360,7 @@ void Gallery::handleUserItems(int userId) {
 		user_itemsXML.popTag(); // user_items
 	}
 
-	//--------------------------------------ofDirectory-------------------------------------------//
+	//----------ofDirectory
 
 	dir.listDir("items/");
 	dir.allowExt("jpg");
@@ -412,51 +515,6 @@ string Gallery::filter2DAux(string itemName)
 	return result;
 }
 
-void Gallery::filterItems(string filter)
-{
-	// if filter is empty, items = auxItems
-	if (filter == "") {
-		(void)ofLog(OF_LOG_NOTICE, "Items = AuxItems!");
-		items = auxItems;
-		return;
-	}
-
-	// filter items
-	int counter = 0;
-	int numItems = itemsXML.getNumTags("item");
-
-	for (int i = 0; i < numItems; i++) {
-		itemsXML.pushTag("item", i);
-		itemsXML.pushTag("tags");
-
-		int numTags = itemsXML.getNumTags("tag");
-		for (int j = 0; j < numTags; j++) {
-			string tag = itemsXML.getValue("tag", "", j);
-
-			if (tag.find(filter) != std::string::npos) { // add this item
-				(void)ofLog(OF_LOG_NOTICE, "found");
-				// NEED LOGIC HERE
-			}
-		}
-		itemsXML.popTag(); // tags
-		itemsXML.popTag(); // item
-	}
-}
-
-void Gallery::filterByColor(float hue)
-{
-	int numberOfItems = itemsXML.getNumTags("item");
-	for (int i = 0; i < numberOfItems; i++) {
-		itemsXML.pushTag("item", i);
-		float color = itemsXML.getValue("color", 0);
-		if (color == hue) {
-			// this item will apear
-		}
-		itemsXML.popTag(); // item
-	}
-}
-
-// NAO PODE SER PELO INDEX
 void Gallery::extractMetadata(ofxDatGuiButtonEvent e) {
 	int index = e.target->getIndex();
 	ofxXmlSettings saveFile;
@@ -465,6 +523,8 @@ void Gallery::extractMetadata(ofxDatGuiButtonEvent e) {
 	for (int i = 0; i < numberOfItems; i++) {
 		itemsXML.pushTag("item", i);
 		if (i == index) {
+			saveFile.addValue("id", itemsXML.getValue("id", ""));
+
 			saveFile.addTag("tags");
 			saveFile.pushTag("tags");
 
@@ -476,35 +536,37 @@ void Gallery::extractMetadata(ofxDatGuiButtonEvent e) {
 			itemsXML.popTag(); // tags
 			saveFile.popTag(); // tags
 
-			saveFile.addValue("luminance", itemsXML.getValue("luminance", 0));
-			saveFile.addValue("color", itemsXML.getValue("color", 0));
-			saveFile.addValue("faces", itemsXML.getValue("faces", 0));
+			saveFile.addValue("luminance", itemsXML.getValue("luminance", ""));
+			saveFile.addValue("color", itemsXML.getValue("color", ""));
+			saveFile.addValue("faces", itemsXML.getValue("faces", ""));
+			saveFile.addValue("edges", itemsXML.getValue("edges", ""));
 			saveFile.addValue("texture", itemsXML.getValue("texture", ""));
 
 			saveFile.addTag("times");
 			saveFile.pushTag("times");
-			int numTimes = itemsXML.getNumTags("times");
+
 			itemsXML.pushTag("times");
+			int numTimes = itemsXML.getNumTags("time");
 			for (int j = 0; j < numTimes; j++) {
 				saveFile.addTag("time");
 				saveFile.pushTag("time");
-				itemsXML.pushTag("time");
+				itemsXML.pushTag("time", j);
 
 				saveFile.addValue("name", itemsXML.getValue("name", "", j));
-				saveFile.addValue("numTime", itemsXML.getValue("numTime", 0, j));
+				saveFile.addValue("numTime", itemsXML.getValue("numTime", "", j));
 
 				itemsXML.popTag(); // time
 				saveFile.popTag(); // time
 			}
-			itemsXML.popTag();
+			itemsXML.popTag(); // times
 			saveFile.popTag(); // times
 
 			if (items[index]->getIsVideo())
-				saveFile.addValue("rhythm", itemsXML.getValue("rhythm", 0));
+				saveFile.addValue("rhythm", itemsXML.getValue("rhythm", ""));
 
+			itemsXML.popTag(); // item
 			break;
 		}
-
 		itemsXML.popTag(); // item
 	}
 	// SAVES THE FILE
@@ -515,7 +577,6 @@ void Gallery::extractMetadata(ofxDatGuiButtonEvent e) {
 	}
 }
 
-// NAO PODE SER PELO INDEX
 // the user types or import file???
 void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 {
@@ -571,11 +632,4 @@ void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 		(void)ofLog(OF_LOG_NOTICE, "Saved!");
 	else
 		(void)ofLog(OF_LOG_NOTICE, "Didn't save!");
-}
-
-void Gallery::toggleMovingIcon(bool isMovingIcon)
-{
-	// checks or unchecks the value
-	this->isMovingIcon = isMovingIcon;
-	(void)ofLog(OF_LOG_NOTICE, "IsMovingIcon: " + ofToString(isMovingIcon));
 }

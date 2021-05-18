@@ -12,7 +12,7 @@ using namespace cv;
 class Gallery : public ofBaseApp
 {
 public:
-	void setup();
+	void setup(int id);
 	void update();
 	void draw();
 
@@ -28,6 +28,11 @@ public:
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
 
+	void filterItems(string filter);
+	void filterByColor(float hue);
+	void toggleMovingIcon(bool isMovingIcon);
+
+private:
 	void nextFrame();
 
 	void initXmlObjects();
@@ -35,12 +40,8 @@ public:
 	void generateMetadata(string itemName, ofImage image);
 	string filter2DAux(string itemName);
 
-	void filterItems(string filter);
-	void filterByColor(float hue);
-
 	void extractMetadata(ofxDatGuiButtonEvent e);
 	void importMetadata(ofxDatGuiButtonEvent e);
-	void toggleMovingIcon(bool isMovingIcon);
 	
 
 	int imageSize = (ofGetViewportWidth() - 200) / 3;
@@ -74,6 +75,11 @@ public:
 
 	// GUI
 	ofxDatGuiButton* ex1;
+	ofxDatGuiButton* ex2;
+	ofxDatGuiButton* ex3;
+	
 	ofxDatGuiButton* im1;
+	ofxDatGuiButton* im2;
+	ofxDatGuiButton* im3;
 };
 

@@ -9,7 +9,7 @@ void ofApp::setup() {
 	menu();
 	galleryUI();
 
-	gallery.setup();
+	gallery.setup(1);
 }
 
 //--------------------------------------------------------------
