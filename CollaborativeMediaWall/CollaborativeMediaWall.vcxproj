@@ -180,6 +180,8 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ObjectColorMode.cpp" />
+    <ClCompile Include="PlayMode.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
     <ClCompile Include="src\gallery\Gallery.cpp" />
@@ -212,6 +214,8 @@
     <ClCompile Include="..\..\..\..\addons\ofxXmlSettings\libs\tinyxmlparser.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ObjectColorMode.h" />
+    <ClInclude Include="PlayMode.h" />
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="src\gallery\Gallery.h" />
     <ClInclude Include="src\item\Item.h" />
