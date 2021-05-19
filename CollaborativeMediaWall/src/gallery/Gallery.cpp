@@ -12,43 +12,7 @@ void Gallery::setup(int id) {
 	handleUserItems(id);
 
 	// Buttons
-	//---------Export
-	ex1 = new ofxDatGuiButton("Extract Metadata");
-	ex1->setPosition(50, 375);
-	ex1->setIndex(0);
-	ex1->setWidth(100);
-	ex1->onButtonEvent(this, &Gallery::extractMetadata);
-
-	ex2 = new ofxDatGuiButton("Extract Metadata");
-	ex2->setPosition(100 + imageSize, 375);
-	ex2->setIndex(1);
-	ex2->setWidth(100);
-	ex2->onButtonEvent(this, &Gallery::extractMetadata);
-
-	ex3 = new ofxDatGuiButton("Extract Metadata");
-	ex3->setPosition(200 + imageSize * 2, 375);
-	ex3->setIndex(2);
-	ex3->setWidth(100);
-	ex3->onButtonEvent(this, &Gallery::extractMetadata);
-
-	//---------Import
-	im1 = new ofxDatGuiButton("Import Metadata");
-	im1->setPosition(150, 375);
-	im1->setIndex(0);
-	im1->setWidth(100);
-	im1->onButtonEvent(this, &Gallery::importMetadata);
-
-	im2 = new ofxDatGuiButton("Import Metadata");
-	im2->setPosition(200 + imageSize, 375);
-	im2->setIndex(1);
-	im2->setWidth(100);
-	im2->onButtonEvent(this, &Gallery::importMetadata);
-
-	im3 = new ofxDatGuiButton("Import Metadata");
-	im3->setPosition(300 + imageSize * 2, 375);
-	im3->setIndex(2);
-	im3->setWidth(100);
-	im3->onButtonEvent(this, &Gallery::importMetadata);
+	initButtons();
 }
 
 //--------------------------------------------------------------
@@ -172,6 +136,7 @@ void Gallery::mousePressed(int x, int y, int button) {
 
 		int image_x = 0; // postion in the x
 
+		itemsSize = items.size();
 		int size = currentItem + 3;
 		if (size > itemsSize)
 			size = itemsSize;
@@ -245,13 +210,21 @@ void Gallery::dragEvent(ofDragInfo dragInfo) {
 void Gallery::filterItems(string filter)
 {
 	// if filter is empty, items = auxItems
+	remove(filter.begin(), filter.end(), ' '); // trim
 	if (filter == "") {
 		(void)ofLog(OF_LOG_NOTICE, "Items = AuxItems!");
+		items.clear();
+
+		int size = auxItems.size();
+		items.resize(size);
+		itemsSize = size;
 		items = auxItems;
+
 		return;
 	}
 
 	// filter items
+	vector<Item*> filteredItems;
 	int counter = 0;
 	int numItems = itemsXML.getNumTags("item");
 
@@ -264,26 +237,48 @@ void Gallery::filterItems(string filter)
 			string tag = itemsXML.getValue("tag", "", j);
 
 			if (tag.find(filter) != std::string::npos) { // add this item
-				(void)ofLog(OF_LOG_NOTICE, "found");
-				// NEED LOGIC HERE
+				filteredItems.push_back(auxItems[i]);
+				counter++;
 			}
 		}
 		itemsXML.popTag(); // tags
 		itemsXML.popTag(); // item
 	}
+	// items = filteredItems
+	items.clear();
+	items.resize(counter);
+	itemsSize = counter;
+	items = filteredItems;
+	/*
+	for (int i = 0; i < counter; i++) {
+		items.push_back(filteredItems[i]);
+	}*/
 }
 
 void Gallery::filterByColor(float hue)
 {
+	vector<Item*> filteredItems;
+	int counter = 0;
 	int numberOfItems = itemsXML.getNumTags("item");
+
 	for (int i = 0; i < numberOfItems; i++) {
 		itemsXML.pushTag("item", i);
 		float color = itemsXML.getValue("color", 0);
 		if (color == hue) {
 			// this item will apear
+			filteredItems.push_back(auxItems[i]);
+			counter++;
 		}
 		itemsXML.popTag(); // item
 	}
+	// items = filteredItems
+	items.clear();
+	items.resize(counter);
+	itemsSize = counter;
+	items = filteredItems;
+	/*for (int i = 0; i < counter; i++) {
+		items.push_back(filteredItems[i]);
+	}*/
 }
 
 void Gallery::toggleMovingIcon(bool isMovingIcon)
@@ -294,6 +289,47 @@ void Gallery::toggleMovingIcon(bool isMovingIcon)
 }
 
 //------------------------------Private_Fucntions-----------------------------------//
+
+void Gallery::initButtons()
+{
+	//---------Export
+	ex1 = new ofxDatGuiButton("Extract Metadata");
+	ex1->setPosition(50, 375);
+	ex1->setIndex(0);
+	ex1->setWidth(100);
+	ex1->onButtonEvent(this, &Gallery::extractMetadata);
+
+	ex2 = new ofxDatGuiButton("Extract Metadata");
+	ex2->setPosition(100 + imageSize, 375);
+	ex2->setIndex(1);
+	ex2->setWidth(100);
+	ex2->onButtonEvent(this, &Gallery::extractMetadata);
+
+	ex3 = new ofxDatGuiButton("Extract Metadata");
+	ex3->setPosition(200 + imageSize * 2, 375);
+	ex3->setIndex(2);
+	ex3->setWidth(100);
+	ex3->onButtonEvent(this, &Gallery::extractMetadata);
+
+	//---------Import
+	im1 = new ofxDatGuiButton("Import Metadata");
+	im1->setPosition(150, 375);
+	im1->setIndex(0);
+	im1->setWidth(100);
+	im1->onButtonEvent(this, &Gallery::importMetadata);
+
+	im2 = new ofxDatGuiButton("Import Metadata");
+	im2->setPosition(200 + imageSize, 375);
+	im2->setIndex(1);
+	im2->setWidth(100);
+	im2->onButtonEvent(this, &Gallery::importMetadata);
+
+	im3 = new ofxDatGuiButton("Import Metadata");
+	im3->setPosition(300 + imageSize * 2, 375);
+	im3->setIndex(2);
+	im3->setWidth(100);
+	im3->onButtonEvent(this, &Gallery::importMetadata);
+}
 
 void Gallery::nextFrame() {
 	if (currentFrame == 0)
@@ -314,7 +350,6 @@ void Gallery::initXmlObjects()
 	}
 	else {
 		(void)ofLog(OF_LOG_ERROR, "Didn't open!");
-		return;
 	}
 
 	// get xml for user_items
@@ -323,7 +358,6 @@ void Gallery::initXmlObjects()
 	}
 	else {
 		(void)ofLog(OF_LOG_ERROR, "Didn't open!");
-		return;
 	}
 
 	// init objects, in order to not push the headers everytime
@@ -359,9 +393,7 @@ void Gallery::handleUserItems(int userId) {
 		user_itemsXML.popTag(); // items
 		user_itemsXML.popTag(); // user_items
 	}
-
 	//----------ofDirectory
-
 	dir.listDir("items/");
 	dir.allowExt("jpg");
 	dir.sort(); // in linux the file system doesn't return file lists ordered in alphabetical order
@@ -369,6 +401,7 @@ void Gallery::handleUserItems(int userId) {
 	//allocate the vector to have as many ofImages as files
 	if (dir.size()) {
 		items.assign(numberOfItems, &Item("", ofImage(), false, false));
+		auxItems.assign(numberOfItems, &Item("", ofImage(), false, false));
 	}
 
 	int counter = 0;
@@ -391,15 +424,14 @@ void Gallery::handleUserItems(int userId) {
 
 				img.setFromPixels(video.getPixels());
 			}
+			Item* item = new Item(dir.getPath(i), img, isVideo, false);
+			items[counter] = item;
+			auxItems[counter++] = item;
 
-			items[counter++] = new Item(dir.getPath(i), img, isVideo, false);
 			// generate metadata if not already generated
 			//generateMetadata(itemName, img);
 		}
 	}
-	// saves the items of the user
-	auxItems = items;
-
 	currentItem = 0;
 	itemsSize = counter;
 }
@@ -494,13 +526,7 @@ string Gallery::filter2DAux(string itemName)
 		kernel = Mat::ones(kernel_size, kernel_size, CV_32F) / (float)(kernel_size * kernel_size);
 		// Apply filter
 		filter2D(src, dst, ddepth, kernel, anchor, delta, BORDER_DEFAULT);
-		//imshow(window_name, dst);
-		char c = (char)waitKey(500);
-		// Press 'ESC' to exit the program
-		if (c == 27)
-		{
-			break;
-		}
+		
 		ind++;
 	}
 	string result = "";
@@ -577,7 +603,6 @@ void Gallery::extractMetadata(ofxDatGuiButtonEvent e) {
 	}
 }
 
-// the user types or import file???
 void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 {
 	int index = e.target->getIndex();

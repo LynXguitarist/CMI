@@ -33,6 +33,7 @@ public:
 	void toggleMovingIcon(bool isMovingIcon);
 
 private:
+	void initButtons();
 	void nextFrame();
 
 	void initXmlObjects();
