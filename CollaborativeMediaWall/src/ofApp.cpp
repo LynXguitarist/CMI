@@ -7,30 +7,37 @@ void ofApp::setup() {
 	gui = new ofxDatGui(0, 0);
 
 	menu();
+	
+	/* tudo gallery
 	galleryUI();
-
 	gallery.setup(1);
+	*/
+	videoPlayer.setup();
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
+	/* tudo gallery
 	isMovingIcon->update();
 	colorPicker->update();
-
 	gallery.update();
+	*/
+	videoPlayer.update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
+	/* tudo do galery
 	isMovingIcon->draw();
 	colorPicker->draw();
-
 	gallery.draw();
+	*/
+	videoPlayer.draw();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key) {
-	gallery.keyPressed(key);
+	//gallery.keyPressed(key);
 }
 
 //--------------------------------------------------------------
@@ -40,7 +47,6 @@ void ofApp::keyReleased(int key) {
 
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y) {
-	gallery.mouseMoved(x, y);
 }
 
 //--------------------------------------------------------------
@@ -50,7 +56,7 @@ void ofApp::mouseDragged(int x, int y, int button) {
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button) {
-	gallery.mousePressed(x, y, button);
+	//gallery.mousePressed(x, y, button);
 }
 
 

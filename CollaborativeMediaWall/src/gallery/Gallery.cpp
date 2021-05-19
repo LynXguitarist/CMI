@@ -131,9 +131,7 @@ void Gallery::mouseDragged(int x, int y, int button) {
 
 //--------------------------------------------------------------
 void Gallery::mousePressed(int x, int y, int button) {
-
 	if (video.isLoaded()) {
-
 		int image_x = 0; // postion in the x
 
 		itemsSize = items.size();
@@ -169,7 +167,6 @@ void Gallery::mousePressed(int x, int y, int button) {
 				items[i]->setVideoPlaying(false);
 				video.setPaused(true);
 			}
-
 			image_x++;
 		}
 	}
@@ -359,7 +356,6 @@ void Gallery::initXmlObjects()
 	else {
 		(void)ofLog(OF_LOG_ERROR, "Didn't open!");
 	}
-
 	// init objects, in order to not push the headers everytime
 	itemsXML.pushTag("items");
 	user_itemsXML.pushTag("users_items");
@@ -478,7 +474,7 @@ void Gallery::generateMetadata(string itemName, ofImage image)
 
 	// faces
 	// finder faces
-	finder.setup("haarcascade_frontalface_default.xml");
+	finder.setup("data_xml/haarcascade_frontalface_default.xml");
 	int faces = finder.findHaarObjects(image);
 
 	itemsXML.addValue("faces", faces);

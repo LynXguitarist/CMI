@@ -2,6 +2,7 @@
 #include "ofMain.h"
 #include "ofxDatGui.h"
 #include "Gallery.h"
+#include "VideoPlayer.h"
 
 class ofApp : public ofBaseApp {
 
@@ -39,4 +40,5 @@ public:
 
 	//------------------------Auxiliar_classes-------------------//
 	Gallery gallery;
+	VideoPlayer videoPlayer;
 };
