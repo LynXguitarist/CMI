@@ -97,6 +97,12 @@
     <ClCompile Include="..\..\..\..\addons\ofxXmlSettings\libs\tinyxmlparser.cpp">
       <Filter>addons\ofxXmlSettings\libs</Filter>
     </ClCompile>
+    <ClCompile Include="PlayMode.cpp">
+      <Filter>src\videoPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectColorMode.cpp">
+      <Filter>src\videoPlayer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -1294,6 +1300,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\addons\ofxXmlSettings\libs\tinyxml.h">
       <Filter>addons\ofxXmlSettings\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayMode.h">
+      <Filter>src\videoPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectColorMode.h">
+      <Filter>src\videoPlayer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
