@@ -3,9 +3,9 @@
 //--------------------------------------------------------------
 void ofApp::setup() {
 	ofBackground(ofColor::grey);
+	view = 0;
 
 	gui = new ofxDatGui(0, 0);
-
 	menu();
 	
 	/* tudo gallery
@@ -17,21 +17,35 @@ void ofApp::setup() {
 
 //--------------------------------------------------------------
 void ofApp::update() {
-	/* tudo gallery
-	isMovingIcon->update();
-	colorPicker->update();
-	gallery.update();
-	*/
-	videoPlayer.update();
+
+	//View id: VideoPlayer=0; Gallery=1;
+	
+	switch (view) {
+	case 0:videoPlayer.update();
+		break;
+	case 1:
+		isMovingIcon->update();
+		colorPicker->update();
+		gallery.update();
+		break;
+	}
+	
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-	/* tudo do galery
-	isMovingIcon->draw();
-	colorPicker->draw();
-	gallery.draw();
-	*/
+	
+	//View id: VideoPlayer=0; Gallery=1;
+
+	switch (view) {
+	case 0:videoPlayer.draw();
+		break;
+	case 1:
+		isMovingIcon->draw();
+		colorPicker->draw();
+		gallery.draw();
+		break;
+	}
 	videoPlayer.draw();
 }
 
@@ -135,3 +149,11 @@ void ofApp::onColorPickerEvent(ofxDatGuiColorPickerEvent e) {
 	gallery.filterByColor(hue);
 
 }
+
+void ofApp::navigateToGallery(int id) {
+	
+	gallery.setup(id);
+	view = 1;
+}
+
+

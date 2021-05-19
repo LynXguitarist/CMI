@@ -27,6 +27,7 @@ public:
 	//------------------------GUI_Functions----------------------//
 	void menu();
 	void galleryUI();
+	void navigateToGallery(int id);
 
 	// Addons
 	ofxDatGui* gui;
@@ -41,4 +42,5 @@ public:
 	//------------------------Auxiliar_classes-------------------//
 	Gallery gallery;
 	VideoPlayer videoPlayer;
+	int view;
 };

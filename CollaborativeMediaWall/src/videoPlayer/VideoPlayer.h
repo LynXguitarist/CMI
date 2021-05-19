@@ -27,6 +27,7 @@ public:
     ofxCvColorImage color;
     ofxCvGrayscaleImage grayscale;
     ofxCvHaarFinder haar;
+    int numberOfFaces;
 
     ofxXmlSettings users_projects;
 

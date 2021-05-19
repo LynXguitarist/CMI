@@ -7,6 +7,7 @@ void VideoPlayer::setup()
     color.allocate(camera.getWidth(), camera.getHeight());
     grayscale.allocate(camera.getWidth(), camera.getHeight());
     haar.setup("data_xml/haarcascade_frontalface_default.xml");
+    numberOfFaces = 0;
 }
 
 void VideoPlayer::update()
@@ -17,6 +18,7 @@ void VideoPlayer::update()
         color.setFromPixels(camera.getPixels());
         grayscale = color;
         haar.findHaarObjects(grayscale);
+        numberOfFaces = haar.blobs.size();
 
     }
 }
