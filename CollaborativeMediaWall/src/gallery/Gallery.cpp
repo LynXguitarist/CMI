@@ -1,7 +1,7 @@
 #include "Gallery.h"
 
 //--------------------------------------------------------------
-void Gallery::setup(int id) {
+vector<Item*> Gallery::setup(int id) {
 	// makes the logs log in console
 	ofLogToConsole();
 
@@ -13,6 +13,8 @@ void Gallery::setup(int id) {
 
 	// Buttons
 	initButtons();
+
+	return auxItems;
 }
 
 //--------------------------------------------------------------
@@ -88,19 +90,19 @@ void Gallery::keyPressed(int key) {
 	if (GetKeyState(VK_RIGHT)) {
 		if (currentItem < itemsSize - 3) {
 			currentItem++;
-			currentItem %= itemsSize;
+			//currentItem %= itemsSize;
 		}
 	}
 	else if (GetKeyState(VK_LEFT)) {
 		if (currentItem >= 1) {
 			currentItem--;
-			currentItem %= itemsSize;
+			//currentItem %= itemsSize;
 			inc = -1;
 		}
 	}
 	else if (GetKeyState(VK_SPACE)) {
-		if (video.isPlaying()) {
-			video.setPaused(video.isPaused());
+		if (video.isLoaded()) {
+			video.setPaused(!video.isPaused());
 		}
 	}
 	ex1->setIndex(ex1->getIndex() + inc);
@@ -236,6 +238,7 @@ void Gallery::filterItems(string filter)
 			if (tag.find(filter) != std::string::npos) { // add this item
 				filteredItems.push_back(auxItems[i]);
 				counter++;
+				break;
 			}
 		}
 		itemsXML.popTag(); // tags
@@ -246,10 +249,6 @@ void Gallery::filterItems(string filter)
 	items.resize(counter);
 	itemsSize = counter;
 	items = filteredItems;
-	/*
-	for (int i = 0; i < counter; i++) {
-		items.push_back(filteredItems[i]);
-	}*/
 }
 
 void Gallery::filterByColor(float hue)
@@ -283,6 +282,15 @@ void Gallery::toggleMovingIcon(bool isMovingIcon)
 	// checks or unchecks the value
 	this->isMovingIcon = isMovingIcon;
 	(void)ofLog(OF_LOG_NOTICE, "IsMovingIcon: " + ofToString(isMovingIcon));
+}
+
+void Gallery::reset()
+{
+	int counter = auxItems.size();
+	items.clear();
+	items.resize(counter);
+	itemsSize = counter;
+	items = auxItems;
 }
 
 //------------------------------Private_Fucntions-----------------------------------//

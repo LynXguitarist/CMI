@@ -3,6 +3,7 @@
 #include "ofxDatGui.h"
 #include "Gallery.h"
 #include "VideoPlayer.h"
+#include "PlayMode.h"
 
 class ofApp : public ofBaseApp {
 
@@ -29,10 +30,21 @@ public:
 	void galleryUI();
 	void navigateToGallery(int id);
 
+	//------------------------Events-----------------------------//
+	void ofApp::onButtonEvent(ofxDatGuiButtonEvent e);
+
+	vector<Item*> items;
+
 	// Addons
 	ofxDatGui* gui;
+	ofxDatGuiTextInput* search;
 	ofxDatGuiToggle* isMovingIcon;
 	ofxDatGuiColorPicker* colorPicker;
+	ofxDatGuiButton* reset;
+
+	ofxDatGuiButton* objectMode;
+	ofxDatGuiButton* colorMode;
+	ofxDatGuiButton* playModeB;
 
 	//------------------------Events-----------------------------//
 	void onTextInputEvent(ofxDatGuiTextInputEvent e);
@@ -42,5 +54,6 @@ public:
 	//------------------------Auxiliar_classes-------------------//
 	Gallery gallery;
 	VideoPlayer videoPlayer;
+	PlayMode playMode;
 	int view;
 };

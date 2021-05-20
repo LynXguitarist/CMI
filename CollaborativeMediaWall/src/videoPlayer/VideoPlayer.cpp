@@ -1,5 +1,4 @@
 #include "VideoPlayer.h"
-// faceRecog here
 
 void VideoPlayer::setup()
 {

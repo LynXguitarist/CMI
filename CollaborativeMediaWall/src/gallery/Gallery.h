@@ -12,7 +12,7 @@ using namespace cv;
 class Gallery : public ofBaseApp
 {
 public:
-	void setup(int id);
+	vector<Item*> setup(int id);
 	void update();
 	void draw();
 
@@ -31,6 +31,7 @@ public:
 	void filterItems(string filter);
 	void filterByColor(float hue);
 	void toggleMovingIcon(bool isMovingIcon);
+	void reset();
 
 private:
 	void initButtons();
