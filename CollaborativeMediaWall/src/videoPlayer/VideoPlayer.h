@@ -23,13 +23,22 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
 
+    //---- VIDEO PLAYER---
+
+    void setupButtons();
+    int toNavigate();
+    int getSelectedId();
+    void setNavigation(ofxDatGuiButtonEvent e);
+
     ofVideoGrabber camera;
     ofxCvColorImage color;
     ofxCvGrayscaleImage grayscale;
     ofxCvHaarFinder haar;
     int numberOfFaces;
+    int selectedId;
+    int navigate;
 
-    ofxXmlSettings users_projects;
+    ofxXmlSettings usersXML;
 
     vector<ofxDatGuiButton*> names;
 

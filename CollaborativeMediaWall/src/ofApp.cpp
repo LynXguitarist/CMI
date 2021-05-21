@@ -4,7 +4,7 @@
 void ofApp::setup() {
 	ofBackground(ofColor::grey);
 	// voltar a meter a 0
-	view = 1;
+	view = 0;
 
 	gui = new ofxDatGui(0, 0);
 	menu();
@@ -30,6 +30,12 @@ void ofApp::update() {
 	switch (view) {
 	case 0:
 		videoPlayer.update();
+		if (videoPlayer.toNavigate() == 1) {
+			galleryUI();
+			items = gallery.setup(videoPlayer.getSelectedId());
+			view = 1;
+		}
+		
 		break;
 	case 1:
 		search->update();
