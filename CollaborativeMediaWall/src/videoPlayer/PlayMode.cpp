@@ -4,13 +4,15 @@ void PlayMode::setup(vector<Item*> items)
 {
 	camera.setVerbose(true);
 	camera.setup(320, 240);
-	//colorImg.allocate(320, 240);
-	//grayImage.allocate(320, 240);
-	//grayBg.allocate(320, 240);
-	//grayDiff.allocate(320, 240);
 
 	bLearnBakground = true;
 	threshold = 80;
+
+	// Gestures positions
+	previous = ofRectangle(0, 0, camera.getWidth() / 4, camera.getHeight());
+	next = ofRectangle(camera.getWidth() - (camera.getWidth() / 4), 0, camera.getWidth() / 4, camera.getHeight());
+	stop = ofRectangle(camera.getWidth() / 3, 0, camera.getWidth() / 4, camera.getHeight());
+
 
 	//itemsSize = items.size();
 	//this->items.assign(itemsSize, &Item("", ofImage(), false, false));
@@ -65,6 +67,16 @@ void PlayMode::draw()
 	for (int i = 0; i < contourFinder.nBlobs; i++) {
 		contourFinder.blobs[i].draw(x, y);
 
+		// inside for x time
+		if (previous.inside(contourFinder.blobs[i].boundingRect)) {
+			(void)ofLog(OF_LOG_NOTICE, "Inside previous");
+		}
+		else if (next.inside(contourFinder.blobs[i].boundingRect)) {
+			(void)ofLog(OF_LOG_NOTICE, "Inside next");
+		}
+		else if (stop.inside(contourFinder.blobs[i].boundingRect)) {
+			(void)ofLog(OF_LOG_NOTICE, "Inside stop/play");
+		}
 		// draw over the centroid if the blob is a hole
 		ofSetColor(255);
 		if (contourFinder.blobs[i].hole) {

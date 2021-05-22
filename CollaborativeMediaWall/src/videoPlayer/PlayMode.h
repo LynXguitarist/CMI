@@ -35,13 +35,10 @@ public:
     int 				threshold;
     bool				bLearnBakground;
 
-    // Modes
-    int stopX; // same for playing, when video is stoped, it will play
-    int stopY; // when is playing, it will stop
-    int nextX; // changes to the next item
-    int nextY;
-    int previousX; // changes to the previous item
-    int previousY;
+    // Modes - Areas
+    ofRectangle stop; // same for playing, when video is stoped, it will play, when is playing, it will stop
+    ofRectangle next; // changes to the next item
+    ofRectangle previous; // changes to the previous item
 
     // Items
     vector<Item*> items;
