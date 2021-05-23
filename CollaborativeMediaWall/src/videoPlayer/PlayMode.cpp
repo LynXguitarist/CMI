@@ -77,6 +77,7 @@ void PlayMode::draw()
 		else if (stop.inside(contourFinder.blobs[i].boundingRect)) {
 			(void)ofLog(OF_LOG_NOTICE, "Inside stop/play");
 		}
+
 		// draw over the centroid if the blob is a hole
 		ofSetColor(255);
 		if (contourFinder.blobs[i].hole) {

@@ -17,8 +17,10 @@ void VideoPlayer::setup()
 
 void VideoPlayer::update()
 {
-    for (int i = 0; i < names.size(); i++) {
-        names[i]->update();
+    if (numberOfFaces > 0) {
+        for (int i = 0; i < names.size(); i++) {
+            names[i]->update();
+        }
     }
     camera.update();
 
@@ -27,10 +29,7 @@ void VideoPlayer::update()
         grayscale = color;
         haar.findHaarObjects(grayscale);
         numberOfFaces = haar.blobs.size();
-
     }
-    
-
 }
 
 void VideoPlayer::draw()

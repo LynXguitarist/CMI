@@ -111,9 +111,9 @@ void ofApp::mouseDragged(int x, int y, int button) {
 void ofApp::mousePressed(int x, int y, int button) {
 	switch (view) {
 	case 0:
-		gallery.mousePressed(x, y, button);
 		break;
 	case 1:
+		gallery.mousePressed(x, y, button);
 		break;
 	}
 }
