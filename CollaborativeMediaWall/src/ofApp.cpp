@@ -2,6 +2,9 @@
 
 //--------------------------------------------------------------
 void ofApp::setup() {
+	// makes the logs log in console
+	ofLogToConsole();
+
 	ofBackground(ofColor::grey);
 	// voltar a meter a 0
 	view = 0;

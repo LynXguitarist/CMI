@@ -2,9 +2,6 @@
 
 //--------------------------------------------------------------
 vector<Item*> Gallery::setup(int id) {
-	// makes the logs log in console
-	ofLogToConsole();
-
 	// Init xml objects -> items, user_items
 	initXmlObjects();
 
@@ -272,9 +269,6 @@ void Gallery::filterByColor(float hue)
 	items.resize(counter);
 	itemsSize = counter;
 	items = filteredItems;
-	/*for (int i = 0; i < counter; i++) {
-		items.push_back(filteredItems[i]);
-	}*/
 }
 
 void Gallery::toggleMovingIcon(bool isMovingIcon)
@@ -456,7 +450,8 @@ void Gallery::generateMetadata(string itemName, ofImage image)
 		itemsXML.popTag(); // item
 	}
 
-	if (index == -1)
+	// if metadata already exists
+	if (index != -1)
 		return;
 
 	itemsXML.pushTag("item", index);

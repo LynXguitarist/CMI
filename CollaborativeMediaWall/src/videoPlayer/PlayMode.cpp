@@ -11,7 +11,7 @@ void PlayMode::setup(vector<Item*> items)
 	// Gestures positions
 	previous = ofRectangle(0, 0, camera.getWidth() / 4, camera.getHeight());
 	next = ofRectangle(camera.getWidth() - (camera.getWidth() / 4), 0, camera.getWidth() / 4, camera.getHeight());
-	stop = ofRectangle(camera.getWidth() / 3, 0, camera.getWidth() / 4, camera.getHeight());
+	stop = ofRectangle(camera.getWidth() / 3, camera.getHeight()/ 2, camera.getWidth() / 4, camera.getHeight() / 2);
 
 
 	//itemsSize = items.size();

@@ -123,6 +123,7 @@ void VideoPlayer::setupButtons() {
 void VideoPlayer::setNavigation(ofxDatGuiButtonEvent e) {
 
     selectedId = e.target->getIndex();
+    camera.close();
     navigate = 1;
 }
 
