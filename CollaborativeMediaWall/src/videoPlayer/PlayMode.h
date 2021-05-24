@@ -35,6 +35,9 @@ public:
     int 				threshold;
     bool				bLearnBakground;
 
+    float x;
+    float y;
+
     // Modes - Areas
     ofRectangle stop; // same for playing, when video is stoped, it will play, when is playing, it will stop
     ofRectangle next; // changes to the next item

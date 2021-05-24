@@ -4,20 +4,27 @@ void PlayMode::setup(vector<Item*> items)
 {
 	camera.setVerbose(true);
 	camera.setup(320, 240);
+	// mirrors the camera, easier to the user
+	camera.getPixelsRef().mirror(false, true);
 
 	bLearnBakground = true;
 	threshold = 80;
 
+
+	// then draw the contours:
+	x = ofGetViewportWidth() - 320;
+	y = ofGetViewportHeight() - 240;
+
 	// Gestures positions
-	previous = ofRectangle(0, 0, camera.getWidth() / 4, camera.getHeight());
-	next = ofRectangle(camera.getWidth() - (camera.getWidth() / 4), 0, camera.getWidth() / 4, camera.getHeight());
-	stop = ofRectangle(camera.getWidth() / 3, camera.getHeight()/ 2, camera.getWidth() / 4, camera.getHeight() / 2);
+	previous = ofRectangle(x + camera.getWidth() - (camera.getWidth() / 4), y, camera.getWidth() / 4, camera.getHeight());
+	next = ofRectangle(x, y, camera.getWidth() / 4, camera.getHeight());
+	stop = ofRectangle(x + camera.getWidth() / 3, y + camera.getHeight()/ 4, camera.getWidth() / 3, camera.getHeight() / 2);
 
 
-	//itemsSize = items.size();
-	//this->items.assign(itemsSize, &Item("", ofImage(), false, false));
-	//this->items = items;
-	//currentItem = 0;
+	itemsSize = items.size();
+	this->items.assign(itemsSize, &Item("", ofImage(), false, false));
+	this->items = items;
+	currentItem = 0;
 }
 
 void PlayMode::update()
@@ -45,22 +52,34 @@ void PlayMode::update()
 		// also, find holes is set to true so we will get interior contours as well....
 		contourFinder.findContours(grayDiff, 20, (340 * 240) / 3, 10, true);	// find holes
 	}
-	/*
+	
 	if (!video.isPaused())
 		video.update();
-	*/
 }
 
 void PlayMode::draw()
 {
-	// then draw the contours:
-	int x = ofGetViewportWidth() - 320;
-	int y = ofGetViewportHeight() - 240;
-
 	ofFill();
 	ofSetHexColor(0x333333);
 	ofDrawRectangle(x, y, 320, 240);
 	ofSetHexColor(0xffffff);
+
+	// Draws Rectangle Modes
+	//---------------previous
+	ofDrawLine(previous.getBottomLeft(), previous.getTopLeft());
+	ofDrawLine(previous.getTopLeft(), previous.getTopRight());
+	ofDrawLine(previous.getTopRight(), previous.getBottomRight());
+	ofDrawLine(previous.getBottomLeft(), previous.getBottomRight());
+	//---------------next
+	ofDrawLine(next.getBottomLeft(), next.getTopLeft());
+	ofDrawLine(next.getTopLeft(), next.getTopRight());
+	ofDrawLine(next.getTopRight(), next.getBottomRight());
+	ofDrawLine(next.getBottomLeft(), next.getBottomRight());
+	//---------------stop/pause
+	ofDrawLine(stop.getBottomLeft(), stop.getTopLeft());
+	ofDrawLine(stop.getTopLeft(), stop.getTopRight());
+	ofDrawLine(stop.getTopRight(), stop.getBottomRight());
+	ofDrawLine(stop.getBottomLeft(), stop.getBottomRight());
 
 	// or, instead we can draw each blob individually from the blobs vector,
 	// this is how to get access to them:
@@ -96,13 +115,12 @@ void PlayMode::draw()
 		<< "num blobs found " << contourFinder.nBlobs << ", fps: " << ofGetFrameRate();
 	ofDrawBitmapString(reportStr.str(), 20, 600);
 
-	/*
 	// Items
 	if (items[currentItem]->getIsVideo())
 		video.draw(ofGetViewportWidth() / 2, 200, 300, 300);
 	else
 		image.draw(ofGetViewportWidth() / 2, 200, 300, 300);
-	*/
+	
 }
 
 void PlayMode::keyPressed(int key)
