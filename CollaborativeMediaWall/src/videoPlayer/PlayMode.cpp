@@ -224,13 +224,15 @@ void PlayMode::draw()
 
 	// Items
 	if (items[currentItem]->getIsVideo()) {
-		setFadeIn();
+		setFadeIn(true);
 		video.draw(300, 50, 400, 400);
 		if (!isGestureMode)
 			stopButton->draw();
 	}
-	else
+	else {
+		setFadeIn(false);
 		image.draw(300, 50, 400, 400);
+	}
 
 }
 
@@ -301,17 +303,29 @@ void PlayMode::dragEvent(ofDragInfo dragInfo) {
 
 }
 
-void PlayMode::setFadeIn()
+void PlayMode::setFadeIn(bool isVideo)
 {
-	float videoLength = video.getDuration();
-	float videoElapsedTime = video.getPosition() * video.getDuration();
-	float videoTimeRemaining = videoLength - videoElapsedTime;
-	float fadeTime = 5.0;
-	if (videoTimeRemaining < fadeTime) { //if it is time to fade  
-		ofSetColor(255, 255, 255, 255 * videoTimeRemaining / fadeTime); // fade based on time left  
+	float fadeTime = 3.0;
+	if (isVideo) {
+		float videoLength = video.getDuration();
+		float videoElapsedTime = video.getPosition() * video.getDuration();
+		float videoTimeRemaining = videoLength - videoElapsedTime;
+		
+		if (videoTimeRemaining < fadeTime) { //if it is time to fade  
+			ofSetColor(255, 255, 255, 255 * videoTimeRemaining / fadeTime); // fade based on time left  
+		}
+		else {
+			ofSetColor(255, 255, 255, 255); //else draw at full opacity  
+		}
 	}
 	else {
-		ofSetColor(255, 255, 255, 255); //else draw at full opacity  
+		float timePassed = ofGetElapsedTimef() - time;
+		if (timePassed > 5 - fadeTime) {
+			ofSetColor(255, 255, 255, 255 * (5 - timePassed) / fadeTime); // fade based on time left 
+		}
+		else {
+			ofSetColor(255, 255, 255, 255); //else draw at full opacity
+		}
 	}
 	ofEnableAlphaBlending();
 }
