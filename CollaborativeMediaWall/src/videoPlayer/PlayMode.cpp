@@ -99,9 +99,9 @@ void PlayMode::update()
 		video.update();
 	}
 
-	/*if (ofGetElapsedTimef() - time > diffTime) {
+	if (ofGetElapsedTimef() - time > diffTime) {
 		changeCurrentItem(true);
-	}*/
+	}
 
 }
 
@@ -224,6 +224,7 @@ void PlayMode::draw()
 
 	// Items
 	if (items[currentItem]->getIsVideo()) {
+		setFadeIn();
 		video.draw(300, 50, 400, 400);
 		if (!isGestureMode)
 			stopButton->draw();
@@ -300,6 +301,21 @@ void PlayMode::dragEvent(ofDragInfo dragInfo) {
 
 }
 
+void PlayMode::setFadeIn()
+{
+	float videoLength = video.getDuration();
+	float videoElapsedTime = video.getPosition() * video.getDuration();
+	float videoTimeRemaining = videoLength - videoElapsedTime;
+	float fadeTime = 5.0;
+	if (videoTimeRemaining < fadeTime) { //if it is time to fade  
+		ofSetColor(255, 255, 255, 255 * videoTimeRemaining / fadeTime); // fade based on time left  
+	}
+	else {
+		ofSetColor(255, 255, 255, 255); //else draw at full opacity  
+	}
+	ofEnableAlphaBlending();
+}
+
 // Change CurrentItem
 void PlayMode::changeCurrentItem(bool isNext) {
 	if (isNext) {
@@ -318,7 +334,7 @@ void PlayMode::changeCurrentItem(bool isNext) {
 		video.setLoopState(OF_LOOP_NONE); // stops video from looping
 
 		time = ofGetElapsedTimef() + video.getDuration();
-		diffTime = 1;
+		diffTime = 0.2f;
 	}
 	else {
 		if (video.isPlaying()) {

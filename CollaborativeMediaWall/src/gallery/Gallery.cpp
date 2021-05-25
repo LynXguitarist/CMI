@@ -407,7 +407,6 @@ void Gallery::handleUserItems(int userId) {
 		// checks if user has the item
 		string fileName = dir.getName(i);
 		string itemName = fileName.substr(0, fileName.find('.'));
-		(void)ofLog(OF_LOG_ERROR, "ItemName " + itemName);
 
 		if (find(user_items.begin(), user_items.end(), itemName) != user_items.end()) {
 			ofImage img = ofImage(dir.getPath(i));

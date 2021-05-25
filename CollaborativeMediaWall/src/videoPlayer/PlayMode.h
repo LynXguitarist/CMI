@@ -25,6 +25,7 @@ public:
 	void gotMessage(ofMessage msg);
 
 	// Change currentItem
+	void setFadeIn();
 	void changeCurrentItem(bool isNext);
 	void onButtonEvent(ofxDatGuiButtonEvent e);
 	void onToggleEvent(ofxDatGuiToggleEvent e);
