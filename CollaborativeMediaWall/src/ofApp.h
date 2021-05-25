@@ -32,6 +32,9 @@ public:
 
 	//------------------------Events-----------------------------//
 	void ofApp::onButtonEvent(ofxDatGuiButtonEvent e);
+	void onTextInputEvent(ofxDatGuiTextInputEvent e);
+	void onToggleEvent(ofxDatGuiToggleEvent e);
+	void onColorPickerEvent(ofxDatGuiColorPickerEvent e);
 
 	vector<Item*> items;
 
@@ -40,16 +43,12 @@ public:
 	ofxDatGuiTextInput* search;
 	ofxDatGuiToggle* isMovingIcon;
 	ofxDatGuiColorPicker* colorPicker;
+	ofxDatGuiButton* galleryNavigate;
 	ofxDatGuiButton* reset;
 
 	ofxDatGuiButton* objectMode;
 	ofxDatGuiButton* colorMode;
 	ofxDatGuiButton* playModeB;
-
-	//------------------------Events-----------------------------//
-	void onTextInputEvent(ofxDatGuiTextInputEvent e);
-	void onToggleEvent(ofxDatGuiToggleEvent e);
-	void onColorPickerEvent(ofxDatGuiColorPickerEvent e);
 
 	//------------------------Auxiliar_classes-------------------//
 	Gallery gallery;

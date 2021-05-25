@@ -4,8 +4,6 @@ void PlayMode::setup(vector<Item*> items)
 {
 	camera.setVerbose(true);
 	camera.setup(320, 240);
-	// mirrors the camera, easier to the user
-	camera.getPixels().mirror(false, true);
 
 	bLearnBakground = true;
 	threshold = 80;
@@ -14,11 +12,39 @@ void PlayMode::setup(vector<Item*> items)
 	x = ofGetViewportWidth() - 320;
 	y = ofGetViewportHeight() - 240;
 
-	// Gestures positions
-	previous = ofRectangle(x + camera.getWidth() - (camera.getWidth() / 4), y, camera.getWidth() / 4, camera.getHeight());
-	next = ofRectangle(x, y, camera.getWidth() / 4, camera.getHeight());
-	stop = ofRectangle(x + camera.getWidth() / 3, y + camera.getHeight() / 4, camera.getWidth() / 3, camera.getHeight() / 2);
+	// buttons setup
+	previousButton = new ofxDatGuiButton("<");
+	previousButton->setPosition(270, ofGetViewportHeight() / 4 + 50);
+	previousButton->setIndex(0);
+	previousButton->setWidth(30);
+	previousButton->onButtonEvent(this, &PlayMode::onButtonEvent);
 
+	nextButton = new ofxDatGuiButton(">");
+	nextButton->setPosition(700, ofGetViewportHeight() / 4 + 50);
+	nextButton->setIndex(1);
+	nextButton->setWidth(30);
+	nextButton->onButtonEvent(this, &PlayMode::onButtonEvent);
+
+	stopButton = new ofxDatGuiButton("||");
+	stopButton->setPosition(500, 450);
+	stopButton->setIndex(2);
+	stopButton->setWidth(30);
+	stopButton->onButtonEvent(this, &PlayMode::onButtonEvent);
+
+	isGestureModeButton = new ofxDatGuiToggle("Gesture Mode?");
+	isGestureModeButton->setChecked(true);
+	isGestureModeButton->setPosition(x, y - isGestureModeButton->getHeight());
+	isGestureModeButton->setWidth(150);
+	isGestureModeButton->onToggleEvent(this, &PlayMode::onToggleEvent);
+
+	// Gestures positions
+	previous = ofRectangle(0, 0, camera.getWidth() / 4, camera.getHeight());
+	next = ofRectangle(camera.getWidth() - (camera.getWidth() / 4), 0, camera.getWidth() / 4, camera.getHeight());
+	stop = ofRectangle(camera.getWidth() / 3, camera.getWidth() / 4, camera.getWidth() / 3, camera.getHeight() / 2);
+	//----------------UI
+	previousUI = ofRectangle(x, y, camera.getWidth() / 4, camera.getHeight());
+	nextUI = ofRectangle(x + camera.getWidth() - (camera.getWidth() / 4), y, camera.getWidth() / 4, camera.getHeight());
+	stopUI = ofRectangle(x + camera.getWidth() / 3, y + camera.getHeight() / 4, camera.getWidth() / 3, camera.getHeight() / 2);
 
 	itemsSize = items.size();
 	this->items.assign(itemsSize, &Item("", ofImage(), false, false));
@@ -27,8 +53,7 @@ void PlayMode::setup(vector<Item*> items)
 
 	if (items[currentItem]->getIsVideo()) {
 		video.load(items[currentItem]->getPath());
-		// video won't loop
-		video.setLoopState(OF_LOOP_NONE);
+		video.setLoopState(OF_LOOP_NONE); // stops video from looping
 	}
 	else
 		image = items[currentItem]->getImage();
@@ -46,6 +71,8 @@ void PlayMode::update()
 	if (bNewFrame) {
 
 		colorImg.setFromPixels(camera.getPixels());
+		// mirrors the camera, easier to the user
+		colorImg.mirror(false, true);
 
 		grayImage = colorImg;
 		if (bLearnBakground == true) {
@@ -61,13 +88,20 @@ void PlayMode::update()
 		// also, find holes is set to true so we will get interior contours as well....
 		contourFinder.findContours(grayDiff, 20, (340 * 240) / 3, 10, true);	// find holes
 	}
-
-	if (!video.isPaused())
-		video.update();
-
-	if (ofGetElapsedTimef() - time > diffTime) {
-		changeCurrentItem();
+	if (!isGestureMode) {
+		previousButton->update();
+		nextButton->update();
+		stopButton->update();
 	}
+	isGestureModeButton->update();
+
+	if (!video.isPaused()) {
+		video.update();
+	}
+
+	/*if (ofGetElapsedTimef() - time > diffTime) {
+		changeCurrentItem(true);
+	}*/
 
 }
 
@@ -80,35 +114,88 @@ void PlayMode::draw()
 
 	// Draws Rectangle Modes
 	//---------------previous
-	ofDrawLine(previous.getBottomLeft(), previous.getTopLeft());
-	ofDrawLine(previous.getTopLeft(), previous.getTopRight());
-	ofDrawLine(previous.getTopRight(), previous.getBottomRight());
-	ofDrawLine(previous.getBottomLeft(), previous.getBottomRight());
+	ofSetColor(previousColor);
+	ofDrawLine(previousUI.getBottomLeft(), previousUI.getTopLeft());
+	ofDrawLine(previousUI.getTopLeft(), previousUI.getTopRight());
+	ofDrawLine(previousUI.getTopRight(), previousUI.getBottomRight());
+	ofDrawLine(previousUI.getBottomLeft(), previousUI.getBottomRight());
 	//---------------next
-	ofDrawLine(next.getBottomLeft(), next.getTopLeft());
-	ofDrawLine(next.getTopLeft(), next.getTopRight());
-	ofDrawLine(next.getTopRight(), next.getBottomRight());
-	ofDrawLine(next.getBottomLeft(), next.getBottomRight());
+	ofSetColor(nextColor);
+	ofDrawLine(nextUI.getBottomLeft(), nextUI.getTopLeft());
+	ofDrawLine(nextUI.getTopLeft(), nextUI.getTopRight());
+	ofDrawLine(nextUI.getTopRight(), nextUI.getBottomRight());
+	ofDrawLine(nextUI.getBottomLeft(), nextUI.getBottomRight());
 	//---------------stop/pause
-	ofDrawLine(stop.getBottomLeft(), stop.getTopLeft());
-	ofDrawLine(stop.getTopLeft(), stop.getTopRight());
-	ofDrawLine(stop.getTopRight(), stop.getBottomRight());
-	ofDrawLine(stop.getBottomLeft(), stop.getBottomRight());
+	ofSetColor(stopColor);
+	ofDrawLine(stopUI.getBottomLeft(), stopUI.getTopLeft());
+	ofDrawLine(stopUI.getTopLeft(), stopUI.getTopRight());
+	ofDrawLine(stopUI.getTopRight(), stopUI.getBottomRight());
+	ofDrawLine(stopUI.getBottomLeft(), stopUI.getBottomRight());
 
 	// or, instead we can draw each blob individually from the blobs vector,
 	// this is how to get access to them:
 	for (int i = 0; i < contourFinder.nBlobs; i++) {
 		contourFinder.blobs[i].draw(x, y);
-
+		//ofSetColor(0, 0, 0);
 		// inside for x time
-		if (previous.inside(contourFinder.blobs[i].boundingRect)) {
-			//(void)ofLog(OF_LOG_NOTICE, "Inside previous");
+		if (previous.inside(contourFinder.blobs[i].boundingRect) && isGestureMode) {
+			// reset other colors
+			nextColor = ofColor::white;
+			stopColor = ofColor::white;
+
+			if (previousTime > 1.5 * 50 && previousTime < 3 * 50) {// if stayed inside rect more than 1.5 secs
+				// change rect color
+				previousColor = ofColor::green;
+			}
+			else if (previousTime > 3 * 50) { // if stayed inside rect more than 3 secs
+				changeCurrentItem(false);
+				previousColor = ofColor::white;
+				previousTime = 0;
+			}
+			else {
+				previousColor = ofColor::white;
+			}
+			previousTime++;
 		}
-		else if (next.inside(contourFinder.blobs[i].boundingRect)) {
-			//(void)ofLog(OF_LOG_NOTICE, "Inside next");
+		else if (next.inside(contourFinder.blobs[i].boundingRect) && isGestureMode) {
+			// reset other colors
+			previousColor = ofColor::white;
+			stopColor = ofColor::white;
+
+			if (nextTime > 1.5 * 50 && nextTime < 3 * 50) {// if stayed inside rect more than 1.5 secs
+				// change rect color
+				nextColor = ofColor::green;
+			}
+			else if (nextTime > 3 * 50) { // if stayed inside rect more than 3 secs
+				changeCurrentItem(true);
+				nextColor = ofColor::white;
+				nextTime = 0;
+			}
+			else {
+				nextColor = ofColor::white;
+			}
+			nextTime++;
 		}
-		else if (stop.inside(contourFinder.blobs[i].boundingRect)) {
-			//(void)ofLog(OF_LOG_NOTICE, "Inside stop/play");
+		else if (stop.inside(contourFinder.blobs[i].boundingRect) && video.isLoaded() && isGestureMode) {
+			// reset other colors
+			previousColor = ofColor::white;
+			nextColor = ofColor::white;
+
+			if (stopTime > 1.5 * 50 && stopTime < 3 * 50) {// if stayed inside rect more than 1.5 secs
+				// change rect color
+				stopColor = ofColor::green;
+			}
+			else if (stopTime > 3 * 50) { // if stayed inside rect more than 3 secs
+				if (video.isLoaded())
+					video.setPaused(!video.isPaused());
+
+				stopColor = ofColor::white;
+				stopTime = 0;
+			}
+			else {
+				stopColor = ofColor::white;
+			}
+			stopTime++;
 		}
 
 		// draw over the centroid if the blob is a hole
@@ -129,9 +216,18 @@ void PlayMode::draw()
 		<< "num blobs found " << contourFinder.nBlobs << ", fps: " << ofGetFrameRate();
 	ofDrawBitmapString(reportStr.str(), 20, 600);
 
+	if (!isGestureMode) {
+		previousButton->draw();
+		nextButton->draw();
+	}
+	isGestureModeButton->draw();
+
 	// Items
-	if (items[currentItem]->getIsVideo())
+	if (items[currentItem]->getIsVideo()) {
 		video.draw(300, 50, 400, 400);
+		if (!isGestureMode)
+			stopButton->draw();
+	}
 	else
 		image.draw(300, 50, 400, 400);
 
@@ -205,22 +301,57 @@ void PlayMode::dragEvent(ofDragInfo dragInfo) {
 }
 
 // Change CurrentItem
-void PlayMode::changeCurrentItem() {
-	currentItem++;
-	currentItem %= itemsSize;
+void PlayMode::changeCurrentItem(bool isNext) {
+	if (isNext) {
+		currentItem++;
+		currentItem %= itemsSize;
+	}
+	else {
+		currentItem--;
+		if (currentItem < 0)
+			currentItem = itemsSize - 1;
+	}
+
 	if (items[currentItem]->getIsVideo()) {
 		video.load(items[currentItem]->getPath());
 		video.play();
-		// video won't loop
-		video.setLoopState(OF_LOOP_NONE);
+		video.setLoopState(OF_LOOP_NONE); // stops video from looping
+
 		time = ofGetElapsedTimef() + video.getDuration();
 		diffTime = 1;
 	}
 	else {
-		if (video.isPlaying())
+		if (video.isPlaying()) {
 			video.stop();
+			video.closeMovie();
+		}
 
 		image = items[currentItem]->getImage();
 		time = ofGetElapsedTimef();
+		diffTime = 5;
 	}
+}
+
+void PlayMode::onButtonEvent(ofxDatGuiButtonEvent e)
+{
+	if (!isGestureMode) {
+		int index = e.target->getIndex();
+		if (index == 0) {
+			changeCurrentItem(false);
+		}
+		else if (index == 1) {
+			changeCurrentItem(true);
+		}
+		else if (index == 2) {
+			if (video.isLoaded())
+				video.setPaused(!video.isPaused());
+		}
+	}
+}
+
+void PlayMode::onToggleEvent(ofxDatGuiToggleEvent e)
+{
+	isGestureModeButton->toggle();
+	isGestureModeButton->setChecked(!isGestureModeButton->getChecked());
+	isGestureMode = !isGestureMode;
 }

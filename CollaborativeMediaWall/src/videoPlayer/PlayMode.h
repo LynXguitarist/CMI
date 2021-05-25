@@ -25,7 +25,9 @@ public:
 	void gotMessage(ofMessage msg);
 
 	// Change currentItem
-	void changeCurrentItem();
+	void changeCurrentItem(bool isNext);
+	void onButtonEvent(ofxDatGuiButtonEvent e);
+	void onToggleEvent(ofxDatGuiToggleEvent e);
 
 	ofVideoGrabber camera;
 	ofxCvColorImage			colorImg;
@@ -45,6 +47,21 @@ public:
 	ofRectangle stop; // same for playing, when video is stoped, it will play, when is playing, it will stop
 	ofRectangle next; // changes to the next item
 	ofRectangle previous; // changes to the previous item
+	// UI - needed because the pos is relative to the camera not the window
+	ofRectangle stopUI;
+	ofRectangle nextUI;
+	ofRectangle previousUI;
+
+	ofColor previousColor = ofColor::white;
+	ofColor nextColor = ofColor::white;
+	ofColor stopColor = ofColor::white;
+
+	ofxDatGuiButton* previousButton;
+	ofxDatGuiButton* nextButton;
+	ofxDatGuiButton* stopButton;
+
+	ofxDatGuiToggle* isGestureModeButton;
+	bool isGestureMode = true;
 
 	// Items
 	vector<Item*> items;
@@ -56,5 +73,8 @@ public:
 	// Timer - time that each item will preview before changing to the next
 	float time;
 	short diffTime = 5;
+	float previousTime = 0;
+	float nextTime = 0;
+	float stopTime = 0;
 };
 

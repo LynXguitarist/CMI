@@ -393,7 +393,6 @@ void Gallery::handleUserItems(int userId) {
 	}
 	//----------ofDirectory
 	dir.listDir("items/");
-	dir.allowExt("jpg");
 	dir.sort(); // in linux the file system doesn't return file lists ordered in alphabetical order
 
 	//allocate the vector to have as many ofImages as files
@@ -408,6 +407,7 @@ void Gallery::handleUserItems(int userId) {
 		// checks if user has the item
 		string fileName = dir.getName(i);
 		string itemName = fileName.substr(0, fileName.find('.'));
+		(void)ofLog(OF_LOG_ERROR, "ItemName " + itemName);
 
 		if (find(user_items.begin(), user_items.end(), itemName) != user_items.end()) {
 			ofImage img = ofImage(dir.getPath(i));

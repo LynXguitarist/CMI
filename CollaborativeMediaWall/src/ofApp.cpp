@@ -18,7 +18,7 @@ void ofApp::setup() {
 		break;
 	case 1:
 		galleryUI();
-		items = gallery.setup(1);
+		items = gallery.setup(videoPlayer.getSelectedId()); // mudar isto
 		break;
 	case 4:
 		playMode.setup(items);
@@ -49,7 +49,14 @@ void ofApp::update() {
 		playModeB->update();
 		gallery.update();
 		break;
+	case 2:
+		galleryNavigate->update();
+		break;
+	case 3:
+		galleryNavigate->update();
+		break;
 	case 4:
+		galleryNavigate->update();
 		playMode.update();
 		break;
 	}
@@ -75,7 +82,14 @@ void ofApp::draw() {
 		playModeB->draw();
 		gallery.draw();
 		break;
+	case 2:
+		galleryNavigate->draw();
+		break;
+	case 3:
+		galleryNavigate->draw();
+		break;
 	case 4:
+		galleryNavigate->draw();
 		playMode.draw();
 		break;
 	}
@@ -155,6 +169,11 @@ void ofApp::dragEvent(ofDragInfo dragInfo) {
 void ofApp::menu() {
 	gui->addHeader("Collaborative Media Wall")->setWidth(ofGetViewportWidth());
 	gui->getHeader()->setDraggable(false);
+
+	galleryNavigate = new ofxDatGuiButton("Gallery");
+	galleryNavigate->setPosition(0, gui->getHeader()->getHeight());
+	galleryNavigate->setIndex(10);
+	galleryNavigate->onButtonEvent(this, &ofApp::onButtonEvent);
 }
 
 void ofApp::galleryUI() {
@@ -248,6 +267,11 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e) {
 		gallery.reset();
 		colorPicker->setColor(0);
 		search->setText("");
+		break;
+	case 10: // go to Gallery
+		galleryUI();
+		items = gallery.setup(videoPlayer.getSelectedId());
+		view = 1;
 		break;
 	}
 }

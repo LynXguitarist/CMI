@@ -26,6 +26,7 @@ void VideoPlayer::update()
 
     if (camera.isFrameNew()) {
         color.setFromPixels(camera.getPixels());
+
         grayscale = color;
         haar.findHaarObjects(grayscale);
         numberOfFaces = haar.blobs.size();
