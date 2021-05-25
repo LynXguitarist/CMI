@@ -5,11 +5,10 @@ void PlayMode::setup(vector<Item*> items)
 	camera.setVerbose(true);
 	camera.setup(320, 240);
 	// mirrors the camera, easier to the user
-	camera.getPixelsRef().mirror(false, true);
+	camera.getPixels().mirror(false, true);
 
 	bLearnBakground = true;
 	threshold = 80;
-
 
 	// then draw the contours:
 	x = ofGetViewportWidth() - 320;
@@ -18,13 +17,23 @@ void PlayMode::setup(vector<Item*> items)
 	// Gestures positions
 	previous = ofRectangle(x + camera.getWidth() - (camera.getWidth() / 4), y, camera.getWidth() / 4, camera.getHeight());
 	next = ofRectangle(x, y, camera.getWidth() / 4, camera.getHeight());
-	stop = ofRectangle(x + camera.getWidth() / 3, y + camera.getHeight()/ 4, camera.getWidth() / 3, camera.getHeight() / 2);
+	stop = ofRectangle(x + camera.getWidth() / 3, y + camera.getHeight() / 4, camera.getWidth() / 3, camera.getHeight() / 2);
 
 
 	itemsSize = items.size();
 	this->items.assign(itemsSize, &Item("", ofImage(), false, false));
 	this->items = items;
 	currentItem = 0;
+
+	if (items[currentItem]->getIsVideo()) {
+		video.load(items[currentItem]->getPath());
+		// video won't loop
+		video.setLoopState(OF_LOOP_NONE);
+	}
+	else
+		image = items[currentItem]->getImage();
+
+	time = ofGetElapsedTimef();
 }
 
 void PlayMode::update()
@@ -52,9 +61,14 @@ void PlayMode::update()
 		// also, find holes is set to true so we will get interior contours as well....
 		contourFinder.findContours(grayDiff, 20, (340 * 240) / 3, 10, true);	// find holes
 	}
-	
+
 	if (!video.isPaused())
 		video.update();
+
+	if (ofGetElapsedTimef() - time > diffTime) {
+		changeCurrentItem();
+	}
+
 }
 
 void PlayMode::draw()
@@ -88,13 +102,13 @@ void PlayMode::draw()
 
 		// inside for x time
 		if (previous.inside(contourFinder.blobs[i].boundingRect)) {
-			(void)ofLog(OF_LOG_NOTICE, "Inside previous");
+			//(void)ofLog(OF_LOG_NOTICE, "Inside previous");
 		}
 		else if (next.inside(contourFinder.blobs[i].boundingRect)) {
-			(void)ofLog(OF_LOG_NOTICE, "Inside next");
+			//(void)ofLog(OF_LOG_NOTICE, "Inside next");
 		}
 		else if (stop.inside(contourFinder.blobs[i].boundingRect)) {
-			(void)ofLog(OF_LOG_NOTICE, "Inside stop/play");
+			//(void)ofLog(OF_LOG_NOTICE, "Inside stop/play");
 		}
 
 		// draw over the centroid if the blob is a hole
@@ -117,10 +131,10 @@ void PlayMode::draw()
 
 	// Items
 	if (items[currentItem]->getIsVideo())
-		video.draw(ofGetViewportWidth() / 2, 200, 300, 300);
+		video.draw(300, 50, 400, 400);
 	else
-		image.draw(ofGetViewportWidth() / 2, 200, 300, 300);
-	
+		image.draw(300, 50, 400, 400);
+
 }
 
 void PlayMode::keyPressed(int key)
@@ -137,27 +151,6 @@ void PlayMode::keyPressed(int key)
 		threshold--;
 		if (threshold < 0) threshold = 0;
 		break;
-	}
-
-	if (GetKeyState(VK_RIGHT)) {
-		if (currentItem < itemsSize) {
-			currentItem++;
-			//currentItem %= itemsSize;
-			if (items[currentItem]->getIsVideo())
-				video.load(items[currentItem]->getPath());
-		}
-	}
-	else if (GetKeyState(VK_LEFT)) {
-		if (currentItem >= 1) {
-			currentItem--;
-			//currentItem %= itemsSize;
-			if (items[currentItem]->getIsVideo())
-				video.load(items[currentItem]->getPath());
-		}
-	}
-	else if (GetKeyState(VK_SPACE)) {
-		if (video.isLoaded())
-			video.setPaused(!video.isPaused());
 	}
 }
 
@@ -209,4 +202,25 @@ void PlayMode::gotMessage(ofMessage msg) {
 //--------------------------------------------------------------
 void PlayMode::dragEvent(ofDragInfo dragInfo) {
 
+}
+
+// Change CurrentItem
+void PlayMode::changeCurrentItem() {
+	currentItem++;
+	currentItem %= itemsSize;
+	if (items[currentItem]->getIsVideo()) {
+		video.load(items[currentItem]->getPath());
+		video.play();
+		// video won't loop
+		video.setLoopState(OF_LOOP_NONE);
+		time = ofGetElapsedTimef() + video.getDuration();
+		diffTime = 1;
+	}
+	else {
+		if (video.isPlaying())
+			video.stop();
+
+		image = items[currentItem]->getImage();
+		time = ofGetElapsedTimef();
+	}
 }

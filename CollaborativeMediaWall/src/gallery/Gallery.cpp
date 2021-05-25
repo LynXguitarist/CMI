@@ -305,7 +305,7 @@ void Gallery::initButtons()
 	ex2->onButtonEvent(this, &Gallery::extractMetadata);
 
 	ex3 = new ofxDatGuiButton("Extract Metadata");
-	ex3->setPosition(200 + imageSize * 2, 375);
+	ex3->setPosition(150 + imageSize * 2, 375);
 	ex3->setIndex(2);
 	ex3->setWidth(100);
 	ex3->onButtonEvent(this, &Gallery::extractMetadata);
@@ -324,7 +324,7 @@ void Gallery::initButtons()
 	im2->onButtonEvent(this, &Gallery::importMetadata);
 
 	im3 = new ofxDatGuiButton("Import Metadata");
-	im3->setPosition(300 + imageSize * 2, 375);
+	im3->setPosition(250 + imageSize * 2, 375);
 	im3->setIndex(2);
 	im3->setWidth(100);
 	im3->onButtonEvent(this, &Gallery::importMetadata);

@@ -38,7 +38,6 @@ void ofApp::update() {
 			items = gallery.setup(videoPlayer.getSelectedId());
 			view = 1;
 		}
-		
 		break;
 	case 1:
 		search->update();
