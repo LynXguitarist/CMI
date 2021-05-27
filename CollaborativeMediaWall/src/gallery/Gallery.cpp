@@ -16,6 +16,10 @@ vector<Item*> Gallery::setup(int id) {
 
 //--------------------------------------------------------------
 void Gallery::update() {
+	openWMB1->update();
+	openWMB2->update();
+	openWMB3->update();
+
 	ex1->update();
 	ex2->update();
 	ex3->update();
@@ -67,14 +71,17 @@ void Gallery::draw() {
 	}
 	int numItemsDisplay = size - currentItem;
 	if (numItemsDisplay > 0) {
+		openWMB1->draw();
 		ex1->draw();
 		im1->draw();
 	}
 	if (numItemsDisplay > 1) {
+		openWMB2->draw();
 		ex2->draw();
 		im2->draw();
 	}
 	if (numItemsDisplay > 2) {
+		openWMB3->draw();
 		ex3->draw();
 		im3->draw();
 	}
@@ -82,7 +89,6 @@ void Gallery::draw() {
 
 //--------------------------------------------------------------
 void Gallery::keyPressed(int key) {
-	// BUG AO ANDAR PARA TRAS COM MOVING ICON
 	short inc = 1;
 	if (GetKeyState(VK_RIGHT)) {
 		if (currentItem < itemsSize - 3) {
@@ -102,6 +108,7 @@ void Gallery::keyPressed(int key) {
 			video.setPaused(!video.isPaused());
 		}
 	}
+
 	ex1->setIndex(ex1->getIndex() + inc);
 	ex2->setIndex(ex2->getIndex() + inc * 2);
 	ex3->setIndex(ex3->getIndex() + inc * 3);
@@ -291,6 +298,25 @@ void Gallery::reset()
 
 void Gallery::initButtons()
 {
+	//---------Open Media player
+	openWMB1 = new ofxDatGuiButton("MediaPlayer");
+	openWMB1->setPosition(250, 375);
+	openWMB1->setIndex(0);
+	openWMB1->setWidth(75);
+	openWMB1->onButtonEvent(this, &Gallery::openInWMP);
+
+	openWMB2 = new ofxDatGuiButton("MediaPlayer");
+	openWMB2->setPosition(300 + imageSize, 375);
+	openWMB2->setIndex(1);
+	openWMB2->setWidth(75);
+	openWMB2->onButtonEvent(this, &Gallery::openInWMP);
+
+	openWMB3 = new ofxDatGuiButton("MediaPlayer");
+	openWMB3->setPosition(350 + imageSize * 2, 375);
+	openWMB3->setIndex(2);
+	openWMB3->setWidth(75);
+	openWMB3->onButtonEvent(this, &Gallery::openInWMP);
+
 	//---------Export
 	ex1 = new ofxDatGuiButton("Extract Metadata");
 	ex1->setPosition(50, 375);
@@ -486,8 +512,6 @@ void Gallery::generateMetadata(string itemName, ofImage image)
 		itemsXML.setValue("edges", edges);
 	// texture
 
-	// times
-
 	// rhythm
 
 	itemsXML.popTag(); // item
@@ -524,7 +548,7 @@ string Gallery::filter2DAux(string itemName)
 		kernel = Mat::ones(kernel_size, kernel_size, CV_32F) / (float)(kernel_size * kernel_size);
 		// Apply filter
 		filter2D(src, dst, ddepth, kernel, anchor, delta, BORDER_DEFAULT);
-		
+
 		ind++;
 	}
 	string result = "";
@@ -537,6 +561,21 @@ string Gallery::filter2DAux(string itemName)
 	}
 	// returns the matrix in string format
 	return result;
+}
+
+void Gallery::openInWMP(ofxDatGuiButtonEvent e)
+{
+	int index = e.target->getIndex();
+
+	(void)ofLog(OF_LOG_NOTICE, "will play video...");
+
+	string moviePath = ofFilePath::getAbsolutePath(ofToDataPath(items[index]->getPath()));
+	string mode = "";
+	if (items[index]->getIsVideo())
+		mode = "/fullscreen";
+	string command = " \"" + moviePath + "\" " + mode;
+
+	ofSystem("start /d \"C:\Program Files (x86)\Windows Media Player\" wmplayer " + command);
 }
 
 void Gallery::extractMetadata(ofxDatGuiButtonEvent e) {
@@ -616,34 +655,59 @@ void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 		listTags[i] = tag;
 	}
 
-	string luminance = ofSystemTextBoxDialog("Luminance", "1");
-	string color = ofSystemTextBoxDialog("Color", "0");
-	string faces = ofSystemTextBoxDialog("Faces", "1");
-	string edge = ofSystemTextBoxDialog("Edge", "1");
-	string texture = ofSystemTextBoxDialog("Texture", "");
-	string rhythm = "";
-	if (items[index]->getIsVideo())
-		rhythm = ofSystemTextBoxDialog("Rhythm", "0");
+	//string luminance = ofSystemTextBoxDialog("Luminance", "1");
+	//string color = ofSystemTextBoxDialog("Color", "0");
+	//string faces = ofSystemTextBoxDialog("Faces", "1");
+	//string edge = ofSystemTextBoxDialog("Edge", "1");
+	//string texture = ofSystemTextBoxDialog("Texture", "");
+	string times = ofSystemTextBoxDialog("Number of objects to process (times a specific object (input as an image) appears in the video frame):", "1");
+	int numberTimes = stoi(times);
+	map<string, int> mapTimes;
+
+	for (int i = 0; i < numberTimes; i++) {
+		// process object
+	}
+
+	//string rhythm = "";
+	//if (items[index]->getIsVideo())
+	//	rhythm = ofSystemTextBoxDialog("Rhythm", "0");
 
 	int numberOfItems = itemsXML.getNumTags("item");
 	for (int i = 0; i < numberOfItems; i++) {
 		itemsXML.pushTag("item", i);
 		if (i == index) {
 			itemsXML.pushTag("tags");
-			itemsXML.removeTag("tag"); // Removes previous tags
+			int numExTags = itemsXML.getNumTags("tag"); // number of existing tags
+
 			for (int j = 0; j < numberOfTags; j++) {
-				itemsXML.setValue("tag", listTags[j], j);
+				itemsXML.setValue("tag", listTags[j], j + numExTags);
 			}
 			itemsXML.popTag(); // tags
 
-			itemsXML.setValue("luminance", luminance);
-			itemsXML.setValue("color", color);
-			itemsXML.setValue("faces", faces);
-			itemsXML.setValue("edge", edge);
-			itemsXML.setValue("texture", texture);
+			//itemsXML.setValue("luminance", luminance);
+			//itemsXML.setValue("color", color);
+			//itemsXML.setValue("faces", faces);
+			//itemsXML.setValue("edge", edge);
+			//itemsXML.setValue("texture", texture);
 
-			if (items[index]->getIsVideo())
-				itemsXML.setValue("rhythm", rhythm);
+			int j = 0;
+			itemsXML.pushTag("times");
+			int numExTimes = itemsXML.getNumTags("time"); // number of existing times
+
+			for (map<string, int>::iterator itr = mapTimes.begin(); itr != mapTimes.end(); ++itr) {
+				itemsXML.addTag("time");
+				itemsXML.pushTag("time", j + numExTimes);
+
+				itemsXML.setValue("name", itr->first, j + numExTimes);
+				itemsXML.setValue("numTime", itr->second, j + numExTimes);
+				itemsXML.popTag();
+
+				j++;
+			}
+			itemsXML.popTag(); // tags
+
+			//if (items[index]->getIsVideo())
+			//	itemsXML.setValue("rhythm", rhythm);
 
 			itemsXML.popTag(); // item
 			break;

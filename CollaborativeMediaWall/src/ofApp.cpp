@@ -99,9 +99,10 @@ void ofApp::draw() {
 void ofApp::keyPressed(int key) {
 	switch (view) {
 	case 0:
-		gallery.keyPressed(key);
+		
 		break;
 	case 1:
+		gallery.keyPressed(key);
 		break;
 	case 4:
 		playMode.keyPressed(key);

@@ -42,6 +42,8 @@ private:
 	void generateMetadata(string itemName, ofImage image);
 	string filter2DAux(string itemName);
 
+	//----------------------Events---------------//
+	void openInWMP(ofxDatGuiButtonEvent e);
 	void extractMetadata(ofxDatGuiButtonEvent e);
 	void importMetadata(ofxDatGuiButtonEvent e);
 	
@@ -76,6 +78,10 @@ private:
 	ofFileDialogResult windowFileSys;
 
 	// GUI
+	ofxDatGuiButton* openWMB1;
+	ofxDatGuiButton* openWMB2;
+	ofxDatGuiButton* openWMB3;
+
 	ofxDatGuiButton* ex1;
 	ofxDatGuiButton* ex2;
 	ofxDatGuiButton* ex3;
