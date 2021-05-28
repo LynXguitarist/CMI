@@ -17,7 +17,7 @@ void ofApp::setup() {
 		videoPlayer.setup();
 		break;
 	case 1:
-		items = gallery.setup(videoPlayer.getSelectedId());
+		items = gallery.setup(videoPlayer.getSelectedId(), isUser);
 		galleryUI();
 		break;
 	case 4:
@@ -34,7 +34,7 @@ void ofApp::update() {
 	case 0:
 		videoPlayer.update();
 		if (videoPlayer.toNavigate() == 1) {
-			items = gallery.setup(videoPlayer.getSelectedId());
+			items = gallery.setup(videoPlayer.getSelectedId(), isUser);
 			galleryUI();
 			view = 1;
 		}
@@ -246,7 +246,7 @@ void ofApp::onColorPickerEvent(ofxDatGuiColorPickerEvent e) {
 
 //-----------------------Navigate--------------------------//
 void ofApp::navigateToGallery(int id) {
-	gallery.setup(id);
+	gallery.setup(id, isUser);
 	view = 1;
 }
 
@@ -271,7 +271,7 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e) {
 		break;
 	case 10: // go to Gallery
 		galleryUI();
-		items = gallery.setup(videoPlayer.getSelectedId());
+		items = gallery.setup(videoPlayer.getSelectedId(), isUser);
 		view = 1;
 		break;
 	}

@@ -12,7 +12,7 @@ using namespace cv;
 class Gallery : public ofBaseApp
 {
 public:
-	vector<Item*> setup(int id);
+	vector<Item*> setup(int id, bool isUser);
 	void update();
 	void draw();
 
@@ -38,10 +38,12 @@ private:
 	void nextFrame();
 
 	void initXmlObjects();
+	bool hasItemMetadata(string itemName);
 	void handleUserItems(int userId);
-	void generateMetadata(string itemName, ofImage image);
-	string filter2DAux(string itemName);
-	string rhythm(string path);
+	void generateMetadata(string itemName, string path, ofImage image, bool isVideo);
+	string edgesFilter(string itemName);
+	string textureFilter(string itemName);
+	string rhythmFilter(string path);
 
 	//----------------------Events---------------//
 	void openInWMP(ofxDatGuiButtonEvent e);
@@ -74,6 +76,7 @@ private:
 	// Xml object
 	ofxXmlSettings user_itemsXML;
 	ofxXmlSettings itemsXML;
+	ofxXmlSettings projectsXml;
 
 	// window explorer
 	ofFileDialogResult windowFileSys;

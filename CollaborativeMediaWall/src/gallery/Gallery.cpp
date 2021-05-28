@@ -1,12 +1,36 @@
 #include "Gallery.h"
 
 //--------------------------------------------------------------
-vector<Item*> Gallery::setup(int id) {
+vector<Item*> Gallery::setup(int id, bool isUser) {
 	// Init xml objects -> items, user_items
 	initXmlObjects();
 
-	// passes the id
-	handleUserItems(id);
+	// if is project
+	if (!isUser) {
+		int numOfProjects = projectsXml.getNumTags("project");
+		for (int i = 0; i < numOfProjects; i++) {
+			projectsXml.pushTag("project", i);
+			if (projectsXml.getValue("id", 0) == id) {
+				projectsXml.pushTag("users");
+				int numberOfUsers = projectsXml.getNumTags("user");
+				for (int j = 0; j < numberOfUsers; j++) {
+					projectsXml.pushTag("user", j);
+					int userId = projectsXml.getValue("id", 0);
+					// handle user items for the user with id = userId
+					handleUserItems(userId);
+					projectsXml.popTag(); // user
+				}
+				projectsXml.popTag(); // users
+				projectsXml.popTag(); // project i
+				break;
+			}
+			projectsXml.popTag(); // project i
+		}
+	}
+	else {
+		// if is user
+		handleUserItems(id);
+	}
 
 	// Buttons
 	initButtons();
@@ -384,9 +408,36 @@ void Gallery::initXmlObjects()
 	else {
 		(void)ofLog(OF_LOG_ERROR, "Didn't open!");
 	}
+
+	// get xml for projects
+	if (projectsXml.loadFile("data_xml/projects.xml")) {
+		(void)ofLog(OF_LOG_NOTICE, "Open!");
+	}
+	else {
+		(void)ofLog(OF_LOG_ERROR, "Didn't open!");
+	}
+
 	// init objects, in order to not push the headers everytime
 	itemsXML.pushTag("items");
 	user_itemsXML.pushTag("users_items");
+	projectsXml.pushTag("projects");
+}
+
+bool Gallery::hasItemMetadata(string itemName)
+{
+	bool found = false;
+	int numberItems = itemsXML.getNumTags("item");
+	for (int i = 0; i < numberItems; i++) {
+		itemsXML.pushTag("item", i);
+		if (itemsXML.getValue("id", "") == itemName) {
+			found = true;
+			itemsXML.popTag(); // item
+			break;
+		}
+		else
+			itemsXML.popTag(); // item
+	}
+	return found;
 }
 
 void Gallery::handleUserItems(int userId) {
@@ -435,31 +486,34 @@ void Gallery::handleUserItems(int userId) {
 		string itemName = fileName.substr(0, fileName.find('.'));
 
 		if (find(user_items.begin(), user_items.end(), itemName) != user_items.end()) {
-			ofImage img = ofImage(dir.getPath(i));
+			string path = dir.getPath(i);
+			ofImage img = ofImage(path);
 			bool isVideo = false;
 			if (!img.bAllocated()) {
 				isVideo = true;
 
-				video.load(dir.getPath(i));
+				video.load(path);
 				video.play();
 				video.setPaused(true);
 				video.setPosition(0.5);
 
 				img.setFromPixels(video.getPixels());
 			}
-			Item* item = new Item(dir.getPath(i), img, isVideo, false);
+			Item* item = new Item(path, img, isVideo, false);
 			items[counter] = item;
 			auxItems[counter++] = item;
 
 			// generate metadata if not already generated
-			//generateMetadata(itemName, img);
+			if (!hasItemMetadata(itemName)) {
+				//generateMetadata(itemName, path, img, isVideo);
+			}
 		}
 	}
 	currentItem = 0;
 	itemsSize = counter;
 }
 
-void Gallery::generateMetadata(string itemName, ofImage image)
+void Gallery::generateMetadata(string itemName, string path, ofImage image, bool isVideo)
 {
 	int index = -1;
 	int numberOfItems = itemsXML.getNumTags("item");
@@ -507,17 +561,22 @@ void Gallery::generateMetadata(string itemName, ofImage image)
 
 	itemsXML.addValue("faces", faces);
 	// edges - filter2D
-	string edges = filter2DAux(itemName);
+	string edges = edgesFilter(itemName);
 	if (edges != "")
 		itemsXML.setValue("edges", edges);
 	// texture
-
+	string texture = textureFilter(itemName);
+	if (texture != "")
+		itemsXML.setValue("texture", texture);
 	// rhythm
-
+	if (isVideo) {
+		string rhythm = rhythmFilter(path);
+		itemsXML.setValue("rhythm", rhythm);
+	}
 	itemsXML.popTag(); // item
 }
 
-string Gallery::filter2DAux(string itemName)
+string Gallery::edgesFilter(string itemName)
 {
 	// Declare variables
 	Mat src, dst;
@@ -525,7 +584,7 @@ string Gallery::filter2DAux(string itemName)
 	Point anchor;
 	double delta;
 	int ddepth;
-	int kernel_size;
+	float kernel_size;
 	const char* window_name = "filter2D Demo";
 	// Loads an image
 	src = imread(samples::findFile(itemName), IMREAD_COLOR); // Load an image
@@ -545,7 +604,7 @@ string Gallery::filter2DAux(string itemName)
 	{
 		// Update kernel size for a normalized box filter
 		kernel_size = 3 + 2 * (ind % 5);
-		kernel = Mat::ones(kernel_size, kernel_size, CV_32F) / (float)(kernel_size * kernel_size);
+		kernel = Mat::ones(kernel_size, kernel_size, CV_32F) / (kernel_size * kernel_size);
 		// Apply filter
 		filter2D(src, dst, ddepth, kernel, anchor, delta, BORDER_DEFAULT);
 
@@ -563,10 +622,41 @@ string Gallery::filter2DAux(string itemName)
 	return result;
 }
 
-string Gallery::rhythm(string path)
+string Gallery::textureFilter(string itemName)
 {
-	string rhythm = "";
+	Mat src, dst;
+	int kernel_size = 31;
 
+	src = imread(samples::findFile(itemName), IMREAD_COLOR); // Load an image
+	if (src.empty())
+	{
+		printf(" Error opening image\n");
+		printf(" Program Arguments: [image_name -- default lena.jpg] \n");
+		return "";
+	}
+	double lambda = imageSize / 5;
+	double theta = 45;
+	double psi = 180;
+	double gamma = 0.5;
+	double sigma = 0.56 * lambda;
+
+	Mat kernel = cv::getGaborKernel(cv::Size(kernel_size, kernel_size), sigma, theta, lambda, gamma, psi);
+	filter2D(src, dst, CV_32F, kernel);
+
+	string result = "";
+	for (int i = 0; i < dst.rows; i++)
+	{
+		for (int j = 0; j < dst.cols; j++)
+		{
+			result += to_string(dst.at<float>(i, j)) + ", ";
+		}
+	}
+	// returns the matrix in string format
+	return result;
+}
+
+string Gallery::rhythmFilter(string path)
+{
 	CvHistogram* hist;
 
 	ofVideoPlayer video;
@@ -596,7 +686,7 @@ string Gallery::rhythm(string path)
 		hist = cvCreateHist(1, hist_size, CV_HIST_ARRAY, ranges, 1);
 
 		cvCalcHist(plane, hist, 0, 0);
-		cvNormalizeHist(hist, 20 * 255); // Normalize it  
+		cvNormalizeHist(hist, 20.0 * 255.0); // Normalize it
 
 		cvCalcBackProject(plane, grayBack.getCvImage(), hist);// Calculate back projection  
 		cvNormalizeHist(hist, 1.0); // Normalize it  
@@ -607,6 +697,7 @@ string Gallery::rhythm(string path)
 
 	cvReleaseHist(&hist);
 
+	string rhythm = "";
 	return rhythm;
 }
 
