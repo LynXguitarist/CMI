@@ -20,8 +20,8 @@ D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaW
 D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(290,31): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(440,12): warning C4996: 'ofImage_<unsigned char>::bAllocated': Use isAllocated()
 D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(492,31): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(578,11): warning C4129: 'P': unrecognized character escape sequence
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(578,11): warning C4129: 'W': unrecognized character escape sequence
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(581,17): warning C4129: 'P': unrecognized character escape sequence
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(581,17): warning C4129: 'W': unrecognized character escape sequence
   CollaborativeMediaWall.vcxproj -> D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\bin\CollaborativeMediaWall_debug.exe
   
   	                   2	D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\libs\fmod\lib\vs\x64\

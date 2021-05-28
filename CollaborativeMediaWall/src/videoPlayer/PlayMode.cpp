@@ -95,12 +95,12 @@ void PlayMode::update()
 	}
 	isGestureModeButton->update();
 
-	if (!video.isPaused()) {
+	if (!video.isPaused())
 		video.update();
-	}
 
-	if (ofGetElapsedTimef() - time > diffTime) {
-		changeCurrentItem(true);
+	if (ofGetElapsedTimef() - time > diffTime && !video.isPaused()) {
+		if (video.isLoaded() && video.getIsMovieDone())
+			changeCurrentItem(true);
 	}
 
 }
@@ -119,18 +119,21 @@ void PlayMode::draw()
 	ofDrawLine(previousUI.getTopLeft(), previousUI.getTopRight());
 	ofDrawLine(previousUI.getTopRight(), previousUI.getBottomRight());
 	ofDrawLine(previousUI.getBottomLeft(), previousUI.getBottomRight());
+	ofDrawBitmapString("Previous", previousUI.getCenter().x - 30, previousUI.getCenter().y);
 	//---------------next
 	ofSetColor(nextColor);
 	ofDrawLine(nextUI.getBottomLeft(), nextUI.getTopLeft());
 	ofDrawLine(nextUI.getTopLeft(), nextUI.getTopRight());
 	ofDrawLine(nextUI.getTopRight(), nextUI.getBottomRight());
 	ofDrawLine(nextUI.getBottomLeft(), nextUI.getBottomRight());
+	ofDrawBitmapString("Next", nextUI.getCenter().x - 10, nextUI.getCenter().y);
 	//---------------stop/pause
 	ofSetColor(stopColor);
 	ofDrawLine(stopUI.getBottomLeft(), stopUI.getTopLeft());
 	ofDrawLine(stopUI.getTopLeft(), stopUI.getTopRight());
 	ofDrawLine(stopUI.getTopRight(), stopUI.getBottomRight());
 	ofDrawLine(stopUI.getBottomLeft(), stopUI.getBottomRight());
+	ofDrawBitmapString("Play/Stop", stopUI.getCenter().x - 20, stopUI.getTopLeft().y);
 
 	// or, instead we can draw each blob individually from the blobs vector,
 	// this is how to get access to them:
@@ -143,11 +146,11 @@ void PlayMode::draw()
 			nextColor = ofColor::white;
 			stopColor = ofColor::white;
 
-			if (previousTime > 1.5 * 50 && previousTime < 3 * 50) {// if stayed inside rect more than 1.5 secs
+			if (previousTime > 1.5 * ofGetFrameRate() && previousTime < 3 * ofGetFrameRate()) {// if stayed inside rect more than 1.5 secs
 				// change rect color
 				previousColor = ofColor::green;
 			}
-			else if (previousTime > 3 * 50) { // if stayed inside rect more than 3 secs
+			else if (previousTime > 3 * ofGetFrameRate()) { // if stayed inside rect more than 3 secs
 				changeCurrentItem(false);
 				previousColor = ofColor::white;
 				previousTime = 0;
@@ -162,11 +165,11 @@ void PlayMode::draw()
 			previousColor = ofColor::white;
 			stopColor = ofColor::white;
 
-			if (nextTime > 1.5 * 50 && nextTime < 3 * 50) {// if stayed inside rect more than 1.5 secs
+			if (nextTime > 1.5 * ofGetFrameRate() && nextTime < 3 * ofGetFrameRate()) {// if stayed inside rect more than 1.5 secs
 				// change rect color
 				nextColor = ofColor::green;
 			}
-			else if (nextTime > 3 * 50) { // if stayed inside rect more than 3 secs
+			else if (nextTime > 3 * ofGetFrameRate()) { // if stayed inside rect more than 3 secs
 				changeCurrentItem(true);
 				nextColor = ofColor::white;
 				nextTime = 0;
@@ -181,11 +184,11 @@ void PlayMode::draw()
 			previousColor = ofColor::white;
 			nextColor = ofColor::white;
 
-			if (stopTime > 1.5 * 50 && stopTime < 3 * 50) {// if stayed inside rect more than 1.5 secs
+			if (stopTime > 1.5 * ofGetFrameRate() && stopTime < 3 * ofGetFrameRate()) {// if stayed inside rect more than 1.5 secs
 				// change rect color
 				stopColor = ofColor::green;
 			}
-			else if (stopTime > 3 * 50) { // if stayed inside rect more than 3 secs
+			else if (stopTime > 3 * fps.getFps()) { // if stayed inside rect more than 3 secs
 				if (video.isLoaded())
 					video.setPaused(!video.isPaused());
 
@@ -310,7 +313,7 @@ void PlayMode::setFadeIn(bool isVideo)
 		float videoLength = video.getDuration();
 		float videoElapsedTime = video.getPosition() * video.getDuration();
 		float videoTimeRemaining = videoLength - videoElapsedTime;
-		
+
 		if (videoTimeRemaining < fadeTime) { //if it is time to fade  
 			ofSetColor(255, 255, 255, 255 * videoTimeRemaining / fadeTime); // fade based on time left  
 		}
@@ -355,7 +358,6 @@ void PlayMode::changeCurrentItem(bool isNext) {
 			video.stop();
 			video.closeMovie();
 		}
-
 		image = items[currentItem]->getImage();
 		time = ofGetElapsedTimef();
 		diffTime = 5;

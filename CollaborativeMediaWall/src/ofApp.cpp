@@ -17,8 +17,8 @@ void ofApp::setup() {
 		videoPlayer.setup();
 		break;
 	case 1:
+		items = gallery.setup(videoPlayer.getSelectedId());
 		galleryUI();
-		items = gallery.setup(videoPlayer.getSelectedId()); // mudar isto
 		break;
 	case 4:
 		playMode.setup(items);
@@ -34,8 +34,8 @@ void ofApp::update() {
 	case 0:
 		videoPlayer.update();
 		if (videoPlayer.toNavigate() == 1) {
-			galleryUI();
 			items = gallery.setup(videoPlayer.getSelectedId());
+			galleryUI();
 			view = 1;
 		}
 		break;
@@ -75,12 +75,12 @@ void ofApp::draw() {
 	case 1:
 		search->draw();
 		isMovingIcon->draw();
-		colorPicker->draw();
 		reset->draw();
 		objectMode->draw();
 		colorMode->draw();
 		playModeB->draw();
 		gallery.draw();
+		colorPicker->draw();
 		break;
 	case 2:
 		galleryNavigate->draw();

@@ -563,6 +563,53 @@ string Gallery::filter2DAux(string itemName)
 	return result;
 }
 
+string Gallery::rhythm(string path)
+{
+	string rhythm = "";
+
+	CvHistogram* hist;
+
+	ofVideoPlayer video;
+	video.load(path);
+
+	for (int i = 0; i < video.getTotalNumFrames(); i++) {
+		video.nextFrame();
+		ofImage image = ofImage(video.getPixels());
+
+		ofxCvColorImage	colorImg;
+		ofxCvGrayscaleImage grayImage;
+		ofxCvGrayscaleImage grayBack;
+
+		colorImg.setFromPixels(image.getPixels());
+
+		grayImage = colorImg;
+
+		IplImage* iplImageGray;
+		IplImage** plane;
+
+		iplImageGray = grayImage.getCvImage();
+		plane = &iplImageGray;
+
+		int hist_size[] = { 30 };
+		float range[] = { 0, 180 };
+		float* ranges[] = { range };
+		hist = cvCreateHist(1, hist_size, CV_HIST_ARRAY, ranges, 1);
+
+		cvCalcHist(plane, hist, 0, 0);
+		cvNormalizeHist(hist, 20 * 255); // Normalize it  
+
+		cvCalcBackProject(plane, grayBack.getCvImage(), hist);// Calculate back projection  
+		cvNormalizeHist(hist, 1.0); // Normalize it  
+
+		//cvReleaseHist(&hist);
+	}
+	//rhythm = ofToString( ((float*)(cvPtr1D((hist)->bins, 0))) ); ???
+
+	cvReleaseHist(&hist);
+
+	return rhythm;
+}
+
 void Gallery::openInWMP(ofxDatGuiButtonEvent e)
 {
 	int index = e.target->getIndex();
@@ -575,7 +622,13 @@ void Gallery::openInWMP(ofxDatGuiButtonEvent e)
 		mode = "/fullscreen";
 	string command = " \"" + moviePath + "\" " + mode;
 
-	ofSystem("start /d \"C:\Program Files (x86)\Windows Media Player\" wmplayer " + command);
+	string mplayerPath = "C:\\Program Files (x86)\\Windows Media Player\\";
+	if (!ofDirectory(mplayerPath).exists())
+		mplayerPath = "C:\\Program Files\\Windows Media Player\\";
+
+	string mplayer = " \"" + mplayerPath + "\" ";
+
+	ofSystem("start /d " + mplayer + " wmplayer " + command);
 }
 
 void Gallery::extractMetadata(ofxDatGuiButtonEvent e) {

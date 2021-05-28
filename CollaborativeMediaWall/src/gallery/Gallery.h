@@ -41,6 +41,7 @@ private:
 	void handleUserItems(int userId);
 	void generateMetadata(string itemName, ofImage image);
 	string filter2DAux(string itemName);
+	string rhythm(string path);
 
 	//----------------------Events---------------//
 	void openInWMP(ofxDatGuiButtonEvent e);

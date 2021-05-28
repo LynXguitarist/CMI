@@ -72,6 +72,7 @@ public:
 	ofImage image;
 
 	// Timer - time that each item will preview before changing to the next
+	ofFpsCounter fps;
 	float time;
 	short diffTime = 5;
 	float previousTime = 0;
