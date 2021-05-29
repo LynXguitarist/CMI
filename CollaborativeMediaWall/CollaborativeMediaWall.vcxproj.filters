@@ -13,9 +13,6 @@
     <ClCompile Include="src\item\Item.cpp">
       <Filter>src\item</Filter>
     </ClCompile>
-    <ClCompile Include="src\item\Metadata.cpp">
-      <Filter>src\item</Filter>
-    </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -306,9 +303,6 @@
       <Filter>src\gallery</Filter>
     </ClInclude>
     <ClInclude Include="src\item\Item.h">
-      <Filter>src\item</Filter>
-    </ClInclude>
-    <ClInclude Include="src\item\Metadata.h">
       <Filter>src\item</Filter>
     </ClInclude>
     <ClInclude Include="src\ofApp.h">

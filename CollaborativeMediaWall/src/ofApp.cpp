@@ -44,9 +44,11 @@ void ofApp::update() {
 		isMovingIcon->update();
 		colorPicker->update();
 		reset->update();
+
 		objectMode->update();
 		colorMode->update();
 		playModeB->update();
+
 		gallery.update();
 		break;
 	case 2:
@@ -76,10 +78,13 @@ void ofApp::draw() {
 		search->draw();
 		isMovingIcon->draw();
 		reset->draw();
+
 		objectMode->draw();
 		colorMode->draw();
 		playModeB->draw();
 		gallery.draw();
+
+		ofFill();
 		colorPicker->draw();
 		break;
 	case 2:

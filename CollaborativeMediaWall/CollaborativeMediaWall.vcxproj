@@ -186,7 +186,6 @@
     <ClCompile Include="src\ofApp.cpp" />
     <ClCompile Include="src\gallery\Gallery.cpp" />
     <ClCompile Include="src\item\Item.cpp" />
-    <ClCompile Include="src\item\Metadata.cpp" />
     <ClCompile Include="src\videoPlayer\VideoPlayer.cpp" />
     <ClCompile Include="..\..\..\..\addons\ofxDatGui-master\src\core\ofxDatGuiComponent.cpp" />
     <ClCompile Include="..\..\..\..\addons\ofxDatGui-master\src\libs\ofxSmartFont\ofxSmartFont.cpp" />
@@ -219,7 +218,6 @@
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="src\gallery\Gallery.h" />
     <ClInclude Include="src\item\Item.h" />
-    <ClInclude Include="src\item\Metadata.h" />
     <ClInclude Include="src\videoPlayer\VideoPlayer.h" />
     <ClInclude Include="..\..\..\..\addons\ofxDatGui-master\src\components\ofxDatGui2dPad.h" />
     <ClInclude Include="..\..\..\..\addons\ofxDatGui-master\src\components\ofxDatGuiButton.h" />
