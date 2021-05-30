@@ -35,9 +35,13 @@ public:
     float camW;
     float camH;
 
+
     float cropSize;
 
     float searchedHue;
+
+    float imageSize;
+
 
     ofVideoGrabber camera;
     ofxCvColorImage color;
@@ -52,5 +56,8 @@ public:
 
     vector<Item*> items;
     vector<Item*> filteredItems;
+    int currentItem;
+
+
 };
 
