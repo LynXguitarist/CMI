@@ -540,19 +540,30 @@ void Gallery::generateMetadata(string itemName, string path, ofImage image, bool
 	// color && luminance
 	ofPixels& pixels = image.getPixels();
 
-	float avgColor = 0;
+	float avgRed = 0;
+	float avgGreen = 0;
+	float avgBlue = 0;
 	float avgLuminance = 0;
 
 	int pixelSize = pixels.size();
 	for (int i = 0; pixelSize; i++) {
-		avgColor += pixels.getColor(pixels[i]).getHue();
+		avgRed += pixels.getColor(pixels[i]).r;
+		avgGreen += pixels.getColor(pixels[i]).r;
+		avgBlue += pixels.getColor(pixels[i]).r;
 		avgLuminance += pixels.getColor(pixels[i]).getBrightness();
 	}
-	avgColor = avgColor / pixelSize;
+	avgRed /= pixelSize;
+	avgGreen /= pixelSize;
+	avgBlue /= pixelSize;
 	avgLuminance = avgLuminance / pixelSize;
+	ofColor newColor;
+	newColor.r = avgRed;
+	newColor.g = avgGreen;
+	newColor.b = avgBlue;
+
 
 	itemsXML.setValue("luminance", avgLuminance);
-	itemsXML.setValue("color", avgColor);
+	itemsXML.setValue("color", newColor.getHue());
 
 	// faces
 	// finder faces

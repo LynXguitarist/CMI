@@ -4,6 +4,8 @@
 #include "Gallery.h"
 #include "VideoPlayer.h"
 #include "PlayMode.h"
+#include "ColorMode.h"
+#include "Item.h"
 
 class ofApp : public ofBaseApp {
 
@@ -47,13 +49,14 @@ public:
 	ofxDatGuiButton* galleryNavigate;
 	ofxDatGuiButton* reset;
 
-	ofxDatGuiButton* objectMode;
-	ofxDatGuiButton* colorMode;
+	ofxDatGuiButton* objectModeB;
+	ofxDatGuiButton* colorModeB;
 	ofxDatGuiButton* playModeB;
 
 	//------------------------Auxiliar_classes-------------------//
 	Gallery gallery;
 	VideoPlayer videoPlayer;
 	PlayMode playMode;
+	ColorMode colorMode;
 	int view;
 };

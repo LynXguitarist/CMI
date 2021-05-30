@@ -44,9 +44,8 @@ void ofApp::update() {
 		isMovingIcon->update();
 		colorPicker->update();
 		reset->update();
-
-		objectMode->update();
-		colorMode->update();
+		objectModeB->update();
+		colorModeB->update();
 		playModeB->update();
 
 		gallery.update();
@@ -56,6 +55,7 @@ void ofApp::update() {
 		break;
 	case 3:
 		galleryNavigate->update();
+		colorMode.update();
 		break;
 	case 4:
 		galleryNavigate->update();
@@ -78,9 +78,8 @@ void ofApp::draw() {
 		search->draw();
 		isMovingIcon->draw();
 		reset->draw();
-
-		objectMode->draw();
-		colorMode->draw();
+		objectModeB->draw();
+		colorModeB->draw();
 		playModeB->draw();
 		gallery.draw();
 
@@ -92,6 +91,8 @@ void ofApp::draw() {
 		break;
 	case 3:
 		galleryNavigate->draw();
+		colorMode.draw();
+		
 		break;
 	case 4:
 		galleryNavigate->draw();
@@ -207,21 +208,21 @@ void ofApp::galleryUI() {
 	reset->onButtonEvent(this, &ofApp::onButtonEvent);
 
 	// Modes
-	objectMode = new ofxDatGuiButton("Object Mode");
-	objectMode->setIndex(0);
-	objectMode->setPosition(0, 50);
-	objectMode->setWidth(100);
-	objectMode->onButtonEvent(this, &ofApp::onButtonEvent);
+	objectModeB = new ofxDatGuiButton("Object Mode");
+	objectModeB->setIndex(0);
+	objectModeB->setPosition(0, 50);
+	objectModeB->setWidth(100);
+	objectModeB->onButtonEvent(this, &ofApp::onButtonEvent);
 
-	colorMode = new ofxDatGuiButton("Color Mode");
-	colorMode->setIndex(1);
-	colorMode->setPosition(objectMode->getWidth(), 50);
-	colorMode->setWidth(100);
-	colorMode->onButtonEvent(this, &ofApp::onButtonEvent);
+	colorModeB = new ofxDatGuiButton("Color Mode");
+	colorModeB->setIndex(1);
+	colorModeB->setPosition(objectModeB->getWidth(), 50);
+	colorModeB->setWidth(100);
+	colorModeB->onButtonEvent(this, &ofApp::onButtonEvent);
 
 	playModeB = new ofxDatGuiButton("Play Mode");
 	playModeB->setIndex(2);
-	playModeB->setPosition(objectMode->getWidth() + colorMode->getWidth(), 50);
+	playModeB->setPosition(objectModeB->getWidth() + colorModeB->getWidth(), 50);
 	playModeB->setWidth(100);
 	playModeB->onButtonEvent(this, &ofApp::onButtonEvent);
 
@@ -264,6 +265,7 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e) {
 		break;
 	case 1: // colorMode
 		view = 3;
+		colorMode.setup(items);
 		break;
 	case 2: // playMode
 		view = 4;
