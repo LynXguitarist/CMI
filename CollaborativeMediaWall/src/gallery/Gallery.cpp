@@ -1,7 +1,7 @@
 #include "Gallery.h"
 
 //--------------------------------------------------------------
-vector<Item*> Gallery::setup(int id, bool isUser) {
+vector<Item*> Gallery::setup(int id, bool isUser, vector<Item*> items_input) {
 	// Init xml objects -> items, user_items
 	initXmlObjects();
 
@@ -17,7 +17,7 @@ vector<Item*> Gallery::setup(int id, bool isUser) {
 					projectsXml.pushTag("user", j);
 					int userId = projectsXml.getValue("id", 0);
 					// handle user items for the user with id = userId
-					handleUserItems(userId);
+					handleUserItems(userId, items_input);
 					projectsXml.popTag(); // user
 				}
 				projectsXml.popTag(); // users
@@ -29,7 +29,7 @@ vector<Item*> Gallery::setup(int id, bool isUser) {
 	}
 	else {
 		// if is user
-		handleUserItems(id);
+		handleUserItems(id, items_input);
 	}
 
 	// Buttons
@@ -440,77 +440,87 @@ bool Gallery::hasItemMetadata(string itemName)
 	return found;
 }
 
-void Gallery::handleUserItems(int userId) {
-	int numberOfUsers = user_itemsXML.getNumTags("user_items");
+void Gallery::handleUserItems(int userId, vector<Item*> items_input) {
+	if (items_input.empty()) {
+		int numberOfUsers = user_itemsXML.getNumTags("user_items");
 
-	int numberOfItems = 0;
-	vector<string> user_items;
+		int numberOfItems = 0;
+		vector<string> user_items;
 
-	for (int i = 0; i < numberOfUsers; i++) {
-		user_itemsXML.pushTag("user_items", i);
+		for (int i = 0; i < numberOfUsers; i++) {
+			user_itemsXML.pushTag("user_items", i);
 
-		if (user_itemsXML.getValue("user", 0) == userId) {
-			// get items
-			user_itemsXML.pushTag("items", i);
-			numberOfItems = user_itemsXML.getNumTags("item");
+			if (user_itemsXML.getValue("user", 0) == userId) {
+				// get items
+				user_itemsXML.pushTag("items", i);
+				numberOfItems = user_itemsXML.getNumTags("item");
 
-			user_items.assign(numberOfItems, string());
+				user_items.assign(numberOfItems, string());
 
-			for (int j = 0; j < numberOfItems; j++) {
-				user_itemsXML.pushTag("item", j);
-				string itemId = user_itemsXML.getValue("id", "");
-				// add to vector
-				user_items.push_back(itemId);
+				for (int j = 0; j < numberOfItems; j++) {
+					user_itemsXML.pushTag("item", j);
+					string itemId = user_itemsXML.getValue("id", "");
+					// add to vector
+					user_items.push_back(itemId);
 
-				user_itemsXML.popTag(); // item
+					user_itemsXML.popTag(); // item
+				}
+			}
+			user_itemsXML.popTag(); // items
+			user_itemsXML.popTag(); // user_items
+		}
+		//----------ofDirectory
+		dir.listDir("items/");
+		dir.sort(); // in linux the file system doesn't return file lists ordered in alphabetical order
+
+		//allocate the vector to have as many ofImages as files
+		if (dir.size()) {
+			items.assign(numberOfItems, &Item("", ofImage(), false, false));
+			auxItems.assign(numberOfItems, &Item("", ofImage(), false, false));
+		}
+
+		int counter = 0;
+
+		for (int i = 0; i < (int)dir.size(); i++) {
+			// checks if user has the item
+			string fileName = dir.getName(i);
+			string itemName = fileName.substr(0, fileName.find('.'));
+
+			if (find(user_items.begin(), user_items.end(), itemName) != user_items.end()) {
+				string path = dir.getPath(i);
+				ofImage img = ofImage(path);
+				bool isVideo = false;
+				if (!img.bAllocated()) {
+					isVideo = true;
+
+					video.load(path);
+					video.play();
+					video.setPaused(true);
+					video.setPosition(0.5);
+
+					img.setFromPixels(video.getPixels());
+				}
+				Item* item = new Item(path, img, isVideo, false);
+				items[counter] = item;
+
+				auxItems[counter++] = item;
+
+				// generate metadata if not already generated
+				if (!hasItemMetadata(itemName)) {
+					//generateMetadata(itemName, path, img, isVideo);
+				}
 			}
 		}
-		user_itemsXML.popTag(); // items
-		user_itemsXML.popTag(); // user_items
+		itemsSize = counter;
 	}
-	//----------ofDirectory
-	dir.listDir("items/");
-	dir.sort(); // in linux the file system doesn't return file lists ordered in alphabetical order
-
-	//allocate the vector to have as many ofImages as files
-	if (dir.size()) {
-		items.assign(numberOfItems, &Item("", ofImage(), false, false));
-		auxItems.assign(numberOfItems, &Item("", ofImage(), false, false));
-	}
-
-	int counter = 0;
-
-	for (int i = 0; i < (int)dir.size(); i++) {
-		// checks if user has the item
-		string fileName = dir.getName(i);
-		string itemName = fileName.substr(0, fileName.find('.'));
-
-		if (find(user_items.begin(), user_items.end(), itemName) != user_items.end()) {
-			string path = dir.getPath(i);
-			ofImage img = ofImage(path);
-			bool isVideo = false;
-			if (!img.bAllocated()) {
-				isVideo = true;
-
-				video.load(path);
-				video.play();
-				video.setPaused(true);
-				video.setPosition(0.5);
-
-				img.setFromPixels(video.getPixels());
-			}
-			Item* item = new Item(path, img, isVideo, false);
-			items[counter] = item;
-			auxItems[counter++] = item;
-
-			// generate metadata if not already generated
-			if (!hasItemMetadata(itemName)) {
-				//generateMetadata(itemName, path, img, isVideo);
-			}
-		}
+	else {
+		int counter = items_input.size();
+		items.clear();
+		items.resize(counter);
+		itemsSize = counter;
+		items = items_input;
 	}
 	currentItem = 0;
-	itemsSize = counter;
 }
 
 void Gallery::generateMetadata(string itemName, string path, ofImage image, bool isVideo)
@@ -568,11 +578,28 @@ void Gallery::generateMetadata(string itemName, string path, ofImage image, bool
 	// faces
 	// finder faces
 	finder.setup("data_xml/haarcascade_frontalface_default.xml");
-	int faces = finder.findHaarObjects(image);
+	int faces = 0;
+	if (isVideo) {
+		ofVideoPlayer auxVideo;
+		auxVideo.load(path);
+
+		for (int i = 0; i <= 1; i += 0.25) {
+			ofImage auxImg;
+
+			auxImg.setFromPixels(auxVideo.getPixels());
+			faces += finder.findHaarObjects(image);
+
+			auxVideo.setPosition(i);
+		}
+		faces /= 5;
+	}
+	else {
+		faces = finder.findHaarObjects(image);
+	}
 
 	itemsXML.addValue("faces", faces);
 	// edges - filter2D
-	string edges = edgesFilter(itemName);
+	string edges = edgesFilter(itemName, image);
 	if (edges != "")
 		itemsXML.setValue("edges", edges);
 	// texture
@@ -587,7 +614,7 @@ void Gallery::generateMetadata(string itemName, string path, ofImage image, bool
 	itemsXML.popTag(); // item
 }
 
-string Gallery::edgesFilter(string itemName)
+string Gallery::edgesFilter(string itemName, ofImage image)
 {
 	// Declare variables
 	Mat src, dst;
@@ -595,8 +622,10 @@ string Gallery::edgesFilter(string itemName)
 	Point anchor;
 	double delta;
 	int ddepth;
-	float kernel_size;
-	const char* window_name = "filter2D Demo";
+	double kernel_size;
+
+	// when video what to do?
+
 	// Loads an image
 	src = imread(samples::findFile(itemName), IMREAD_COLOR); // Load an image
 	if (src.empty())
@@ -609,18 +638,14 @@ string Gallery::edgesFilter(string itemName)
 	anchor = Point(-1, -1);
 	delta = 0;
 	ddepth = -1;
-	// Loop - Will filter the image with different kernel sizes each 0.5 seconds
-	int ind = 0;
-	for (;;)
-	{
-		// Update kernel size for a normalized box filter
-		kernel_size = 3 + 2 * (ind % 5);
-		kernel = Mat::ones(kernel_size, kernel_size, CV_32F) / (kernel_size * kernel_size);
-		// Apply filter
-		filter2D(src, dst, ddepth, kernel, anchor, delta, BORDER_DEFAULT);
 
-		ind++;
-	}
+	int ind = 1;
+	// Update kernel size for a normalized box filter
+	kernel_size = 3 + 2 * (ind % 5);
+	kernel = Mat::ones(kernel_size, kernel_size, CV_32F) / (kernel_size * kernel_size);
+	// Apply filter
+	filter2D(src, dst, ddepth, kernel, anchor, delta, BORDER_DEFAULT);
+
 	string result = "";
 	for (int i = 0; i < dst.rows; i++)
 	{
@@ -810,11 +835,6 @@ void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 		listTags[i] = tag;
 	}
 
-	//string luminance = ofSystemTextBoxDialog("Luminance", "1");
-	//string color = ofSystemTextBoxDialog("Color", "0");
-	//string faces = ofSystemTextBoxDialog("Faces", "1");
-	//string edge = ofSystemTextBoxDialog("Edge", "1");
-	//string texture = ofSystemTextBoxDialog("Texture", "");
 	string times = ofSystemTextBoxDialog("Number of objects to process (times a specific object (input as an image) appears in the video frame):", "1");
 	int numberTimes = stoi(times);
 	map<string, int> mapTimes;
@@ -822,10 +842,6 @@ void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 	for (int i = 0; i < numberTimes; i++) {
 		// process object
 	}
-
-	//string rhythm = "";
-	//if (items[index]->getIsVideo())
-	//	rhythm = ofSystemTextBoxDialog("Rhythm", "0");
 
 	int numberOfItems = itemsXML.getNumTags("item");
 	for (int i = 0; i < numberOfItems; i++) {
@@ -838,12 +854,6 @@ void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 				itemsXML.setValue("tag", listTags[j], j + numExTags);
 			}
 			itemsXML.popTag(); // tags
-
-			//itemsXML.setValue("luminance", luminance);
-			//itemsXML.setValue("color", color);
-			//itemsXML.setValue("faces", faces);
-			//itemsXML.setValue("edge", edge);
-			//itemsXML.setValue("texture", texture);
 
 			int j = 0;
 			itemsXML.pushTag("times");

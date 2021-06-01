@@ -13,7 +13,7 @@ void ColorMode::setup(vector<Item*> thisItems)
     imageSize = (ofGetViewportWidth() - 200) / 3;
  
 
-    camera.initGrabber(camW, camH);
+    camera.setup(camW, camH);
     cameraPosX = ofGetViewportWidth() -  camW;
     cameraPosY = ofGetViewportHeight() - camH;
     color.allocate(camW, camH);
@@ -34,7 +34,7 @@ void ColorMode::setup(vector<Item*> thisItems)
 void ColorMode::update()
 {
     searchButton->update();
-   camera.update();
+    camera.update();
     if (camera.isFrameNew()) {
         ofPixels& pixels = camera.getPixels();
         pixels.cropTo(pixelsCropped,(camW-cropSize)/2, (camH - cropSize) / 2,cropSize,cropSize);
@@ -54,77 +54,18 @@ void ColorMode::draw()
     ofDrawLine(selectedArea.getBottomLeft(), selectedArea.getBottomRight());
 
     textureCropped.draw(cameraPosX-cropSize,cameraPosY);
-
-
-    if (searchedHue != -1) {
-    float itemPosX= 0;
-    float itemPosY = 50;
-    int itemsSize = filteredItems.size();
-    int displayRange = currentItem + 3;
-    if (displayRange > itemsSize)
-        displayRange = itemsSize;
-
-    for (int i = currentItem; i < displayRange; i++) {
-        string path = filteredItems[i]->getPath();
-        //bool isCurrVideoPlaying = items[i]->getIsVideoPlaying();
-        int position = itemPosX * imageSize + (itemPosX + 1) * 50;
-
-        /*      if (isCurrVideoPlaying && !isMovingIcon) {
-                  if (video.getCurrentFrame() >= 50)
-                      video.firstFrame();
-
-                  video.draw(position, 50 + y, imageSize, imageSize);
-              }
-              else {
-                  if (isMovingIcon && isCurrVideoPlaying) {
-                      video.setPosition(currentFrame);
-                      image.setFromPixels(video.getPixels());
-                      nextFrame();
-                      // waits x secs
-                      Sleep(800);
-                  }
-                  */
-
-
-
-        ofImage image = items[i]->getImage(); // init image 
-        image.draw(position, 50 + itemPosY, imageSize, imageSize);
-        itemPosX++;
-    }
-    }
-
     if(searchedHue!=-1){
         ofColor searchColor;
         searchColor.setHsb(searchedHue,255,255);        
         ofSetColor(searchColor);
         ofDrawRectangle(cameraPosX-cropSize, cameraPosY+cropSize, cropSize, cropSize);
     }
-
+    ofSetColor(255);
    
 }
 
 void ColorMode::keyPressed(int key)
 {
-    //short inc = 1;
-    if (GetKeyState(VK_RIGHT)) {
-        if (currentItem < items.size() - 3) {
-            currentItem++;
-            //currentItem %= itemsSize;
-        }
-    }
-    else if (GetKeyState(VK_LEFT)) {
-        if (currentItem >= 1) {
-            currentItem--;
-            //currentItem %= itemsSize;
-         //   inc = -1;
-        }
-    }
-   /* else if (GetKeyState(VK_SPACE)) {
-        if (video.isLoaded()) {
-            video.setPaused(!video.isPaused());
-        }
-    }
-    */
 }
 
 void ColorMode::keyReleased(int key)
@@ -189,7 +130,6 @@ void ColorMode::searchFunction(ofxDatGuiButtonEvent e)
     newColor.g = greenSum;
     newColor.b = blueSum;
     searchedHue = newColor.getHue();
-  // searchedHue = 0;
     if(!filteredItems.empty()) filteredItems.clear();
     int numItems = itemsXML.getNumTags("item");
 

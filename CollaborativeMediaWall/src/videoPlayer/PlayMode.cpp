@@ -50,13 +50,22 @@ void PlayMode::setup(vector<Item*> items)
 	this->items.assign(itemsSize, &Item("", ofImage(), false, false));
 	this->items = items;
 	currentItem = 0;
-
-	if (items[currentItem]->getIsVideo()) {
-		video.load(items[currentItem]->getPath());
-		video.setLoopState(OF_LOOP_NONE); // stops video from looping
+	if (!items.empty()) {
+		if (items[currentItem]->getIsVideo()) {
+			video.load(items[currentItem]->getPath());
+			video.setLoopState(OF_LOOP_NONE); // stops video from looping
+		}
+		else
+			image = items[currentItem]->getImage();
+		if (items.size() > 1) {
+			if (items[currentItem + 1]->getIsVideo()) {
+				video2.load(items[currentItem + 1]->getPath());
+				video2.setLoopState(OF_LOOP_NONE); // stops video from looping
+			}
+			else
+				image2 = items[currentItem + 1]->getImage();
+		}
 	}
-	else
-		image = items[currentItem]->getImage();
 
 	time = ofGetElapsedTimef();
 }
