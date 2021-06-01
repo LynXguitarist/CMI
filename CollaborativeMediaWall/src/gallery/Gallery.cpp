@@ -1,7 +1,7 @@
 #include "Gallery.h"
 
 //--------------------------------------------------------------
-vector<Item*> Gallery::setup(int id, bool isUser) {
+vector<Item*> Gallery::setup(int id, bool isUser, vector<Item*> items_input) {
 	// Init xml objects -> items, user_items
 	initXmlObjects();
 
@@ -17,7 +17,7 @@ vector<Item*> Gallery::setup(int id, bool isUser) {
 					projectsXml.pushTag("user", j);
 					int userId = projectsXml.getValue("id", 0);
 					// handle user items for the user with id = userId
-					handleUserItems(userId);
+					handleUserItems(userId, items_input);
 					projectsXml.popTag(); // user
 				}
 				projectsXml.popTag(); // users
@@ -29,7 +29,7 @@ vector<Item*> Gallery::setup(int id, bool isUser) {
 	}
 	else {
 		// if is user
-		handleUserItems(id);
+		handleUserItems(id, items_input);
 	}
 
 	// Buttons
@@ -440,77 +440,87 @@ bool Gallery::hasItemMetadata(string itemName)
 	return found;
 }
 
-void Gallery::handleUserItems(int userId) {
-	int numberOfUsers = user_itemsXML.getNumTags("user_items");
+void Gallery::handleUserItems(int userId, vector<Item*> items_input) {
+	if (items_input.empty()) {
+		int numberOfUsers = user_itemsXML.getNumTags("user_items");
 
-	int numberOfItems = 0;
-	vector<string> user_items;
+		int numberOfItems = 0;
+		vector<string> user_items;
 
-	for (int i = 0; i < numberOfUsers; i++) {
-		user_itemsXML.pushTag("user_items", i);
+		for (int i = 0; i < numberOfUsers; i++) {
+			user_itemsXML.pushTag("user_items", i);
 
-		if (user_itemsXML.getValue("user", 0) == userId) {
-			// get items
-			user_itemsXML.pushTag("items", i);
-			numberOfItems = user_itemsXML.getNumTags("item");
+			if (user_itemsXML.getValue("user", 0) == userId) {
+				// get items
+				user_itemsXML.pushTag("items", i);
+				numberOfItems = user_itemsXML.getNumTags("item");
 
-			user_items.assign(numberOfItems, string());
+				user_items.assign(numberOfItems, string());
 
-			for (int j = 0; j < numberOfItems; j++) {
-				user_itemsXML.pushTag("item", j);
-				string itemId = user_itemsXML.getValue("id", "");
-				// add to vector
-				user_items.push_back(itemId);
+				for (int j = 0; j < numberOfItems; j++) {
+					user_itemsXML.pushTag("item", j);
+					string itemId = user_itemsXML.getValue("id", "");
+					// add to vector
+					user_items.push_back(itemId);
 
-				user_itemsXML.popTag(); // item
+					user_itemsXML.popTag(); // item
+				}
+			}
+			user_itemsXML.popTag(); // items
+			user_itemsXML.popTag(); // user_items
+		}
+		//----------ofDirectory
+		dir.listDir("items/");
+		dir.sort(); // in linux the file system doesn't return file lists ordered in alphabetical order
+
+		//allocate the vector to have as many ofImages as files
+		if (dir.size()) {
+			items.assign(numberOfItems, &Item("", ofImage(), false, false));
+			auxItems.assign(numberOfItems, &Item("", ofImage(), false, false));
+		}
+
+		int counter = 0;
+
+		for (int i = 0; i < (int)dir.size(); i++) {
+			// checks if user has the item
+			string fileName = dir.getName(i);
+			string itemName = fileName.substr(0, fileName.find('.'));
+
+			if (find(user_items.begin(), user_items.end(), itemName) != user_items.end()) {
+				string path = dir.getPath(i);
+				ofImage img = ofImage(path);
+				bool isVideo = false;
+				if (!img.bAllocated()) {
+					isVideo = true;
+
+					video.load(path);
+					video.play();
+					video.setPaused(true);
+					video.setPosition(0.5);
+
+					img.setFromPixels(video.getPixels());
+				}
+				Item* item = new Item(path, img, isVideo, false);
+				items[counter] = item;
+
+				auxItems[counter++] = item;
+
+				// generate metadata if not already generated
+				if (!hasItemMetadata(itemName)) {
+					//generateMetadata(itemName, path, img, isVideo);
+				}
 			}
 		}
-		user_itemsXML.popTag(); // items
-		user_itemsXML.popTag(); // user_items
+		itemsSize = counter;
 	}
-	//----------ofDirectory
-	dir.listDir("items/");
-	dir.sort(); // in linux the file system doesn't return file lists ordered in alphabetical order
-
-	//allocate the vector to have as many ofImages as files
-	if (dir.size()) {
-		items.assign(numberOfItems, &Item("", ofImage(), false, false));
-		auxItems.assign(numberOfItems, &Item("", ofImage(), false, false));
-	}
-
-	int counter = 0;
-
-	for (int i = 0; i < (int)dir.size(); i++) {
-		// checks if user has the item
-		string fileName = dir.getName(i);
-		string itemName = fileName.substr(0, fileName.find('.'));
-
-		if (find(user_items.begin(), user_items.end(), itemName) != user_items.end()) {
-			string path = dir.getPath(i);
-			ofImage img = ofImage(path);
-			bool isVideo = false;
-			if (!img.bAllocated()) {
-				isVideo = true;
-
-				video.load(path);
-				video.play();
-				video.setPaused(true);
-				video.setPosition(0.5);
-
-				img.setFromPixels(video.getPixels());
-			}
-			Item* item = new Item(path, img, isVideo, false);
-			items[counter] = item;
-			auxItems[counter++] = item;
-
-			// generate metadata if not already generated
-			if (!hasItemMetadata(itemName)) {
-				//generateMetadata(itemName, path, img, isVideo);
-			}
-		}
+	else {
+		int counter = items_input.size();
+		items.clear();
+		items.resize(counter);
+		itemsSize = counter;
+		items = items_input;
 	}
 	currentItem = 0;
-	itemsSize = counter;
 }
 
 void Gallery::generateMetadata(string itemName, string path, ofImage image, bool isVideo)
@@ -570,10 +580,10 @@ void Gallery::generateMetadata(string itemName, string path, ofImage image, bool
 	finder.setup("data_xml/haarcascade_frontalface_default.xml");
 	int faces = 0;
 	if (isVideo) {
-		ofVideoPlayer auxVideo; 
+		ofVideoPlayer auxVideo;
 		auxVideo.load(path);
 
-		for (int i = 0; i <= 1; i+=0.25) {
+		for (int i = 0; i <= 1; i += 0.25) {
 			ofImage auxImg;
 
 			auxImg.setFromPixels(auxVideo.getPixels());
@@ -628,7 +638,7 @@ string Gallery::edgesFilter(string itemName, ofImage image)
 	anchor = Point(-1, -1);
 	delta = 0;
 	ddepth = -1;
-	
+
 	int ind = 1;
 	// Update kernel size for a normalized box filter
 	kernel_size = 3 + 2 * (ind % 5);
