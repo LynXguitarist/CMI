@@ -180,7 +180,7 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\videoPlayer\ObjectColorMode.cpp" />
+    <ClCompile Include="src\videoPlayer\ColorMode.cpp" />
     <ClCompile Include="src\videoPlayer\PlayMode.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
@@ -213,7 +213,7 @@
     <ClCompile Include="..\..\..\..\addons\ofxXmlSettings\libs\tinyxmlparser.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\videoPlayer\ObjectColorMode.h" />
+    <ClInclude Include="src\videoPlayer\ColorMode.h" />
     <ClInclude Include="src\videoPlayer\PlayMode.h" />
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="src\gallery\Gallery.h" />

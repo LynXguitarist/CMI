@@ -11,7 +11,7 @@ void ColorMode::setup(vector<Item*> thisItems)
     items = thisItems;
  
 
-    camera.initGrabber(camW, camH);
+    camera.setup(camW, camH);
     cameraPosX = ofGetViewportWidth() -  camW;
     cameraPosY = ofGetViewportHeight() - camH;
     color.allocate(camW, camH);
@@ -32,7 +32,7 @@ void ColorMode::setup(vector<Item*> thisItems)
 void ColorMode::update()
 {
     searchButton->update();
-   camera.update();
+    camera.update();
     if (camera.isFrameNew()) {
         ofPixels& pixels = camera.getPixels();
         pixels.cropTo(pixelsCropped,(camW-cropSize)/2, (camH - cropSize) / 2,cropSize,cropSize);
@@ -58,7 +58,7 @@ void ColorMode::draw()
         ofSetColor(searchColor);
         ofDrawRectangle(cameraPosX-cropSize, cameraPosY+cropSize, cropSize, cropSize);
     }
-
+    ofSetColor(255);
    
 }
 

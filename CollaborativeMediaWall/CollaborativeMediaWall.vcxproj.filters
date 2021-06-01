@@ -97,7 +97,7 @@
     <ClCompile Include="src\videoPlayer\PlayMode.cpp">
       <Filter>src\videoPlayer</Filter>
     </ClCompile>
-    <ClCompile Include="src\videoPlayer\ObjectColorMode.cpp">
+    <ClCompile Include="src\videoPlayer\ColorMode.cpp">
       <Filter>src\videoPlayer</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1298,7 +1298,7 @@
     <ClInclude Include="src\videoPlayer\PlayMode.h">
       <Filter>src\videoPlayer</Filter>
     </ClInclude>
-    <ClInclude Include="src\videoPlayer\ObjectColorMode.h">
+    <ClInclude Include="src\videoPlayer\ColorMode.h">
       <Filter>src\videoPlayer</Filter>
     </ClInclude>
   </ItemGroup>

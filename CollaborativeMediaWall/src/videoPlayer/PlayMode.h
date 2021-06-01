@@ -69,7 +69,9 @@ public:
 	int itemsSize;
 	int currentItem;
 	ofVideoPlayer video;
+	ofVideoPlayer video2;
 	ofImage image;
+	ofImage image2;
 
 	// Timer - time that each item will preview before changing to the next
 	ofFpsCounter fps;

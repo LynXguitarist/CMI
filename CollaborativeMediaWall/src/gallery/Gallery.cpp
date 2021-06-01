@@ -568,11 +568,28 @@ void Gallery::generateMetadata(string itemName, string path, ofImage image, bool
 	// faces
 	// finder faces
 	finder.setup("data_xml/haarcascade_frontalface_default.xml");
-	int faces = finder.findHaarObjects(image);
+	int faces = 0;
+	if (isVideo) {
+		ofVideoPlayer auxVideo; 
+		auxVideo.load(path);
+
+		for (int i = 0; i <= 1; i+=0.25) {
+			ofImage auxImg;
+
+			auxImg.setFromPixels(auxVideo.getPixels());
+			faces += finder.findHaarObjects(image);
+
+			auxVideo.setPosition(i);
+		}
+		faces /= 5;
+	}
+	else {
+		faces = finder.findHaarObjects(image);
+	}
 
 	itemsXML.addValue("faces", faces);
 	// edges - filter2D
-	string edges = edgesFilter(itemName);
+	string edges = edgesFilter(itemName, image);
 	if (edges != "")
 		itemsXML.setValue("edges", edges);
 	// texture
@@ -587,7 +604,7 @@ void Gallery::generateMetadata(string itemName, string path, ofImage image, bool
 	itemsXML.popTag(); // item
 }
 
-string Gallery::edgesFilter(string itemName)
+string Gallery::edgesFilter(string itemName, ofImage image)
 {
 	// Declare variables
 	Mat src, dst;
@@ -595,8 +612,10 @@ string Gallery::edgesFilter(string itemName)
 	Point anchor;
 	double delta;
 	int ddepth;
-	float kernel_size;
-	const char* window_name = "filter2D Demo";
+	double kernel_size;
+
+	// when video what to do?
+
 	// Loads an image
 	src = imread(samples::findFile(itemName), IMREAD_COLOR); // Load an image
 	if (src.empty())
@@ -609,18 +628,14 @@ string Gallery::edgesFilter(string itemName)
 	anchor = Point(-1, -1);
 	delta = 0;
 	ddepth = -1;
-	// Loop - Will filter the image with different kernel sizes each 0.5 seconds
-	int ind = 0;
-	for (;;)
-	{
-		// Update kernel size for a normalized box filter
-		kernel_size = 3 + 2 * (ind % 5);
-		kernel = Mat::ones(kernel_size, kernel_size, CV_32F) / (kernel_size * kernel_size);
-		// Apply filter
-		filter2D(src, dst, ddepth, kernel, anchor, delta, BORDER_DEFAULT);
+	
+	int ind = 1;
+	// Update kernel size for a normalized box filter
+	kernel_size = 3 + 2 * (ind % 5);
+	kernel = Mat::ones(kernel_size, kernel_size, CV_32F) / (kernel_size * kernel_size);
+	// Apply filter
+	filter2D(src, dst, ddepth, kernel, anchor, delta, BORDER_DEFAULT);
 
-		ind++;
-	}
 	string result = "";
 	for (int i = 0; i < dst.rows; i++)
 	{
@@ -810,11 +825,6 @@ void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 		listTags[i] = tag;
 	}
 
-	//string luminance = ofSystemTextBoxDialog("Luminance", "1");
-	//string color = ofSystemTextBoxDialog("Color", "0");
-	//string faces = ofSystemTextBoxDialog("Faces", "1");
-	//string edge = ofSystemTextBoxDialog("Edge", "1");
-	//string texture = ofSystemTextBoxDialog("Texture", "");
 	string times = ofSystemTextBoxDialog("Number of objects to process (times a specific object (input as an image) appears in the video frame):", "1");
 	int numberTimes = stoi(times);
 	map<string, int> mapTimes;
@@ -822,10 +832,6 @@ void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 	for (int i = 0; i < numberTimes; i++) {
 		// process object
 	}
-
-	//string rhythm = "";
-	//if (items[index]->getIsVideo())
-	//	rhythm = ofSystemTextBoxDialog("Rhythm", "0");
 
 	int numberOfItems = itemsXML.getNumTags("item");
 	for (int i = 0; i < numberOfItems; i++) {
@@ -838,12 +844,6 @@ void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 				itemsXML.setValue("tag", listTags[j], j + numExTags);
 			}
 			itemsXML.popTag(); // tags
-
-			//itemsXML.setValue("luminance", luminance);
-			//itemsXML.setValue("color", color);
-			//itemsXML.setValue("faces", faces);
-			//itemsXML.setValue("edge", edge);
-			//itemsXML.setValue("texture", texture);
 
 			int j = 0;
 			itemsXML.pushTag("times");

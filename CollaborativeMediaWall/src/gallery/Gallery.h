@@ -41,7 +41,7 @@ private:
 	bool hasItemMetadata(string itemName);
 	void handleUserItems(int userId);
 	void generateMetadata(string itemName, string path, ofImage image, bool isVideo);
-	string edgesFilter(string itemName);
+	string edgesFilter(string itemName, ofImage image);
 	string textureFilter(string itemName);
 	string rhythmFilter(string path);
 
