@@ -396,3 +396,7 @@ void PlayMode::onToggleEvent(ofxDatGuiToggleEvent e)
 	isGestureModeButton->setChecked(!isGestureModeButton->getChecked());
 	isGestureMode = !isGestureMode;
 }
+
+void PlayMode::closeCam() {
+	camera.close();
+}

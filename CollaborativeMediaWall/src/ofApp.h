@@ -59,4 +59,5 @@ public:
 	PlayMode playMode;
 	ColorMode colorMode;
 	int view;
+	int currentUserId;
 };

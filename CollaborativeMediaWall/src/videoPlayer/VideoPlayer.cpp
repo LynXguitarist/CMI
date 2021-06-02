@@ -17,11 +17,12 @@ void VideoPlayer::setup()
 
 void VideoPlayer::update()
 {
-    if (numberOfFaces > 0) {
+    //MUDAR
+    //if (numberOfFaces > 0) {
         for (int i = 0; i < names.size(); i++) {
             names[i]->update();
         }
-    }
+    //}
     camera.update();
 
     if (camera.isFrameNew()) {
@@ -42,11 +43,12 @@ void VideoPlayer::draw()
         ofNoFill();
         ofDrawRectangle(haar.blobs[i].boundingRect);
     }
-    if (numberOfFaces > 0) {
+    //MUDAR
+    //if (numberOfFaces > 0) {
         for (int i = 0; i < names.size(); i++) {
             names[i]->draw();
         }
-    }
+    //}
 
 }
 

@@ -12,7 +12,7 @@ using namespace cv;
 class Gallery : public ofBaseApp
 {
 public:
-	vector<Item*> setup(int id, bool isUser, vector<Item*> items_input);
+	vector<Item*> setup(int id, bool isUser, vector<Item*> items_input, bool useItemsInput);
 	void update();
 	void draw();
 
@@ -39,7 +39,7 @@ private:
 
 	void initXmlObjects();
 	bool hasItemMetadata(string itemName);
-	void handleUserItems(int userId, vector<Item*> items_input);
+	void handleUserItems(int userId, vector<Item*> items_input, bool useItemsInput);
 	void generateMetadata(string itemName, string path, ofImage image, bool isVideo);
 	string edgesFilter(string itemName, ofImage image);
 	string textureFilter(string itemName);

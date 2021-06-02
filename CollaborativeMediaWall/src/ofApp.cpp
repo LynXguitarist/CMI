@@ -8,6 +8,7 @@ void ofApp::setup() {
 	ofBackground(ofColor::grey);
 	// voltar a meter a 0
 	view = 0;
+	currentUserId = -1;
 
 	gui = new ofxDatGui(0, 0);
 	menu();
@@ -17,7 +18,7 @@ void ofApp::setup() {
 		videoPlayer.setup();
 		break;
 	case 1:
-		items = gallery.setup(videoPlayer.getSelectedId(), isUser, vector<Item*>());
+		items = gallery.setup(videoPlayer.getSelectedId(), isUser, vector<Item*>(),false);
 		galleryUI();
 		break;
 	case 4:
@@ -34,7 +35,8 @@ void ofApp::update() {
 	case 0:
 		videoPlayer.update();
 		if (videoPlayer.toNavigate() == 1) {
-			items = gallery.setup(videoPlayer.getSelectedId(), isUser, vector<Item*>());
+			currentUserId = videoPlayer.getSelectedId();
+			items = gallery.setup(currentUserId, isUser, vector<Item*>(),false);
 			galleryUI();
 			view = 1;
 		}
@@ -56,6 +58,10 @@ void ofApp::update() {
 	case 3:
 		galleryNavigate->update();
 		colorMode.update();
+		if (colorMode.getToReturn()) {
+			gallery.setup(currentUserId, isUser, colorMode.getFilteredItems(),true);
+			view = 1;
+		}
 		break;
 	case 4:
 		galleryNavigate->update();
@@ -252,7 +258,7 @@ void ofApp::onColorPickerEvent(ofxDatGuiColorPickerEvent e) {
 
 //-----------------------Navigate--------------------------//
 void ofApp::navigateToGallery(int id) {
-	gallery.setup(id, isUser, vector<Item*>());
+	gallery.setup(id, isUser, vector<Item*>(),false);
 	view = 1;
 }
 
@@ -279,7 +285,12 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e) {
 	case 10: // go to Gallery
 		galleryUI();
 		// aqui mudas!!!!!
-		items = gallery.setup(videoPlayer.getSelectedId(), isUser, vector<Item*>());
+		items = gallery.setup(videoPlayer.getSelectedId(), isUser, vector<Item*>(),false);
+		switch (view) {
+		case 3: colorMode.closeCam();
+			break;
+		case 4: playMode.closeCam();
+		}
 		view = 1;
 		break;
 	}

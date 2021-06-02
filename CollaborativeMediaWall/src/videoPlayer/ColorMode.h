@@ -26,8 +26,12 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
     void initXmlObjects();
+    void closeCam();
 
     void searchFunction(ofxDatGuiButtonEvent e);
+    void submitFunction(ofxDatGuiButtonEvent e);
+    vector<Item*> getFilteredItems();
+    bool getToReturn();
 
     float cameraPosX;
     float cameraPosY;
@@ -40,7 +44,6 @@ public:
 
     float searchedHue;
 
-    float imageSize;
 
 
     ofVideoGrabber camera;
@@ -50,13 +53,15 @@ public:
     ofTexture textureCropped;
     ofRectangle selectedArea;
     ofxDatGuiButton* searchButton;
+    ofxDatGuiButton* submitButton;
 
     ofxXmlSettings user_itemsXML;
     ofxXmlSettings itemsXML;
 
     vector<Item*> items;
     vector<Item*> filteredItems;
-    int currentItem;
+
+    bool toReturn;
 
 
 };

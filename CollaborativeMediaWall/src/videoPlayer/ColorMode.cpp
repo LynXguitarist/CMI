@@ -4,36 +4,43 @@ void ColorMode::setup(vector<Item*> thisItems)
 {
     initXmlObjects();
 
-    camW = 320;
-    camH = 240;
+    camW = 480;
+    camH = 360;
     cropSize = camH/2;
     searchedHue = -1;
     items = thisItems;
-    currentItem = 0;
-    imageSize = (ofGetViewportWidth() - 200) / 3;
- 
 
     camera.setup(camW, camH);
-    cameraPosX = ofGetViewportWidth() -  camW;
-    cameraPosY = ofGetViewportHeight() - camH;
+    cameraPosX = ofGetViewportWidth()/2 -  camW/2;
+    cameraPosY = ofGetViewportHeight()/2 - camH/2;
     color.allocate(camW, camH);
     grayscale.allocate(camW, camH);
 
-    pixelsCropped.allocate(120, 120 , OF_PIXELS_RGB);
+    pixelsCropped.allocate(cropSize, cropSize , OF_PIXELS_RGB);
     textureCropped.allocate(pixelsCropped);
 
     selectedArea = ofRectangle(cameraPosX+(camW-cropSize)/2, cameraPosY+(camH - cropSize) / 2,cropSize,cropSize);
     
-    searchButton = new ofxDatGuiButton("Search");
-    searchButton-> setPosition(cameraPosX, cameraPosY-40);
+    searchButton = new ofxDatGuiButton("Pick Color");
+    searchButton-> setPosition(ofGetViewportWidth() / 2-120, cameraPosY-40);
     searchButton->setIndex(0);
     searchButton->setWidth(100);
     searchButton->onButtonEvent(this, (&ColorMode::searchFunction));
+
+    submitButton = new ofxDatGuiButton("Submit");
+    submitButton->setPosition(ofGetViewportWidth() / 2 +20, cameraPosY - 40);
+    submitButton->setIndex(1);
+    submitButton->setWidth(100);
+    submitButton->onButtonEvent(this, (&ColorMode::submitFunction));
+
+    toReturn = false;
+
 }
 
 void ColorMode::update()
 {
     searchButton->update();
+    submitButton->update();
     camera.update();
     if (camera.isFrameNew()) {
         ofPixels& pixels = camera.getPixels();
@@ -46,15 +53,16 @@ void ColorMode::draw()
 {
     searchButton->draw();
     ofSetColor(255);
-    camera.draw(cameraPosX, cameraPosY);
+    camera.draw(cameraPosX+camW, cameraPosY,-camW,camH);
     
     ofDrawLine(selectedArea.getBottomLeft(), selectedArea.getTopLeft());
     ofDrawLine(selectedArea.getTopLeft(), selectedArea.getTopRight());
     ofDrawLine(selectedArea.getTopRight(), selectedArea.getBottomRight());
     ofDrawLine(selectedArea.getBottomLeft(), selectedArea.getBottomRight());
 
-    textureCropped.draw(cameraPosX-cropSize,cameraPosY);
+    textureCropped.draw(cameraPosX,cameraPosY, -cropSize, cropSize);
     if(searchedHue!=-1){
+        submitButton->draw();
         ofColor searchColor;
         searchColor.setHsb(searchedHue,255,255);        
         ofSetColor(searchColor);
@@ -159,7 +167,23 @@ void ColorMode::searchFunction(ofxDatGuiButtonEvent e)
     }
 }
 
-    void ColorMode::initXmlObjects()
+void ColorMode::submitFunction(ofxDatGuiButtonEvent e)
+{
+    toReturn = true;
+    camera.close();
+}
+
+vector<Item*> ColorMode::getFilteredItems()
+{
+    return filteredItems;
+}
+
+bool ColorMode::getToReturn()
+{
+    return toReturn;
+}
+
+void ColorMode::initXmlObjects()
     {
         // get xml for item
         if (itemsXML.loadFile("data_xml/items.xml")) {
@@ -179,5 +203,9 @@ void ColorMode::searchFunction(ofxDatGuiButtonEvent e)
         // init objects, in order to not push the headers everytime
         itemsXML.pushTag("items");
         user_itemsXML.pushTag("users_items");
-    }
+}
+
+void ColorMode::closeCam() {
+    camera.close();
+}
 

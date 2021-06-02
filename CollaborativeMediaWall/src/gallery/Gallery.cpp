@@ -1,7 +1,7 @@
 #include "Gallery.h"
 
 //--------------------------------------------------------------
-vector<Item*> Gallery::setup(int id, bool isUser, vector<Item*> items_input) {
+vector<Item*> Gallery::setup(int id, bool isUser, vector<Item*> items_input, bool useItemsInput) {
 	// Init xml objects -> items, user_items
 	initXmlObjects();
 
@@ -17,7 +17,7 @@ vector<Item*> Gallery::setup(int id, bool isUser, vector<Item*> items_input) {
 					projectsXml.pushTag("user", j);
 					int userId = projectsXml.getValue("id", 0);
 					// handle user items for the user with id = userId
-					handleUserItems(userId, items_input);
+					handleUserItems(userId, items_input,useItemsInput);
 					projectsXml.popTag(); // user
 				}
 				projectsXml.popTag(); // users
@@ -29,7 +29,7 @@ vector<Item*> Gallery::setup(int id, bool isUser, vector<Item*> items_input) {
 	}
 	else {
 		// if is user
-		handleUserItems(id, items_input);
+		handleUserItems(id, items_input,useItemsInput);
 	}
 
 	// Buttons
@@ -440,8 +440,8 @@ bool Gallery::hasItemMetadata(string itemName)
 	return found;
 }
 
-void Gallery::handleUserItems(int userId, vector<Item*> items_input) {
-	if (items_input.empty()) {
+void Gallery::handleUserItems(int userId, vector<Item*> items_input,bool useItemsInput) {
+	if (!useItemsInput) {
 		int numberOfUsers = user_itemsXML.getNumTags("user_items");
 
 		int numberOfItems = 0;
@@ -518,7 +518,10 @@ void Gallery::handleUserItems(int userId, vector<Item*> items_input) {
 		items.clear();
 		items.resize(counter);
 		itemsSize = counter;
-		items = items_input;
+		for(Item* it: items_input) {
+			items.push_back(it);
+		}
+		//items = items_input;
 	}
 	currentItem = 0;
 }

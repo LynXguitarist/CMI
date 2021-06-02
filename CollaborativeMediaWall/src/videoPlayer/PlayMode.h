@@ -30,6 +30,8 @@ public:
 	void onButtonEvent(ofxDatGuiButtonEvent e);
 	void onToggleEvent(ofxDatGuiToggleEvent e);
 
+	void closeCam();
+
 	ofVideoGrabber camera;
 	ofxCvColorImage			colorImg;
 
