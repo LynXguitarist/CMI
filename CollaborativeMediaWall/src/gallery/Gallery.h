@@ -4,10 +4,12 @@
 #include "ofxXmlSettings.h"
 #include "ofxDatGui.h"
 #include <ofxCvHaarFinder.h>
+#include "ofxCv.h"
 
 #include "Item.h"
 
 using namespace cv;
+using namespace ofxCv;
 
 class Gallery : public ofBaseApp
 {
@@ -49,7 +51,7 @@ private:
 	void openInWMP(ofxDatGuiButtonEvent e);
 	void extractMetadata(ofxDatGuiButtonEvent e);
 	void importMetadata(ofxDatGuiButtonEvent e);
-	
+
 
 	int imageSize = (ofGetViewportWidth() - 200) / 3;
 
@@ -89,7 +91,7 @@ private:
 	ofxDatGuiButton* ex1;
 	ofxDatGuiButton* ex2;
 	ofxDatGuiButton* ex3;
-	
+
 	ofxDatGuiButton* im1;
 	ofxDatGuiButton* im2;
 	ofxDatGuiButton* im3;

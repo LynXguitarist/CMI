@@ -624,10 +624,9 @@ string Gallery::edgesFilter(string itemName, ofImage image)
 	int ddepth;
 	double kernel_size;
 
-	// when video what to do?
-
 	// Loads an image
-	src = imread(samples::findFile(itemName), IMREAD_COLOR); // Load an image
+	src = toCv(image.getPixels());
+
 	if (src.empty())
 	{
 		printf(" Error opening image\n");
@@ -885,3 +884,4 @@ void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 	else
 		(void)ofLog(OF_LOG_NOTICE, "Didn't save!");
 }
+
