@@ -226,6 +226,9 @@ void ofApp::galleryUI() {
 	playModeB->setWidth(100);
 	playModeB->onButtonEvent(this, &ofApp::onButtonEvent);
 
+	// reset color to normal, made this cause of fadeOut in PlayMode
+	ofSetColor(255, 255, 255, 255);
+
 }
 
 //------------------------Events-----------------------------//

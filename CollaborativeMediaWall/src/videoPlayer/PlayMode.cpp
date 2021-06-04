@@ -99,8 +99,8 @@ void PlayMode::update()
 	if (!video.isPaused())
 		video.update();
 
-	if (ofGetElapsedTimef() - time > diffTime && !video.isPaused()) {
-		if (video.isLoaded() && video.getIsMovieDone())
+	if (ofGetElapsedTimef() - time > diffTime && (!video.isPaused() || !items[currentItem]->getIsVideo())) {
+		if ((video.isLoaded() && video.getIsMovieDone()) || !items[currentItem]->getIsVideo())
 			changeCurrentItem(true);
 	}
 
