@@ -143,23 +143,6 @@ void Gallery::keyPressed(int key) {
 }
 
 //--------------------------------------------------------------
-void Gallery::keyReleased(int key) {
-
-}
-
-//--------------------------------------------------------------
-void Gallery::mouseMoved(int x, int y) {
-	// use this to trigger event on video-> moving icon
-
-
-}
-
-//--------------------------------------------------------------
-void Gallery::mouseDragged(int x, int y, int button) {
-
-}
-
-//--------------------------------------------------------------
 void Gallery::mousePressed(int x, int y, int button) {
 	if (video.isLoaded()) {
 		int image_x = 0; // postion in the x
@@ -200,36 +183,6 @@ void Gallery::mousePressed(int x, int y, int button) {
 			image_x++;
 		}
 	}
-}
-
-//--------------------------------------------------------------
-void Gallery::mouseReleased(int x, int y, int button) {
-
-}
-
-//--------------------------------------------------------------
-void Gallery::mouseEntered(int x, int y) {
-
-}
-
-//--------------------------------------------------------------
-void Gallery::mouseExited(int x, int y) {
-
-}
-
-//--------------------------------------------------------------
-void Gallery::windowResized(int w, int h) {
-
-}
-
-//--------------------------------------------------------------
-void Gallery::gotMessage(ofMessage msg) {
-
-}
-
-//--------------------------------------------------------------
-void Gallery::dragEvent(ofDragInfo dragInfo) {
-
 }
 
 //------------------------------Aux_Functions----------------------------------//
