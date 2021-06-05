@@ -143,23 +143,6 @@ void Gallery::keyPressed(int key) {
 }
 
 //--------------------------------------------------------------
-void Gallery::keyReleased(int key) {
-
-}
-
-//--------------------------------------------------------------
-void Gallery::mouseMoved(int x, int y) {
-	// use this to trigger event on video-> moving icon
-
-
-}
-
-//--------------------------------------------------------------
-void Gallery::mouseDragged(int x, int y, int button) {
-
-}
-
-//--------------------------------------------------------------
 void Gallery::mousePressed(int x, int y, int button) {
 	if (video.isLoaded()) {
 		int image_x = 0; // postion in the x
@@ -202,36 +185,6 @@ void Gallery::mousePressed(int x, int y, int button) {
 	}
 }
 
-//--------------------------------------------------------------
-void Gallery::mouseReleased(int x, int y, int button) {
-
-}
-
-//--------------------------------------------------------------
-void Gallery::mouseEntered(int x, int y) {
-
-}
-
-//--------------------------------------------------------------
-void Gallery::mouseExited(int x, int y) {
-
-}
-
-//--------------------------------------------------------------
-void Gallery::windowResized(int w, int h) {
-
-}
-
-//--------------------------------------------------------------
-void Gallery::gotMessage(ofMessage msg) {
-
-}
-
-//--------------------------------------------------------------
-void Gallery::dragEvent(ofDragInfo dragInfo) {
-
-}
-
 //------------------------------Aux_Functions----------------------------------//
 
 void Gallery::filterItems(string filter)
@@ -256,6 +209,8 @@ void Gallery::filterItems(string filter)
 	int numItems = itemsXML.getNumTags("item");
 
 	for (int i = 0; i < numItems; i++) {
+		bool wasAdded = false;
+		// tags
 		itemsXML.pushTag("item", i);
 		itemsXML.pushTag("tags");
 
@@ -266,10 +221,30 @@ void Gallery::filterItems(string filter)
 			if (tag.find(filter) != std::string::npos) { // add this item
 				filteredItems.push_back(auxItems[i]);
 				counter++;
+				wasAdded = true;
 				break;
 			}
 		}
 		itemsXML.popTag(); // tags
+		// so the same item isnt added twice
+		if (!wasAdded) {
+			// times
+			itemsXML.pushTag("times");
+
+			int numTimes = itemsXML.getNumTags("time");
+			for (int j = 0; j < numTimes; j++) {
+				itemsXML.pushTag("time", j);
+				string name = itemsXML.getValue("name", "");
+
+				if (name.find(filter) != std::string::npos) { // add this item
+					filteredItems.push_back(auxItems[i]);
+					counter++;
+					break;
+				}
+			}
+			itemsXML.popTag(); // times
+		}
+
 		itemsXML.popTag(); // item
 	}
 	// items = filteredItems
@@ -627,10 +602,9 @@ string Gallery::edgesFilter(string itemName, ofImage image)
 	int ddepth;
 	double kernel_size;
 
-	// when video what to do?
-
 	// Loads an image
-	src = imread(samples::findFile(itemName), IMREAD_COLOR); // Load an image
+	src = toCv(image.getPixels());
+
 	if (src.empty())
 	{
 		printf(" Error opening image\n");
@@ -888,3 +862,4 @@ void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 	else
 		(void)ofLog(OF_LOG_NOTICE, "Didn't save!");
 }
+

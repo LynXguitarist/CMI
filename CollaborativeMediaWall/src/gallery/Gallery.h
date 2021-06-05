@@ -4,10 +4,12 @@
 #include "ofxXmlSettings.h"
 #include "ofxDatGui.h"
 #include <ofxCvHaarFinder.h>
+#include "ofxCv.h"
 
 #include "Item.h"
 
 using namespace cv;
+using namespace ofxCv;
 
 class Gallery : public ofBaseApp
 {
@@ -17,16 +19,7 @@ public:
 	void draw();
 
 	void keyPressed(int key);
-	void keyReleased(int key);
-	void mouseMoved(int x, int y);
-	void mouseDragged(int x, int y, int button);
 	void mousePressed(int x, int y, int button);
-	void mouseReleased(int x, int y, int button);
-	void mouseEntered(int x, int y);
-	void mouseExited(int x, int y);
-	void windowResized(int w, int h);
-	void dragEvent(ofDragInfo dragInfo);
-	void gotMessage(ofMessage msg);
 
 	void filterItems(string filter);
 	void filterByColor(float hue);
@@ -49,7 +42,7 @@ private:
 	void openInWMP(ofxDatGuiButtonEvent e);
 	void extractMetadata(ofxDatGuiButtonEvent e);
 	void importMetadata(ofxDatGuiButtonEvent e);
-	
+
 
 	int imageSize = (ofGetViewportWidth() - 200) / 3;
 
@@ -89,7 +82,7 @@ private:
 	ofxDatGuiButton* ex1;
 	ofxDatGuiButton* ex2;
 	ofxDatGuiButton* ex3;
-	
+
 	ofxDatGuiButton* im1;
 	ofxDatGuiButton* im2;
 	ofxDatGuiButton* im3;

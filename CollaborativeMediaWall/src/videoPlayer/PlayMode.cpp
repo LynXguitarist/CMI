@@ -57,14 +57,6 @@ void PlayMode::setup(vector<Item*> items)
 		}
 		else
 			image = items[currentItem]->getImage();
-		if (items.size() > 1) {
-			if (items[currentItem + 1]->getIsVideo()) {
-				video2.load(items[currentItem + 1]->getPath());
-				video2.setLoopState(OF_LOOP_NONE); // stops video from looping
-			}
-			else
-				image2 = items[currentItem + 1]->getImage();
-		}
 	}
 
 	time = ofGetElapsedTimef();
@@ -107,8 +99,8 @@ void PlayMode::update()
 	if (!video.isPaused())
 		video.update();
 
-	if (ofGetElapsedTimef() - time > diffTime && !video.isPaused()) {
-		if (video.isLoaded() && video.getIsMovieDone())
+	if (ofGetElapsedTimef() - time > diffTime && (!video.isPaused() || !items[currentItem]->getIsVideo())) {
+		if ((video.isLoaded() && video.getIsMovieDone()) || !items[currentItem]->getIsVideo())
 			changeCurrentItem(true);
 	}
 
@@ -236,13 +228,13 @@ void PlayMode::draw()
 
 	// Items
 	if (items[currentItem]->getIsVideo()) {
-		setFadeIn(true);
+		setFadeOut(true);
 		video.draw(300, 50, 400, 400);
 		if (!isGestureMode)
 			stopButton->draw();
 	}
 	else {
-		setFadeIn(false);
+		setFadeOut(false);
 		image.draw(300, 50, 400, 400);
 	}
 
@@ -315,7 +307,7 @@ void PlayMode::dragEvent(ofDragInfo dragInfo) {
 
 }
 
-void PlayMode::setFadeIn(bool isVideo)
+void PlayMode::setFadeOut(bool isVideo)
 {
 	float fadeTime = 3.0;
 	if (isVideo) {
