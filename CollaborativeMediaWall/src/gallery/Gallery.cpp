@@ -256,6 +256,8 @@ void Gallery::filterItems(string filter)
 	int numItems = itemsXML.getNumTags("item");
 
 	for (int i = 0; i < numItems; i++) {
+		bool wasAdded = false;
+		// tags
 		itemsXML.pushTag("item", i);
 		itemsXML.pushTag("tags");
 
@@ -266,10 +268,30 @@ void Gallery::filterItems(string filter)
 			if (tag.find(filter) != std::string::npos) { // add this item
 				filteredItems.push_back(auxItems[i]);
 				counter++;
+				wasAdded = true;
 				break;
 			}
 		}
 		itemsXML.popTag(); // tags
+		// so the same item isnt added twice
+		if (!wasAdded) {
+			// times
+			itemsXML.pushTag("times");
+
+			int numTimes = itemsXML.getNumTags("time");
+			for (int j = 0; j < numTimes; j++) {
+				itemsXML.pushTag("time", j);
+				string name = itemsXML.getValue("name", "");
+
+				if (name.find(filter) != std::string::npos) { // add this item
+					filteredItems.push_back(auxItems[i]);
+					counter++;
+					break;
+				}
+			}
+			itemsXML.popTag(); // times
+		}
+
 		itemsXML.popTag(); // item
 	}
 	// items = filteredItems
