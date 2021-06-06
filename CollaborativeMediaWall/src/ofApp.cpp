@@ -54,6 +54,11 @@ void ofApp::update() {
 		break;
 	case 2:
 		galleryNavigate->update();
+		objectMode.update();
+		if (objectMode.getToReturn()) {
+			gallery.setup(currentUserId, isUser, objectMode.getFilteredItems(), true);
+			view = 1;
+		}
 		break;
 	case 3:
 		galleryNavigate->update();
@@ -94,6 +99,7 @@ void ofApp::draw() {
 		break;
 	case 2:
 		galleryNavigate->draw();
+		objectMode.draw();
 		break;
 	case 3:
 		galleryNavigate->draw();
@@ -271,6 +277,7 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e) {
 	switch (index) {
 	case 0: // objectMode
 		view = 2;
+		objectMode.setup(items);
 		break;
 	case 1: // colorMode
 		view = 3;
@@ -290,6 +297,8 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e) {
 		// aqui mudas!!!!!
 		items = gallery.setup(videoPlayer.getSelectedId(), isUser, vector<Item*>(),false);
 		switch (view) {
+		case 2: objectMode.closeCam();
+			break;
 		case 3: colorMode.closeCam();
 			break;
 		case 4: playMode.closeCam();

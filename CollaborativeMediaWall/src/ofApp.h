@@ -5,7 +5,9 @@
 #include "VideoPlayer.h"
 #include "PlayMode.h"
 #include "ColorMode.h"
+#include "ObjectMode.h"
 #include "Item.h"
+
 
 class ofApp : public ofBaseApp {
 
@@ -58,6 +60,7 @@ public:
 	VideoPlayer videoPlayer;
 	PlayMode playMode;
 	ColorMode colorMode;
+	ObjectMode objectMode;
 	int view;
 	int currentUserId;
 };

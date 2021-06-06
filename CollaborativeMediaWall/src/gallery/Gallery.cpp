@@ -88,7 +88,7 @@ void Gallery::draw() {
 			else {
 				image = items[i]->getImage(); // init image
 			}
-
+			if(image.isAllocated())
 			image.draw(position, 50 + y, imageSize, imageSize);
 		}
 		x++;
@@ -263,7 +263,7 @@ void Gallery::filterByColor(float hue)
 	for (int i = 0; i < numberOfItems; i++) {
 		itemsXML.pushTag("item", i);
 		float color = itemsXML.getValue("color", 0);
-		if (color == hue) {
+		if (abs(color - hue) <= 10 || abs(color - hue) >= 245) {
 			// this item will apear
 			filteredItems.push_back(auxItems[i]);
 			counter++;
@@ -491,12 +491,8 @@ void Gallery::handleUserItems(int userId, vector<Item*> items_input,bool useItem
 	else {
 		int counter = items_input.size();
 		items.clear();
-		items.resize(counter);
 		itemsSize = counter;
-		for(Item* it: items_input) {
-			items.push_back(it);
-		}
-		//items = items_input;
+		items = items_input;
 	}
 	currentItem = 0;
 }
