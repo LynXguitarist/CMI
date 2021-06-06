@@ -102,7 +102,7 @@ void VideoPlayer::draw()
         }
 
     }
-    if (numberOfFaces > 1) {
+    if (numberOfFaces > 1 && !showPasswordInput) {
         for (int i = 0; i < projects.size(); i++) {
             projects[i]->draw();
         }
@@ -215,7 +215,7 @@ void VideoPlayer::setupButtons() {
             names[i]->setIndex(usersXML.getValue("id", 0));
             names[i]->setWidth(100);
             //MUDAR AQUI
-            names[i]->onButtonEvent(this, (&VideoPlayer::showPassInput));
+            names[i]->onButtonEvent(this, (&VideoPlayer::showUserPassInput));
             
         }
         usersXML.popTag();
@@ -240,7 +240,7 @@ void VideoPlayer::setupButtons() {
             projects[i]->setIndex(projID);
             projects[i]->setWidth(100);
             //MUDAR AQUI
-            projects[i]->onButtonEvent(this, (&VideoPlayer::showPassInput));
+            projects[i]->onButtonEvent(this, (&VideoPlayer::showProjectPassInput));
         }
         projXML.popTag();
     }
@@ -252,27 +252,42 @@ void VideoPlayer::setupButtons() {
 
 }
 
-void VideoPlayer::showPassInput(ofxDatGuiButtonEvent e)
+void VideoPlayer::showUserPassInput(ofxDatGuiButtonEvent e)
 {
 	showPasswordInput = true;
 	selectedId = e.target->getIndex();
-	(void)ofLog(OF_LOG_NOTICE, "Selected Id: " + ofToString(selectedId));
 	// get the password for the user/project
 	int usersCount = usersXML.getNumTags("user");
 	for (int i = 0; i < usersCount; i++) {
 		usersXML.pushTag("user", i);
-		(void)ofLog(OF_LOG_NOTICE, "password for current user: " + usersXML.getValue("password", ""));
 		if (usersXML.getValue("id", 0) == selectedId) {
 			// saves password to compare
 			userProjectPass = usersXML.getValue("password", "");
-
-			(void)ofLog(OF_LOG_NOTICE, "Password saved: " + userProjectPass);
 
 			usersXML.popTag(); // user
 			break;
 		}
 		usersXML.popTag(); // user
 	}
+}
+
+void VideoPlayer::showProjectPassInput(ofxDatGuiButtonEvent e)
+{
+    showPasswordInput = true;
+    selectedId = e.target->getIndex();
+    // get the password for the project
+    int projectsCount = projXML.getNumTags("project");
+    for (int i = 0; i < projectsCount; i++) {
+        projXML.pushTag("project", i);
+        if (projXML.getValue("id", 0) == selectedId) {
+            // saves password to compare
+            userProjectPass = projXML.getValue("password", "");
+
+            projXML.popTag(); // user
+            break;
+        }
+        projXML.popTag(); // user
+    }
 }
 
 void VideoPlayer::onTextInputEvent(ofxDatGuiTextInputEvent e)
@@ -302,7 +317,6 @@ void VideoPlayer::onShiftEvent(ofxDatGuiButtonEvent e)
         break;
     }
 }
-
 
 void VideoPlayer::setNavigation(ofxDatGuiButtonEvent e) {
 
@@ -338,7 +352,7 @@ void VideoPlayer::shiftButtons(bool isProj, int shift) {
                 names[i]->setIndex(i+shift+1);
                 names[i]->setWidth(100);
                 //MUDAR AQUI
-                names[i]->onButtonEvent(this, (&VideoPlayer::showPassInput));
+                names[i]->onButtonEvent(this, (&VideoPlayer::showUserPassInput));
             }
             currentUserDisplay = shift;
         }
@@ -352,7 +366,7 @@ void VideoPlayer::shiftButtons(bool isProj, int shift) {
                 projects[i]->setIndex(i + shift+1);
                 projects[i]->setWidth(100);
                 //MUDAR AQUI
-                projects[i]->onButtonEvent(this, (&VideoPlayer::showPassInput));
+                projects[i]->onButtonEvent(this, (&VideoPlayer::showProjectPassInput));
             }
             currentProjectDisplay = shift;
         }

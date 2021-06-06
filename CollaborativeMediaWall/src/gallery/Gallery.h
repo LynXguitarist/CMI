@@ -39,6 +39,7 @@ private:
 	string rhythmFilter(string path);
 
 	//----------------------Events---------------//
+	void changeItems(ofxDatGuiButtonEvent e); // change the items being previewed
 	void openInWMP(ofxDatGuiButtonEvent e);
 	void extractMetadata(ofxDatGuiButtonEvent e);
 	void importMetadata(ofxDatGuiButtonEvent e);
@@ -86,5 +87,8 @@ private:
 	ofxDatGuiButton* im1;
 	ofxDatGuiButton* im2;
 	ofxDatGuiButton* im3;
+
+	ofxDatGuiButton* nextButton;
+	ofxDatGuiButton* previousButton;
 };
 

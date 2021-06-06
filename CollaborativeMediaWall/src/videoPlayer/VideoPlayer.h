@@ -28,7 +28,8 @@ public:
     void setupButtons();
     int toNavigate();
     int getSelectedId();
-    void showPassInput(ofxDatGuiButtonEvent e);
+    void showUserPassInput(ofxDatGuiButtonEvent e);
+    void showProjectPassInput(ofxDatGuiButtonEvent e);
     void setNavigation(ofxDatGuiButtonEvent e);
     void onTextInputEvent(ofxDatGuiTextInputEvent e);
     void onShiftEvent(ofxDatGuiButtonEvent e);

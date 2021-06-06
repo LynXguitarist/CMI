@@ -35,22 +35,43 @@ vector<Item*> Gallery::setup(int id, bool isUser, vector<Item*> items_input, boo
 	// Buttons
 	initButtons();
 
+	if(auxItems.empty())
+		ofSystemAlertDialog("No items to preview!");
+
 	return auxItems;
 }
 
 //--------------------------------------------------------------
 void Gallery::update() {
-	openWMB1->update();
-	openWMB2->update();
-	openWMB3->update();
+	int size = currentItem + 3;
+	if (size > itemsSize)
+		size = itemsSize;
 
-	ex1->update();
-	ex2->update();
-	ex3->update();
+	int numItemsDisplay = size - currentItem;
 
-	im1->update();
-	im2->update();
-	im3->update();
+	if (numItemsDisplay > 0) {
+		openWMB1->update();
+		ex1->update();
+		im1->update();
+	}
+
+	if (numItemsDisplay > 1) {
+		openWMB2->update();
+		ex2->update();
+		im2->update();
+	}
+
+	if (numItemsDisplay > 2) {
+		openWMB3->update();
+		ex3->update();
+		im3->update();
+	}
+
+	if (currentItem > 0)
+		previousButton->update();
+
+	if (currentItem != items.size() - 1)
+		nextButton->update();
 
 	if (isVideoPlaying)
 		video.update();
@@ -109,27 +130,28 @@ void Gallery::draw() {
 		ex3->draw();
 		im3->draw();
 	}
+
+	if (currentItem > 0)
+		previousButton->draw();
+
+	if (currentItem + 2 != items.size() - 1)
+		nextButton->draw();
 }
 
 //--------------------------------------------------------------
 void Gallery::keyPressed(int key) {
 	short inc = 1;
-	if (GetKeyState(VK_RIGHT)) {
+	if (key == 57358) {
 		if (currentItem < itemsSize - 3) {
 			currentItem++;
 			//currentItem %= itemsSize;
 		}
 	}
-	else if (GetKeyState(VK_LEFT)) {
+	else if (key == 57356) {
 		if (currentItem >= 1) {
 			currentItem--;
 			//currentItem %= itemsSize;
 			inc = -1;
-		}
-	}
-	else if (GetKeyState(VK_SPACE)) {
-		if (video.isLoaded()) {
-			video.setPaused(!video.isPaused());
 		}
 	}
 
@@ -353,6 +375,19 @@ void Gallery::initButtons()
 	im3->setIndex(2);
 	im3->setWidth(100);
 	im3->onButtonEvent(this, &Gallery::importMetadata);
+
+	// change items buttons 
+	nextButton =  new ofxDatGuiButton(">");
+	nextButton->setPosition(ofGetViewportWidth() - 25, 100 + imageSize / 2);
+	nextButton->setIndex(0);
+	nextButton->setWidth(25);
+	nextButton->onButtonEvent(this, &Gallery::changeItems);
+
+	previousButton = new ofxDatGuiButton("<");
+	previousButton->setPosition(0, 100 + imageSize / 2);
+	previousButton->setIndex(1);
+	previousButton->setWidth(25);
+	previousButton->onButtonEvent(this, &Gallery::changeItems);
 }
 
 void Gallery::nextFrame() {
@@ -710,6 +745,33 @@ string Gallery::rhythmFilter(string path)
 	return rhythm;
 }
 
+void Gallery::changeItems(ofxDatGuiButtonEvent e)
+{
+	int index = e.target->getIndex();
+	short inc = 1;
+	if (index == 0) {
+		if (currentItem < itemsSize - 3) {
+			currentItem++;
+			//currentItem %= itemsSize;
+		}
+	}
+	else if (e.target->getIndex() == 1) {
+		if (currentItem >= 1) {
+			currentItem--;
+			//currentItem %= itemsSize;
+			inc = -1;
+		}
+	}
+
+	ex1->setIndex(ex1->getIndex() + inc);
+	ex2->setIndex(ex2->getIndex() + inc * 2);
+	ex3->setIndex(ex3->getIndex() + inc * 3);
+
+	im1->setIndex(im1->getIndex() + inc);
+	im2->setIndex(im2->getIndex() + inc * 2);
+	im3->setIndex(im3->getIndex() + inc * 3);
+}
+
 void Gallery::openInWMP(ofxDatGuiButtonEvent e)
 {
 	int index = e.target->getIndex();
@@ -814,6 +876,8 @@ void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 
 	for (int i = 0; i < numberTimes; i++) {
 		// process object
+		// mapTimes -> first -> name do file
+			// second -> numTimes
 	}
 
 	int numberOfItems = itemsXML.getNumTags("item");

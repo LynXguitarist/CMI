@@ -219,6 +219,9 @@ void ObjectMode::searchFunction(ofxDatGuiButtonEvent e)
 			}itemsXML.popTag();
 		}
 	}
+	else {
+		ofSystemAlertDialog("No object found! Add to folder object_items, the object you want to find!");
+	}
 
 }
 
