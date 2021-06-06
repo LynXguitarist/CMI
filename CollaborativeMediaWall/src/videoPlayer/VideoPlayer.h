@@ -31,6 +31,9 @@ public:
     void showPassInput(ofxDatGuiButtonEvent e);
     void setNavigation(ofxDatGuiButtonEvent e);
     void onTextInputEvent(ofxDatGuiTextInputEvent e);
+    void onShiftEvent(ofxDatGuiButtonEvent e);
+    void shiftButtons(bool isProj, int shift);
+    bool isNavigateProject();
 
     ofVideoGrabber camera;
     ofxCvColorImage color;
@@ -41,15 +44,33 @@ public:
     int selectedId; // user/project id
     int navigate;
 
+    float initialY;
+
     bool showPasswordInput = false;
     bool showConfirm = false;
+    bool isProject;
+    int currentUserDisplay;
+    int currentProjectDisplay;
 
     string password; // saves the input text
     string userProjectPass; // aux var to save password
 
     ofxXmlSettings usersXML;
+    ofxXmlSettings projXML;
+
+    ofxDatGuiLabel* namesHeader;
+    ofxDatGuiLabel* projHeader;
+
+    ofxDatGuiButton* namesUp;
+    ofxDatGuiButton* projUp;
+
+    ofxDatGuiButton* namesDown;
+    ofxDatGuiButton* projDown;
 
     vector<ofxDatGuiButton*> names;
+    vector<ofxDatGuiButton*> projects;
+    vector<string> namesArray;
+    vector<string> projectsArray;
     ofxDatGuiTextInput* passwordInput;
     ofxDatGuiButton* confirmButton;
 

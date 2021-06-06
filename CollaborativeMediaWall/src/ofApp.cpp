@@ -9,6 +9,7 @@ void ofApp::setup() {
 	// voltar a meter a 0
 	view = 0;
 	currentUserId = -1;
+	isUser = true;
 
 	gui = new ofxDatGui(0, 0);
 	menu();
@@ -36,6 +37,7 @@ void ofApp::update() {
 		videoPlayer.update();
 		if (videoPlayer.toNavigate() == 1) {
 			currentUserId = videoPlayer.getSelectedId();
+			isUser = videoPlayer.isNavigateProject();
 			items = gallery.setup(currentUserId, isUser, vector<Item*>(),false);
 			galleryUI();
 			view = 1;

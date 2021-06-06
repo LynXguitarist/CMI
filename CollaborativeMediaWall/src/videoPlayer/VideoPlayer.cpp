@@ -1,4 +1,4 @@
-#include "VideoPlayer.h"
+﻿#include "VideoPlayer.h"
 
 void VideoPlayer::setup()
 {
@@ -10,9 +10,15 @@ void VideoPlayer::setup()
     numberOfFaces = 0;
     navigate = -1;
     selectedId = -1;
+    isProject = false;
+    currentUserDisplay=0;
+    currentProjectDisplay=0;
+
 
     usersXML.loadFile("data_xml/users.xml");
     usersXML.pushTag("users");
+    projXML.load("data_xml/projects.xml");
+    projXML.pushTag("projects");
     setupButtons();
 
     passwordInput = new ofxDatGuiTextInput("Password", "");
@@ -29,12 +35,29 @@ void VideoPlayer::setup()
 
 void VideoPlayer::update()
 {
-    //MUDAR
-    //if (numberOfFaces > 0) {
+    
+    if (numberOfFaces > 0) {
         for (int i = 0; i < names.size(); i++) {
             names[i]->update();
+
         }
-    //}
+        namesHeader->update();
+        if(namesArray.size()>10){
+            namesUp->update();
+            namesDown->update();
+        }
+    }
+    if (numberOfFaces > 1) {
+        for (int i = 0; i < projects.size(); i++) {
+            projects[i]->update();
+           
+        }
+        projHeader->update();
+        if (projectsArray.size() > 10) {
+            projUp->update();
+            projDown->update();
+        }
+    }
     camera.update();
 
     if (camera.isFrameNew()) {
@@ -43,6 +66,7 @@ void VideoPlayer::update()
         grayscale = color;
         haar.findHaarObjects(grayscale);
         numberOfFaces = haar.blobs.size();
+        
     }
 
     if (showPasswordInput)
@@ -50,6 +74,8 @@ void VideoPlayer::update()
 
     if (showConfirm)
         confirmButton->update();
+    
+ 
 }
 
 void VideoPlayer::draw()
@@ -65,13 +91,31 @@ void VideoPlayer::draw()
         for (int i = 0; i < names.size(); i++) {
             names[i]->draw();
         }
-    //}
+        namesHeader->draw();
+        if (namesArray.size() > 10) {
+            namesUp->draw();
+            namesDown->draw();
+        }
+
+    }
+    if (numberOfFaces > 1) {
+        for (int i = 0; i < projects.size(); i++) {
+            projects[i]->draw();
+        }
+        projHeader->draw();
+        if (projectsArray.size() > 10) {
+            projUp->draw();
+            projDown->draw();
+        }
+    }
 
     if (showPasswordInput)
         passwordInput->draw();
 
     if (showConfirm)
         confirmButton->draw();
+    
+    
 }
 
 void VideoPlayer::keyPressed(int key)
@@ -130,17 +174,76 @@ void VideoPlayer::dragEvent(ofDragInfo dragInfo) {
 
 void VideoPlayer::setupButtons() {
     
+    namesHeader = new ofxDatGuiLabel("Users");
+    namesHeader->setWidth(100);
+    namesHeader->setPosition(ofGetWidth() / 2, 30);
+
+    projHeader = new ofxDatGuiLabel("Projects");
+    projHeader->setWidth(100);
+    projHeader->setPosition(ofGetWidth() / 2 + 200, 30);
+
+    namesUp= new ofxDatGuiButton("^");
+    namesUp->setWidth(30);
+    namesUp->setPosition(ofGetWidth() / 2+35, 35+ namesHeader->getHeight());
+    namesUp->setIndex(0);
+    namesUp->onButtonEvent(this, (&VideoPlayer::onShiftEvent));
+
+    projUp = new ofxDatGuiButton("^");
+    projUp->setWidth(30);
+    projUp->setPosition(ofGetWidth() / 2 + 235, 35 + projHeader->getHeight());
+    projUp->setIndex(1);
+    projUp->onButtonEvent(this, (&VideoPlayer::onShiftEvent));
+
+    initialY = namesUp->getY() + namesUp->getHeight() + 5;
+
     int usersCount = usersXML.getNumTags("user");
-    names.assign(usersCount, new ofxDatGuiButton(""));
+    names.assign(min(10,usersCount), new ofxDatGuiButton(""));
+    namesArray.assign(usersCount,"");
+   
     for (int i = 0; i < usersCount; i++) {
         usersXML.pushTag("user", i);
-        names[i] = new ofxDatGuiButton(usersXML.getValue("name", ""));
-        names[i]->setPosition(ofGetWidth() / 2, 30+names[i]->getHeight()*i);
-        names[i]->setIndex(usersXML.getValue("id", 0));
-        names[i]->setWidth(100);
-        names[i]->onButtonEvent(this, (&VideoPlayer::showPassInput));
+        string thisUserName = usersXML.getValue("name", "");
+        namesArray[i]=thisUserName;
+        if(i<10){
+            names[i] = new ofxDatGuiButton(thisUserName);
+            names[i]->setPosition(ofGetWidth() / 2, initialY+names[i]->getHeight()*i);
+            names[i]->setIndex(usersXML.getValue("id", 0));
+            names[i]->setWidth(100);
+            //MUDAR AQUI
+            names[i]->onButtonEvent(this, (&VideoPlayer::showPassInput));
+            
+        }
         usersXML.popTag();
     }
+    namesDown = new ofxDatGuiButton("v");
+    namesDown->setWidth(30);
+    namesDown->setPosition(ofGetWidth() / 2 + 35, initialY + namesUp->getHeight()*10 + 5);
+    namesDown->setIndex(2);
+    namesDown->onButtonEvent(this, (&VideoPlayer::onShiftEvent));
+
+    int projectsCount = projXML.getNumTags("project");
+    projects.assign(min(10, projectsCount), new ofxDatGuiButton(""));
+    projectsArray.assign(projectsCount, "");
+    projects.assign(projectsCount, new ofxDatGuiButton(""));
+    for (int i = 0; i < projectsCount; i++) {
+        projXML.pushTag("project", i);
+        int projID = projXML.getValue("id", 0);
+        projectsArray[i] = to_string(projID);
+        if(i<10){
+            projects[i] = new ofxDatGuiButton(to_string(projID));
+            projects[i]->setPosition(ofGetWidth() / 2+200, initialY + projects[i]->getHeight() * i);
+            projects[i]->setIndex(projID);
+            projects[i]->setWidth(100);
+            //MUDAR AQUI
+            projects[i]->onButtonEvent(this, (&VideoPlayer::showPassInput));
+        }
+        projXML.popTag();
+    }
+    projDown = new ofxDatGuiButton("v");
+    projDown->setWidth(30);
+    projDown->setPosition(ofGetWidth() / 2 + 235, initialY + projUp->getHeight() * 10 + 5);
+    projDown->setIndex(3);
+    projDown->onButtonEvent(this, (&VideoPlayer::onShiftEvent));
 
 }
 
@@ -176,6 +279,25 @@ void VideoPlayer::onTextInputEvent(ofxDatGuiTextInputEvent e)
         showConfirm = false;
 }
 
+void VideoPlayer::onShiftEvent(ofxDatGuiButtonEvent e)
+{
+    int bID = e.target->getIndex();
+    switch (bID) {
+    case 0:
+        shiftButtons(false, currentUserDisplay - 1);
+        break;
+    case 1:
+        shiftButtons(true, currentUserDisplay - 1);
+        break;
+    case 2:
+        shiftButtons(false, currentUserDisplay + 1);
+        break;
+    case 3:
+        shiftButtons(true, currentUserDisplay + 1);
+        break;
+    }
+}
+
 
 void VideoPlayer::setNavigation(ofxDatGuiButtonEvent e) {
 
@@ -199,4 +321,40 @@ int VideoPlayer::toNavigate() {
 
 int VideoPlayer::getSelectedId() {
     return selectedId;
+}
+
+void VideoPlayer::shiftButtons(bool isProj, int shift) {
+    if (!isProj) {
+        if (shift >= 0 && (shift + 9) < namesArray.size()) {
+            for (int i = 0; i < 10;i++) {
+                string thisItemName = namesArray[(i+shift)];
+                names[i] = new ofxDatGuiButton(thisItemName);
+                names[i]->setPosition(ofGetWidth() / 2, initialY + names[i]->getHeight() * i);
+                names[i]->setIndex(i+shift+1);
+                names[i]->setWidth(100);
+                //MUDAR AQUI
+                names[i]->onButtonEvent(this, (&VideoPlayer::showPassInput));
+            }
+            currentUserDisplay = shift;
+        }
+    }
+    else {
+        if (shift >= 0 && (shift + 9) < projectsArray.size()) {
+            for (int i = 0; i < 10; i++) {
+                string thisItemName = projectsArray[(i + shift)];
+                projects[i] = new ofxDatGuiButton(thisItemName);
+                projects[i]->setPosition(ofGetWidth() / 2 + 200, initialY + projects[i]->getHeight() * i);
+                projects[i]->setIndex(i + shift+1);
+                projects[i]->setWidth(100);
+                //MUDAR AQUI
+                projects[i]->onButtonEvent(this, (&VideoPlayer::showPassInput));
+            }
+            currentProjectDisplay = shift;
+        }
+    }
+}
+
+bool VideoPlayer::isNavigateProject()
+{
+    return isProject;
 }

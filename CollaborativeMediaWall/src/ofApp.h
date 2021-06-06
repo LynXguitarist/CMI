@@ -40,7 +40,7 @@ public:
 	void onToggleEvent(ofxDatGuiToggleEvent e);
 	void onColorPickerEvent(ofxDatGuiColorPickerEvent e);
 
-	bool isUser = true;
+	bool isUser;
 	vector<Item*> items;
 
 	// Addons
