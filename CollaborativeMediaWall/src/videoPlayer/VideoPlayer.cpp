@@ -21,15 +21,19 @@ void VideoPlayer::setup()
     projXML.pushTag("projects");
     setupButtons();
 
-    passwordInput = new ofxDatGuiTextInput("Password", "");
-    passwordInput->setPosition(ofGetWidth() / 2, 100);
-    passwordInput->onTextInputEvent(this, &VideoPlayer::onTextInputEvent);
-    
+	usersXML.loadFile("data_xml/users.xml");
+	usersXML.pushTag("users");
+	setupButtons();
 
-    confirmButton = new ofxDatGuiButton("Confirm");
-    confirmButton->setWidth(100);
-    confirmButton->setPosition(ofGetWidth() / 2 + passwordInput->getWidth(), 100);
-    confirmButton->onButtonEvent(this, &VideoPlayer::setNavigation);
+	passwordInput = new ofxDatGuiTextInput("Password", "");
+	passwordInput->setPosition(ofGetWidth() / 2, 100);
+	passwordInput->onTextInputEvent(this, &VideoPlayer::onTextInputEvent);
+
+
+	confirmButton = new ofxDatGuiButton("Confirm");
+	confirmButton->setWidth(100);
+	confirmButton->setPosition(ofGetWidth() / 2 + passwordInput->getWidth(), 100);
+	confirmButton->onButtonEvent(this, &VideoPlayer::setNavigation);
 
 }
 
@@ -60,8 +64,8 @@ void VideoPlayer::update()
     }
     camera.update();
 
-    if (camera.isFrameNew()) {
-        color.setFromPixels(camera.getPixels());
+	if (camera.isFrameNew()) {
+		color.setFromPixels(camera.getPixels());
 
         grayscale = color;
         haar.findHaarObjects(grayscale);
@@ -69,8 +73,8 @@ void VideoPlayer::update()
         
     }
 
-    if (showPasswordInput)
-        passwordInput->update();
+	if (showPasswordInput)
+		passwordInput->update();
 
     if (showConfirm)
         confirmButton->update();
@@ -80,7 +84,7 @@ void VideoPlayer::update()
 
 void VideoPlayer::draw()
 {
-    color.draw(0, 0);
+	color.draw(0, 0);
 
     for (int i = 0; i < haar.blobs.size(); i++) {
         ofSetColor(255);
@@ -122,6 +126,7 @@ void VideoPlayer::keyPressed(int key)
 {
 
 }
+
 void VideoPlayer::keyReleased(int key) {
 
 }
@@ -249,34 +254,34 @@ void VideoPlayer::setupButtons() {
 
 void VideoPlayer::showPassInput(ofxDatGuiButtonEvent e)
 {
-    showPasswordInput = true;
-    selectedId = e.target->getIndex();
-    (void)ofLog(OF_LOG_NOTICE, "Selected Id: " + ofToString(selectedId));
-    // get the password for the user/project
-    int usersCount = usersXML.getNumTags("user");
-    for (int i = 0; i < usersCount; i++) {
-        usersXML.pushTag("user", i);
-        (void)ofLog(OF_LOG_NOTICE, "password for current user: " + usersXML.getValue("password", ""));
-        if (usersXML.getValue("id", 0) == selectedId) {
-            // saves password to compare
-            userProjectPass = usersXML.getValue("password", "");
-            
-            (void)ofLog(OF_LOG_NOTICE, "Password saved: " + userProjectPass);
+	showPasswordInput = true;
+	selectedId = e.target->getIndex();
+	(void)ofLog(OF_LOG_NOTICE, "Selected Id: " + ofToString(selectedId));
+	// get the password for the user/project
+	int usersCount = usersXML.getNumTags("user");
+	for (int i = 0; i < usersCount; i++) {
+		usersXML.pushTag("user", i);
+		(void)ofLog(OF_LOG_NOTICE, "password for current user: " + usersXML.getValue("password", ""));
+		if (usersXML.getValue("id", 0) == selectedId) {
+			// saves password to compare
+			userProjectPass = usersXML.getValue("password", "");
 
-            usersXML.popTag(); // user
-            break;
-        }
-        usersXML.popTag(); // user
-    }
+			(void)ofLog(OF_LOG_NOTICE, "Password saved: " + userProjectPass);
+
+			usersXML.popTag(); // user
+			break;
+		}
+		usersXML.popTag(); // user
+	}
 }
 
 void VideoPlayer::onTextInputEvent(ofxDatGuiTextInputEvent e)
 {
-    password = e.text;
-    if (password != "")
-        showConfirm = true;
-    else
-        showConfirm = false;
+	password = e.text;
+	if (password != "")
+		showConfirm = true;
+	else
+		showConfirm = false;
 }
 
 void VideoPlayer::onShiftEvent(ofxDatGuiButtonEvent e)
@@ -301,26 +306,26 @@ void VideoPlayer::onShiftEvent(ofxDatGuiButtonEvent e)
 
 void VideoPlayer::setNavigation(ofxDatGuiButtonEvent e) {
 
-    (void)ofLog(OF_LOG_NOTICE, "Input password: " + password);
-    (void)ofLog(OF_LOG_NOTICE, "Password: " + userProjectPass);
+	(void)ofLog(OF_LOG_NOTICE, "Input password: " + password);
+	(void)ofLog(OF_LOG_NOTICE, "Password: " + userProjectPass);
 
-    if (password == userProjectPass) {
-        camera.close();
-        navigate = 1;
-    }
-    else {
-        // wrong passowrd
-        ofSystemAlertDialog("wrong password! Try again");
-    }
-    
+	if (password == userProjectPass) {
+		camera.close();
+		navigate = 1;
+	}
+	else {
+		// wrong passowrd
+		ofSystemAlertDialog("wrong password! Try again");
+	}
+
 }
 
 int VideoPlayer::toNavigate() {
-    return navigate;
+	return navigate;
 }
 
 int VideoPlayer::getSelectedId() {
-    return selectedId;
+	return selectedId;
 }
 
 void VideoPlayer::shiftButtons(bool isProj, int shift) {

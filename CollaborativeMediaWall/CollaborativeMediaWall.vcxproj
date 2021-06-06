@@ -185,6 +185,7 @@
     <ClCompile Include="src\gallery\Gallery.cpp" />
     <ClCompile Include="src\item\Item.cpp" />
     <ClCompile Include="src\videoPlayer\ColorMode.cpp" />
+    <ClCompile Include="src\videoPlayer\ObjectMode.cpp" />
     <ClCompile Include="src\videoPlayer\PlayMode.cpp" />
     <ClCompile Include="src\videoPlayer\VideoPlayer.cpp" />
     <ClCompile Include="..\..\..\..\addons\ofxOpenCv\src\ofxCvColorImage.cpp" />
@@ -230,6 +231,7 @@
     <ClInclude Include="src\gallery\Gallery.h" />
     <ClInclude Include="src\item\Item.h" />
     <ClInclude Include="src\videoPlayer\ColorMode.h" />
+    <ClInclude Include="src\videoPlayer\ObjectMode.h" />
     <ClInclude Include="src\videoPlayer\PlayMode.h" />
     <ClInclude Include="src\videoPlayer\VideoPlayer.h" />
     <ClInclude Include="..\..\..\..\addons\ofxOpenCv\src\ofxCvBlob.h" />
