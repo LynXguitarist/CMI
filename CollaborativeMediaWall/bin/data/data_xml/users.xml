@@ -1,6 +1,7 @@
 <users>
 	<user>
 		<id>1</id>
-		<name>Frederico Lopes<name>
+		<name>Frederico Lopes</name>
+		<password>123</password>
 	</user>
 </users>

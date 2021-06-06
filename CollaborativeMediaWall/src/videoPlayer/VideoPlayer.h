@@ -28,18 +28,29 @@ public:
     void setupButtons();
     int toNavigate();
     int getSelectedId();
+    void showPassInput(ofxDatGuiButtonEvent e);
     void setNavigation(ofxDatGuiButtonEvent e);
+    void onTextInputEvent(ofxDatGuiTextInputEvent e);
 
     ofVideoGrabber camera;
     ofxCvColorImage color;
     ofxCvGrayscaleImage grayscale;
     ofxCvHaarFinder haar;
+
     int numberOfFaces;
-    int selectedId;
+    int selectedId; // user/project id
     int navigate;
+
+    bool showPasswordInput = false;
+    bool showConfirm = false;
+
+    string password; // saves the input text
+    string userProjectPass; // aux var to save password
 
     ofxXmlSettings usersXML;
 
     vector<ofxDatGuiButton*> names;
+    ofxDatGuiTextInput* passwordInput;
+    ofxDatGuiButton* confirmButton;
 
 };
