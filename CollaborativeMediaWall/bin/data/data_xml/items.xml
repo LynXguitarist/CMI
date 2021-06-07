@@ -1,24 +1,5 @@
 <items>
     <item>
-        <id>DSC09302</id>
-        <tags>
-            <tag>ola 1</tag>
-            <tag>ola 2</tag>
-        </tags>
-        <luminance>1</luminance>
-        <color>0</color>
-        <faces>1</faces>
-        <edge>1</edge>
-        <texture>ewqeq</texture>
-        <times>
-            <time>
-                <name>OF</name>
-                <numTime>1</numTime>
-            </time>
-        </times>
-        <rhythm />
-    </item>
-    <item>
         <id>DSC09305</id>
         <tags />
         <luminace />

@@ -17,7 +17,7 @@ vector<Item*> Gallery::setup(int id, bool isUser, vector<Item*> items_input, boo
 					projectsXml.pushTag("user", j);
 					int userId = projectsXml.getValue("id", 0);
 					// handle user items for the user with id = userId
-					handleUserItems(userId, items_input,useItemsInput);
+					handleUserItems(userId, items_input, useItemsInput);
 					projectsXml.popTag(); // user
 				}
 				projectsXml.popTag(); // users
@@ -29,13 +29,13 @@ vector<Item*> Gallery::setup(int id, bool isUser, vector<Item*> items_input, boo
 	}
 	else {
 		// if is user
-		handleUserItems(id, items_input,useItemsInput);
+		handleUserItems(id, items_input, useItemsInput);
 	}
 
 	// Buttons
 	initButtons();
 
-	if(auxItems.empty())
+	if (auxItems.empty())
 		ofSystemAlertDialog("No items to preview!");
 
 	return auxItems;
@@ -109,8 +109,8 @@ void Gallery::draw() {
 			else {
 				image = items[i]->getImage(); // init image
 			}
-			if(image.isAllocated())
-			image.draw(position, 50 + y, imageSize, imageSize);
+			if (image.isAllocated())
+				image.draw(position, 50 + y, imageSize, imageSize);
 		}
 		x++;
 	}
@@ -377,7 +377,7 @@ void Gallery::initButtons()
 	im3->onButtonEvent(this, &Gallery::importMetadata);
 
 	// change items buttons 
-	nextButton =  new ofxDatGuiButton(">");
+	nextButton = new ofxDatGuiButton(">");
 	nextButton->setPosition(ofGetViewportWidth() - 25, 100 + imageSize / 2);
 	nextButton->setIndex(0);
 	nextButton->setWidth(25);
@@ -433,24 +433,7 @@ void Gallery::initXmlObjects()
 	projectsXml.pushTag("projects");
 }
 
-bool Gallery::hasItemMetadata(string itemName)
-{
-	bool found = false;
-	int numberItems = itemsXML.getNumTags("item");
-	for (int i = 0; i < numberItems; i++) {
-		itemsXML.pushTag("item", i);
-		if (itemsXML.getValue("id", "") == itemName) {
-			found = true;
-			itemsXML.popTag(); // item
-			break;
-		}
-		else
-			itemsXML.popTag(); // item
-	}
-	return found;
-}
-
-void Gallery::handleUserItems(int userId, vector<Item*> items_input,bool useItemsInput) {
+void Gallery::handleUserItems(int userId, vector<Item*> items_input, bool useItemsInput) {
 	if (!useItemsInput) {
 		int numberOfUsers = user_itemsXML.getNumTags("user_items");
 
@@ -516,9 +499,7 @@ void Gallery::handleUserItems(int userId, vector<Item*> items_input,bool useItem
 				auxItems[counter++] = item;
 
 				// generate metadata if not already generated
-				if (!hasItemMetadata(itemName)) {
-					//generateMetadata(itemName, path, img, isVideo);
-				}
+				generateMetadata(itemName, path, img, isVideo);
 			}
 		}
 		itemsSize = counter;
@@ -534,25 +515,23 @@ void Gallery::handleUserItems(int userId, vector<Item*> items_input,bool useItem
 
 void Gallery::generateMetadata(string itemName, string path, ofImage image, bool isVideo)
 {
-	int index = -1;
+	int index = -1; // depois de testar pode se apagar
 	int numberOfItems = itemsXML.getNumTags("item");
 
-	for (int i = 0; i < numberOfItems; i++) {
+	/*for (int i = 0; i < numberOfItems; i++) {
 		itemsXML.pushTag("item", i);
 		string id = itemsXML.getValue("id", "", i);
 		// verify if item exists in xml
 		if (id == itemName) {
 			index = i;
-			break;
+			itemsXML.popTag(); // item
+			break; // return
 		}
 		itemsXML.popTag(); // item
-	}
+	}*/
 
-	// if metadata already exists
-	if (index != -1)
-		return;
-
-	itemsXML.pushTag("item", index);
+	itemsXML.addTag("item");
+	itemsXML.pushTag("item", 1); // mudar para numberOfItems + 1 depois de testar
 	// saves the id - itemName
 	itemsXML.setValue("id", itemName);
 
@@ -565,7 +544,7 @@ void Gallery::generateMetadata(string itemName, string path, ofImage image, bool
 	float avgLuminance = 0;
 
 	int pixelSize = pixels.size();
-	for (int i = 0; pixelSize; i++) {
+	for (int i = 0; i < pixelSize; i++) {
 		avgRed += pixels.getColor(pixels[i]).r;
 		avgGreen += pixels.getColor(pixels[i]).r;
 		avgBlue += pixels.getColor(pixels[i]).r;
@@ -580,9 +559,10 @@ void Gallery::generateMetadata(string itemName, string path, ofImage image, bool
 	newColor.g = avgGreen;
 	newColor.b = avgBlue;
 
-
+	(void)ofLog(OF_LOG_NOTICE, "luminance: " + ofToString(avgLuminance));
 	itemsXML.setValue("luminance", avgLuminance);
 	itemsXML.setValue("color", newColor.getHue());
+	(void)ofLog(OF_LOG_NOTICE, "color: " + ofToString(newColor.getHue()));
 
 	// faces
 	// finder faces
@@ -592,13 +572,13 @@ void Gallery::generateMetadata(string itemName, string path, ofImage image, bool
 		ofVideoPlayer auxVideo;
 		auxVideo.load(path);
 
-		for (int i = 0; i <= 1; i += 0.25) {
+		for (int i = 0; i <= 5; i ++) {
 			ofImage auxImg;
 
 			auxImg.setFromPixels(auxVideo.getPixels());
-			faces += finder.findHaarObjects(image);
+			faces += finder.findHaarObjects(auxImg);
 
-			auxVideo.setPosition(i);
+			auxVideo.setPosition(i * 0.25);
 		}
 		faces /= 5;
 	}
@@ -606,24 +586,28 @@ void Gallery::generateMetadata(string itemName, string path, ofImage image, bool
 		faces = finder.findHaarObjects(image);
 	}
 
+	(void)ofLog(OF_LOG_NOTICE, "faces: " + ofToString(faces));
 	itemsXML.addValue("faces", faces);
 	// edges - filter2D
-	string edges = edgesFilter(itemName, image);
+	string edges = edgesFilter(image);
+	(void)ofLog(OF_LOG_NOTICE, "edges: " + edges);
 	if (edges != "")
 		itemsXML.setValue("edges", edges);
 	// texture
-	string texture = textureFilter(itemName);
+	string texture = textureFilter(image);
+	(void)ofLog(OF_LOG_NOTICE, "texture: " + texture);
 	if (texture != "")
 		itemsXML.setValue("texture", texture);
 	// rhythm
 	if (isVideo) {
-		string rhythm = rhythmFilter(path);
+		double rhythm = rhythmFilter(path);
+		(void)ofLog(OF_LOG_NOTICE, "rhythm: " + ofToString(rhythm));
 		itemsXML.setValue("rhythm", rhythm);
 	}
 	itemsXML.popTag(); // item
 }
 
-string Gallery::edgesFilter(string itemName, ofImage image)
+string Gallery::edgesFilter(ofImage image)
 {
 	// Declare variables
 	Mat src, dst;
@@ -654,7 +638,12 @@ string Gallery::edgesFilter(string itemName, ofImage image)
 	// Apply filter
 	filter2D(src, dst, ddepth, kernel, anchor, delta, BORDER_DEFAULT);
 
-	string result = "";
+	Size size = dst.size();
+	int total = size.width * size.height * dst.channels();
+	vector<uchar> data(dst.ptr(), dst.ptr() + total);
+	string result(data.begin(), data.end());
+
+	/*
 	for (int i = 0; i < dst.rows; i++)
 	{
 		for (int j = 0; j < dst.cols; j++)
@@ -662,16 +651,18 @@ string Gallery::edgesFilter(string itemName, ofImage image)
 			result += to_string(dst.at<float>(i, j)) + ", ";
 		}
 	}
+	*/
+	
 	// returns the matrix in string format
 	return result;
 }
 
-string Gallery::textureFilter(string itemName)
+string Gallery::textureFilter(ofImage image)
 {
 	Mat src, dst;
 	int kernel_size = 31;
 
-	src = imread(samples::findFile(itemName), IMREAD_COLOR); // Load an image
+	src = toCv(image.getPixels()); // Load an image
 	if (src.empty())
 	{
 		printf(" Error opening image\n");
@@ -699,49 +690,81 @@ string Gallery::textureFilter(string itemName)
 	return result;
 }
 
-string Gallery::rhythmFilter(string path)
+double Gallery::rhythmFilter(string path)
 {
-	CvHistogram* hist;
+	ofVideoPlayer videoAux;
+	videoAux.load(path);
 
-	ofVideoPlayer video;
-	video.load(path);
+	Mat src_0 = toCv(video.getPixels());
+	video.setPosition(0.25);
+	Mat src_1 = toCv(video.getPixels());
+	video.setPosition(0.5);
+	Mat src_2 = toCv(video.getPixels());
+	video.setPosition(0.75);
+	Mat src_3 = toCv(video.getPixels());
+	video.setPosition(1);
+	Mat src_4 = toCv(video.getPixels());
 
-	for (int i = 0; i < video.getTotalNumFrames(); i++) {
-		video.nextFrame();
-		ofImage image = ofImage(video.getPixels());
-
-		ofxCvColorImage	colorImg;
-		ofxCvGrayscaleImage grayImage;
-		ofxCvGrayscaleImage grayBack;
-
-		colorImg.setFromPixels(image.getPixels());
-
-		grayImage = colorImg;
-
-		IplImage* iplImageGray;
-		IplImage** plane;
-
-		iplImageGray = grayImage.getCvImage();
-		plane = &iplImageGray;
-
-		int hist_size[] = { 30 };
-		float range[] = { 0, 180 };
-		float* ranges[] = { range };
-		hist = cvCreateHist(1, hist_size, CV_HIST_ARRAY, ranges, 1);
-
-		cvCalcHist(plane, hist, 0, 0);
-		cvNormalizeHist(hist, 20.0 * 255.0); // Normalize it
-
-		cvCalcBackProject(plane, grayBack.getCvImage(), hist);// Calculate back projection  
-		cvNormalizeHist(hist, 1.0); // Normalize it  
-
-		//cvReleaseHist(&hist);
+	if (src_0.empty() || src_1.empty() || src_2.empty() || src_3.empty() || src_4.empty())
+	{
+		// something went wrong
+		return -1;
 	}
-	//rhythm = ofToString( ((float*)(cvPtr1D((hist)->bins, 0))) ); ???
 
-	cvReleaseHist(&hist);
+	Mat hsv_0, hsv_1, hsv_2, hsv_3, hsv_4;
+	cvtColor(src_0, hsv_0, COLOR_BGR2HSV);
+	cvtColor(src_1, hsv_1, COLOR_BGR2HSV);
+	cvtColor(src_2, hsv_2, COLOR_BGR2HSV);
+	cvtColor(src_3, hsv_3, COLOR_BGR2HSV);
+	cvtColor(src_4, hsv_4, COLOR_BGR2HSV);
 
-	string rhythm = "";
+	Mat hsv_half_down = src_0(Range(hsv_0.rows / 2, hsv_0.rows), Range(0, hsv_0.cols));
+	int h_bins = 50, s_bins = 60;
+	int histSize[] = { h_bins, s_bins };
+
+	// hue varies from 0 to 179, saturation from 0 to 255
+	float h_ranges[] = { 0, 180 };
+	float s_ranges[] = { 0, 256 };
+	const float* ranges[] = { h_ranges, s_ranges };
+
+	// Use the 0-th and 1-st channels
+	int channels[] = { 0, 1 };
+
+	Mat hist_0, hist_half_down, hist_1, hist_2, hist_3, hist_4;
+	calcHist(&hsv_0, 1, channels, Mat(), hist_0, 2, histSize, ranges, true, false);
+	normalize(hist_0, hist_0, 0, 1, NORM_MINMAX, -1, Mat());
+
+	calcHist(&hsv_half_down, 1, channels, Mat(), hist_half_down, 2, histSize, ranges, true, false);
+	normalize(hist_half_down, hist_half_down, 0, 1, NORM_MINMAX, -1, Mat());
+
+	calcHist(&hsv_1, 1, channels, Mat(), hist_1, 2, histSize, ranges, true, false);
+	normalize(hist_1, hist_1, 0, 1, NORM_MINMAX, -1, Mat());
+
+	calcHist(&hsv_2, 1, channels, Mat(), hist_2, 2, histSize, ranges, true, false);
+	normalize(hist_2, hist_2, 0, 1, NORM_MINMAX, -1, Mat());
+
+	calcHist(&hsv_3, 1, channels, Mat(), hist_3, 2, histSize, ranges, true, false);
+	normalize(hist_3, hist_3, 0, 1, NORM_MINMAX, -1, Mat());
+
+	calcHist(&hsv_4, 1, channels, Mat(), hist_4, 2, histSize, ranges, true, false);
+	normalize(hist_4, hist_4, 0, 1, NORM_MINMAX, -1, Mat());
+
+	vector<Mat> histVector = { hist_0, hist_half_down, hist_1, hist_2, hist_3, hist_4 };
+	double rhythm = 0;
+	for (int i = 0; i < histVector.size() - 1; i++)
+	{
+		rhythm += compareHist(histVector[i], histVector[i + 1], i);
+
+		/*
+		double base_base = compareHist(hist_base, hist_base, compare_method);
+		double base_half = compareHist(hist_base, hist_half_down, compare_method);
+		double base_test1 = compareHist(hist_base, hist_test1, compare_method);
+		double base_test2 = compareHist(hist_base, hist_test2, compare_method);
+		cout << "Method " << compare_method << " Perfect, Base-Half, Base-Test(1), Base-Test(2) : "
+			<< base_base << " / " << base_half << " / " << base_test1 << " / " << base_test2 << endl;
+		*/
+	}
+	rhythm /= histVector.size();
 	return rhythm;
 }
 
@@ -907,9 +930,6 @@ void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 				j++;
 			}
 			itemsXML.popTag(); // tags
-
-			//if (items[index]->getIsVideo())
-			//	itemsXML.setValue("rhythm", rhythm);
 
 			itemsXML.popTag(); // item
 			break;

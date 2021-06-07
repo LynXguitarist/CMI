@@ -31,12 +31,11 @@ private:
 	void nextFrame();
 
 	void initXmlObjects();
-	bool hasItemMetadata(string itemName);
 	void handleUserItems(int userId, vector<Item*> items_input, bool useItemsInput);
 	void generateMetadata(string itemName, string path, ofImage image, bool isVideo);
-	string edgesFilter(string itemName, ofImage image);
-	string textureFilter(string itemName);
-	string rhythmFilter(string path);
+	string edgesFilter(ofImage image);
+	string textureFilter(ofImage image);
+	double rhythmFilter(string path);
 
 	//----------------------Events---------------//
 	void changeItems(ofxDatGuiButtonEvent e); // change the items being previewed
