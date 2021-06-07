@@ -609,41 +609,26 @@ void Gallery::generateMetadata(string itemName, string path, ofImage image, bool
 
 string Gallery::edgesFilter(ofImage image)
 {
-	// Declare variables
-	Mat src, dst;
-	Mat kernel;
-	Point anchor;
-	double delta;
-	int ddepth;
 	double kernel_size;
-
-	// Loads an image
-	src = toCv(image.getPixels());
-
-	if (src.empty())
-	{
-		printf(" Error opening image\n");
-		printf(" Program Arguments: [image_name -- default lena.jpg] \n");
-		return "";
-	}
-	// Initialize arguments for the filter
-	anchor = Point(-1, -1);
-	delta = 0;
-	ddepth = -1;
-
-	int ind = 1;
-	// Update kernel size for a normalized box filter
-	kernel_size = 3 + 2 * (ind % 5);
+	Mat kernel;
+	kernel_size = 31;
 	kernel = Mat::ones(kernel_size, kernel_size, CV_32F) / (kernel_size * kernel_size);
-	// Apply filter
-	filter2D(src, dst, ddepth, kernel, anchor, delta, BORDER_DEFAULT);
 
-	Size size = dst.size();
-	int total = size.width * size.height * dst.channels();
-	vector<uchar> data(dst.ptr(), dst.ptr() + total);
-	string result(data.begin(), data.end());
+	Mat src = toCv(image);
+	Mat dst;
+	Mat gray_image;
 
-	/*
+	vector<Mat> channels;
+	Mat hsv;
+	cvtColor(src, hsv, CV_RGB2HSV);
+	split(hsv, channels);
+	gray_image = channels[0];
+
+	Canny(image, dst, 10, 350);
+
+	filter2D(src, dst, CV_32F, kernel);
+
+	string result = "";
 	for (int i = 0; i < dst.rows; i++)
 	{
 		for (int j = 0; j < dst.cols; j++)
@@ -651,8 +636,6 @@ string Gallery::edgesFilter(ofImage image)
 			result += to_string(dst.at<float>(i, j)) + ", ";
 		}
 	}
-	*/
-	
 	// returns the matrix in string format
 	return result;
 }
