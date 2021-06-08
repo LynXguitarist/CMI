@@ -717,9 +717,6 @@ double Gallery::rhythmFilter(string path)
 	calcHist(&hsv_0, 1, channels, Mat(), hist_0, 2, histSize, ranges, true, false);
 	normalize(hist_0, hist_0, 0, 1, NORM_MINMAX, -1, Mat());
 
-	calcHist(&hsv_half_down, 1, channels, Mat(), hist_half_down, 2, histSize, ranges, true, false);
-	normalize(hist_half_down, hist_half_down, 0, 1, NORM_MINMAX, -1, Mat());
-
 	calcHist(&hsv_1, 1, channels, Mat(), hist_1, 2, histSize, ranges, true, false);
 	normalize(hist_1, hist_1, 0, 1, NORM_MINMAX, -1, Mat());
 
@@ -732,20 +729,12 @@ double Gallery::rhythmFilter(string path)
 	calcHist(&hsv_4, 1, channels, Mat(), hist_4, 2, histSize, ranges, true, false);
 	normalize(hist_4, hist_4, 0, 1, NORM_MINMAX, -1, Mat());
 
-	vector<Mat> histVector = { hist_0, hist_half_down, hist_1, hist_2, hist_3, hist_4 };
+	vector<Mat> histVector = { hist_0, hist_1, hist_2, hist_3, hist_4 };
 	double rhythm = 0;
-	for (int i = 0; i < histVector.size() - 1; i++)
+	for (int i = 1; i < histVector.size(); i++)
 	{
-		rhythm += compareHist(histVector[i], histVector[i + 1], i);
+		rhythm += compareHist(hist_0, histVector[i], i);
 
-		/*
-		double base_base = compareHist(hist_base, hist_base, compare_method);
-		double base_half = compareHist(hist_base, hist_half_down, compare_method);
-		double base_test1 = compareHist(hist_base, hist_test1, compare_method);
-		double base_test2 = compareHist(hist_base, hist_test2, compare_method);
-		cout << "Method " << compare_method << " Perfect, Base-Half, Base-Test(1), Base-Test(2) : "
-			<< base_base << " / " << base_half << " / " << base_test1 << " / " << base_test2 << endl;
-		*/
 	}
 	rhythm /= histVector.size();
 	return rhythm;
