@@ -543,17 +543,18 @@ void Gallery::generateMetadata(string itemName, string path, ofImage image, bool
 	float avgBlue = 0;
 	float avgLuminance = 0;
 
-	int pixelSize = pixels.size();
-	for (int i = 0; i < pixelSize; i++) {
-		avgRed += pixels.getColor(pixels[i]).r;
-		avgGreen += pixels.getColor(pixels[i]).g;
-		avgBlue += pixels.getColor(pixels[i]).b;
-		avgLuminance += pixels.getColor(pixels[i]).getBrightness();
+	int pixelSize = pixels.getWidth() * pixels.getHeight();
+	for (auto& pixel : pixels.getPixelsIter()) {
+		avgRed += pixel.getColor().r;
+		avgGreen += pixel.getColor().g;
+		avgBlue += pixel.getColor().b;
+		avgLuminance += pixel.getColor().getBrightness();
 	}
 	avgRed /= pixelSize;
 	avgGreen /= pixelSize;
 	avgBlue /= pixelSize;
 	avgLuminance = avgLuminance / pixelSize;
+
 	ofColor newColor;
 	newColor.r = avgRed;
 	newColor.g = avgGreen;
@@ -624,7 +625,7 @@ string Gallery::edgesFilter(string itemName, ofImage image)
 
 	Canny(image, dst, 10, 350);
 
-	filter2D(src, dst, CV_32F, kernel);
+	//filter2D(src, dst, CV_32F, kernel);
 
 	ofImage saveEdges;
 	toOf(dst, saveEdges);
@@ -640,15 +641,15 @@ string Gallery::textureFilter(string itemName, ofImage image)
 	Mat src, dst;
 	int kernel_size = 31;
 
-	src = toCv(image.getPixels()); // Load an image
+	src = toCv(image); // Load an image
 
-	double lambda = imageSize / 5;
-	double theta = 45;
-	double psi = 180;
-	double gamma = 0.5;
+	double lambda = 1.0;
+	double theta = 0;
+	double psi =  0;
+	double gamma = 0.02;
 	double sigma = 0.56 * lambda;
 
-	Mat kernel = cv::getGaborKernel(cv::Size(kernel_size, kernel_size), sigma, theta, lambda, gamma, psi);
+	Mat kernel = getGaborKernel(cv::Size(kernel_size, kernel_size), sigma, theta, lambda, gamma, psi);
 	filter2D(src, dst, CV_32F, kernel);
 
 	ofImage saveTexture;

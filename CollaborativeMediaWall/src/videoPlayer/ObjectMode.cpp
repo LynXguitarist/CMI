@@ -169,28 +169,34 @@ void ObjectMode::searchFunction(ofxDatGuiButtonEvent e)
 			goodMatches.clear();
 			BFMatcher matcher(cv::NORM_L2, true);
 			vector< vector<cv::DMatch> > matches;
-			matches.clear();
+			//matches.clear();
 			matcher.knnMatch(desc1, desc2, matches, 1);
 			int k1s = keyP1.size();
 			int k2s = keyP2.size();
-			
-			
-			for (size_t i = 0; i < matches.size(); i++)
+
+
+			for (int i = 0; i < matches.size(); i++)
 			{
-				if (matches[i][0].distance < 0.75 * matches[i][1].distance)
-				{
-					goodMatches.push_back(matches[i][0]);
+				
+
+				if (matches[i].size() > 1) {
+					(void)ofLog(OF_LOG_NOTICE, "pos i: " + ofToString(i));
+
+					if (matches[i][0].distance < 0.75 * matches[i][1].distance)
+					{
+						goodMatches.push_back(matches[i][0]);
+					}
 				}
-			}
-			int ms = goodMatches.size();
-			if (ms >= min(k1s, k2s) * 1 / 5) {
-				if (ms > maxMatches) {
-					maxMatches = ms;
-					matchName = dir.getName(i);
+
+				int ms = goodMatches.size();
+				if (ms >= min(k1s, k2s) * 1 / 5) {
+					if (ms > maxMatches) {
+						maxMatches = ms;
+						matchName = dir.getName(i);
+					}
 				}
 			}
 		}
-
 	}
 	searchedObject = matchName;
 	if (matchName.compare("") != 0) {
