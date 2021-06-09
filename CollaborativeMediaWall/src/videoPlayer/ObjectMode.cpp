@@ -1,7 +1,7 @@
 #include "ObjectMode.h"
 
 
-
+using namespace cv;
 using cv::Mat;
 using cv::Point2f;
 using cv::KeyPoint;
@@ -162,38 +162,22 @@ void ObjectMode::searchFunction(ofxDatGuiButtonEvent e)
 			vector<KeyPoint> keyP2;
 			Mat desc1;
 			Mat desc2;
-			vector<cv::DMatch> goodMatches;
 			Ptr<ORB> detector = ORB::create();
 			detector->detectAndCompute(img1, Mat(), keyP1, desc1);
 			detector->detectAndCompute(img2, Mat(), keyP2, desc2);
-			goodMatches.clear();
 			BFMatcher matcher(cv::NORM_L2, true);
-			vector< vector<cv::DMatch> > matches;
-			//matches.clear();
-			matcher.knnMatch(desc1, desc2, matches, 1);
+			vector<cv::DMatch>  matches;
+			matches.clear();
+			matcher.match(desc1, desc2, matches, Mat());
 			int k1s = keyP1.size();
 			int k2s = keyP2.size();
-
-
-			for (int i = 0; i < matches.size(); i++)
-			{
-				
-
-				if (matches[i].size() > 1) {
-					(void)ofLog(OF_LOG_NOTICE, "pos i: " + ofToString(i));
-
-					if (matches[i][0].distance < 0.75 * matches[i][1].distance)
-					{
-						goodMatches.push_back(matches[i][0]);
-					}
-				}
-
-				int ms = goodMatches.size();
-				if (ms >= min(k1s, k2s) * 1 / 5) {
-					if (ms > maxMatches) {
-						maxMatches = ms;
-						matchName = dir.getName(i);
-					}
+			
+			
+			int ms = matches.size();
+			if (ms >= min(k1s, k2s) * 1 / 5) {
+				if (ms > maxMatches) {
+					maxMatches = ms;
+					matchName = dir.getName(i);
 				}
 			}
 		}
