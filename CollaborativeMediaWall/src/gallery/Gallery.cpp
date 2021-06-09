@@ -465,9 +465,7 @@ void Gallery::handleUserItems(int userId, vector<Item*> items_input, bool useIte
 		//----------ofDirectory
 		dir.listDir("items/");
 		dir.sort();
-		objDir.listDir("object_items/");// in linux the file system doesn't return file lists ordered in alphabetical order
-		objDir.sort();
-		//allocate the vector to have as many ofImages as files
+
 		if (dir.size()) {
 			items.assign(numberOfItems, &Item("", ofImage(), false, false));
 			auxItems.assign(numberOfItems, &Item("", ofImage(), false, false));
@@ -516,25 +514,23 @@ void Gallery::handleUserItems(int userId, vector<Item*> items_input, bool useIte
 
 void Gallery::generateMetadata(string itemName, string path, ofImage image, bool isVideo)
 {
-	int index = -1; // depois de testar pode se apagar
 	int numberOfItems = itemsXML.getNumTags("item");
 
-	/*for (int i = 0; i < numberOfItems; i++) {
+	for (int i = 0; i < numberOfItems; i++) {
 		itemsXML.pushTag("item", i);
 		string id = itemsXML.getValue("id", "", i);
 		// verify if item exists in xml
 		if (id == itemName) {
-			index = i;
 			itemsXML.popTag(); // item
-			break; // return
+			return;
 		}
 		itemsXML.popTag(); // item
-	}*/
+	}
 
 	itemsXML.addTag("item");
-	itemsXML.pushTag("item", 1); // mudar para numberOfItems + 1 depois de testar
+	itemsXML.pushTag("item", numberOfItems); // mudar para numberOfItems + 1 depois de testar
 	// saves the id - itemName
-	itemsXML.setValue("id", itemName);
+	itemsXML.setValue("id", itemName, numberOfItems);
 
 	// color && luminance
 	ofPixels& pixels = image.getPixels();
@@ -560,10 +556,8 @@ void Gallery::generateMetadata(string itemName, string path, ofImage image, bool
 	newColor.g = avgGreen;
 	newColor.b = avgBlue;
 
-	(void)ofLog(OF_LOG_NOTICE, "luminance: " + ofToString(avgLuminance));
-	itemsXML.setValue("luminance", avgLuminance);
-	itemsXML.setValue("color", newColor.getHue());
-	(void)ofLog(OF_LOG_NOTICE, "color: " + ofToString(newColor.getHue()));
+	itemsXML.setValue("luminance", avgLuminance, numberOfItems);
+	itemsXML.setValue("color", newColor.getHue(), numberOfItems);
 
 	// faces
 	// finder faces
@@ -573,7 +567,7 @@ void Gallery::generateMetadata(string itemName, string path, ofImage image, bool
 		ofVideoPlayer auxVideo;
 		auxVideo.load(path);
 
-		for (int i = 0; i <= 5; i ++) {
+		for (int i = 0; i <= 5; i++) {
 			ofImage auxImg;
 
 			auxImg.setFromPixels(auxVideo.getPixels());
@@ -587,65 +581,27 @@ void Gallery::generateMetadata(string itemName, string path, ofImage image, bool
 		faces = finder.findHaarObjects(image);
 	}
 
-	(void)ofLog(OF_LOG_NOTICE, "faces: " + ofToString(faces));
-	itemsXML.addValue("faces", faces);
+	itemsXML.setValue("faces", faces, numberOfItems);
 	// edges - filter2D
 	string edges = edgesFilter(image);
 	(void)ofLog(OF_LOG_NOTICE, "edges: " + edges);
 	if (edges != "")
-		itemsXML.setValue("edges", edges);
+		itemsXML.setValue("edges", edges, numberOfItems);
 	// texture
 	string texture = textureFilter(image);
 	(void)ofLog(OF_LOG_NOTICE, "texture: " + texture);
 	if (texture != "")
-		itemsXML.setValue("texture", texture);
-	//objects
-/*	itemsXML.pushTag("times");
-	int objCount = 0;
-	for (int i = 0; i < (int)dir.size(); i++) {
-		string objPath = objDir.getPath(i);
-		string objName = objDir.getName(i);
-		objName = objName.substr(0, objName.find_last_of("."));
-		ofImage objImg = ofImage(path);
-		int objTimes = 0;
-
-		if (isVideo) {
-			ofVideoPlayer auxObjVideo;
-			auxObjVideo.load(path);
-
-			for (int i = 0; i <= 1; i += 0.25) {
-				ofImage auxObjImg;
-
-				auxObjImg.setFromPixels(auxObjVideo.getPixels());
-				int thisObjTimes = objectTimesFilter(auxObjImg, objImg);
-				if (thisObjTimes > objTimes) objTimes = thisObjTimes;
-
-				auxObjVideo.setPosition(i);
-			}
-		}
-		else objTimes = objectTimesFilter(image, objImg);
-		if (objTimes > 0) {
-			itemsXML.addTag("time");
-			itemsXML.pushTag("time", objCount);
-			itemsXML.setValue("name", objName);
-			itemsXML.setValue("numTimes", objTimes);
-			objCount++;
-			itemsXML.popTag(); //time
-		}
-	}
-	itemsXML.popTag();//times
-*/
+		itemsXML.setValue("texture", texture, numberOfItems);
 	// rhythm
 	if (isVideo) {
 		double rhythm = rhythmFilter(path);
 		(void)ofLog(OF_LOG_NOTICE, "rhythm: " + ofToString(rhythm));
-		itemsXML.setValue("rhythm", rhythm);
+		itemsXML.setValue("rhythm", rhythm, numberOfItems);
 	}
 
-
-	
-	
 	itemsXML.popTag(); // item
+
+	itemsXML.saveFile();
 }
 
 string Gallery::edgesFilter(ofImage image)
@@ -687,12 +643,7 @@ string Gallery::textureFilter(ofImage image)
 	int kernel_size = 31;
 
 	src = toCv(image.getPixels()); // Load an image
-	if (src.empty())
-	{
-		printf(" Error opening image\n");
-		printf(" Program Arguments: [image_name -- default lena.jpg] \n");
-		return "";
-	}
+
 	double lambda = imageSize / 5;
 	double theta = 45;
 	double psi = 180;
@@ -712,6 +663,41 @@ string Gallery::textureFilter(ofImage image)
 	}
 	// returns the matrix in string format
 	return result;
+}
+
+int Gallery::objectTimesFilter(ofImage image, ofImage objImage) {
+	int numberOfMatches = 0;
+	ofImage  tempImg = image;
+	tempImg.setImageType(OF_IMAGE_GRAYSCALE);
+	Mat img1 = ofxCv::toCv(tempImg.getPixels());
+	objImage.setImageType(OF_IMAGE_GRAYSCALE);
+	Mat img2 = ofxCv::toCv(objImage.getPixels());
+	if (!img1.empty() && !img2.empty())
+	{
+		if (img1.channels() != 1) {
+			cvtColor(img1, img1, cv::COLOR_RGB2GRAY);
+		}
+
+		if (img2.channels() != 1) {
+			cvtColor(img2, img2, cv::COLOR_RGB2GRAY);
+		}
+		vector<KeyPoint> keyP1;
+		vector<KeyPoint> keyP2;
+		Mat desc1;
+		Mat desc2;
+		vector<cv::DMatch> matches;
+		Ptr<ORB> detector = ORB::create();
+		detector->detectAndCompute(img1, Mat(), keyP1, desc1);
+		detector->detectAndCompute(img2, Mat(), keyP2, desc2);
+		matches.clear();
+		BFMatcher bruteMatcher(cv::NORM_L2, true);
+		bruteMatcher.match(desc1, desc2, matches, Mat());
+		int k1s = keyP1.size();
+		int k2s = keyP2.size();
+		int ms = matches.size();
+		numberOfMatches = ms / (k2s * 3 / 5);
+	}
+	return numberOfMatches;
 }
 
 double Gallery::rhythmFilter(string path)
@@ -775,7 +761,6 @@ double Gallery::rhythmFilter(string path)
 	for (int i = 1; i < histVector.size(); i++)
 	{
 		rhythm += compareHist(hist_0, histVector[i], i);
-
 	}
 	rhythm /= histVector.size();
 	return rhythm;
@@ -807,41 +792,6 @@ void Gallery::changeItems(ofxDatGuiButtonEvent e)
 	im2->setIndex(im2->getIndex() + inc * 2);
 	im3->setIndex(im3->getIndex() + inc * 3);
 }
-
-int Gallery::objectTimesFilter(ofImage image, ofImage objImage) {
-	ofImage  tempImg = image;
-	tempImg.setImageType(OF_IMAGE_GRAYSCALE);
-	Mat img1 = ofxCv::toCv(tempImg.getPixels());
-	objImage.setImageType(OF_IMAGE_GRAYSCALE);
-	Mat img2 = ofxCv::toCv(objImage.getPixels());
-	if (!img1.empty() && !img2.empty())
-	{
-		if (img1.channels() != 1) {
-			cvtColor(img1, img1, cv::COLOR_RGB2GRAY);
-		}
-
-		if (img2.channels() != 1) {
-			cvtColor(img2, img2, cv::COLOR_RGB2GRAY);
-		}
-		vector<KeyPoint> keyP1;
-		vector<KeyPoint> keyP2;
-		Mat desc1;
-		Mat desc2;
-		vector<cv::DMatch> matches;
-		Ptr<ORB> detector = ORB::create();
-		detector->detectAndCompute(img1, Mat(), keyP1, desc1);
-		detector->detectAndCompute(img2, Mat(), keyP2, desc2);
-		matches.clear();
-		BFMatcher bruteMatcher(cv::NORM_L2, true);
-		bruteMatcher.match(desc1, desc2, matches, Mat());
-		int k1s = keyP1.size();
-		int k2s = keyP2.size();
-		int ms = matches.size();
-		int numberOfMatches = ms / (k2s * 3 / 5);
-	}
-	return 0;
-}
-
 
 void Gallery::openInWMP(ofxDatGuiButtonEvent e)
 {
@@ -929,6 +879,8 @@ void Gallery::extractMetadata(ofxDatGuiButtonEvent e) {
 void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 {
 	int index = e.target->getIndex();
+	ofImage auxImg = items[index]->getImage();
+	ofImage object = ofImage();
 
 	string tags = ofSystemTextBoxDialog("Number of tags", "1");
 	int numberOfTags = stoi(tags);
@@ -941,14 +893,23 @@ void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 		listTags[i] = tag;
 	}
 
-	string times = ofSystemTextBoxDialog("Number of objects to process (times a specific object (input as an image) appears in the video frame):", "1");
+	string times = ofSystemTextBoxDialog("Number of objects to process (times a specific object (input as an image) appears in the item):", "1");
 	int numberTimes = stoi(times);
 	map<string, int> mapTimes;
 
 	for (int i = 0; i < numberTimes; i++) {
-		// process object
-		// mapTimes -> first -> name do file
-			// second -> numTimes
+		ofFileDialogResult result = ofSystemLoadDialog("Load file", false, "/data/object_items/");
+
+		if (result.bSuccess) {
+			string path = result.getPath();
+			object.load(path);
+			// Number of times the object appears
+			int numberOfTimes = objectTimesFilter(auxImg, object);
+			mapTimes.insert({ result.fileName, numberOfTimes });
+		}
+		else {
+			ofSystemTextBoxDialog("Error loading file...");
+		}
 	}
 
 	int numberOfItems = itemsXML.getNumTags("item");
@@ -971,13 +932,13 @@ void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 				itemsXML.addTag("time");
 				itemsXML.pushTag("time", j + numExTimes);
 
-				itemsXML.setValue("name", itr->first, j + numExTimes);
-				itemsXML.setValue("numTime", itr->second, j + numExTimes);
-				itemsXML.popTag();
+				itemsXML.addValue("name", itr->first);
+				itemsXML.addValue("numTime", itr->second);
+				itemsXML.popTag(); // time
 
 				j++;
 			}
-			itemsXML.popTag(); // tags
+			itemsXML.popTag(); // times
 
 			itemsXML.popTag(); // item
 			break;

@@ -35,8 +35,8 @@ private:
 	void generateMetadata(string itemName, string path, ofImage image, bool isVideo);
 	string edgesFilter(ofImage image);
 	string textureFilter(ofImage image);
-	double rhythmFilter(string path);
 	int objectTimesFilter(ofImage image, ofImage objImage);
+	double rhythmFilter(string path);
 
 	//----------------------Events---------------//
 	void changeItems(ofxDatGuiButtonEvent e); // change the items being previewed
