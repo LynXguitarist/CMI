@@ -48,6 +48,7 @@ private:
 
 	// Array of items(path)
 	ofDirectory dir;
+	ofDirectory objDir;
 	vector<Item*> items; // contains the filtered items
 	vector<Item*> auxItems; // contains all the items
 	int itemsSize;

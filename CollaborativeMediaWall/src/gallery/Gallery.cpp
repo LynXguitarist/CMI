@@ -464,8 +464,9 @@ void Gallery::handleUserItems(int userId, vector<Item*> items_input, bool useIte
 		}
 		//----------ofDirectory
 		dir.listDir("items/");
-		dir.sort(); // in linux the file system doesn't return file lists ordered in alphabetical order
-
+		dir.sort();
+		objDir.listDir("object_items/");// in linux the file system doesn't return file lists ordered in alphabetical order
+		objDir.sort();
 		//allocate the vector to have as many ofImages as files
 		if (dir.size()) {
 			items.assign(numberOfItems, &Item("", ofImage(), false, false));
@@ -598,12 +599,51 @@ void Gallery::generateMetadata(string itemName, string path, ofImage image, bool
 	(void)ofLog(OF_LOG_NOTICE, "texture: " + texture);
 	if (texture != "")
 		itemsXML.setValue("texture", texture);
+	//objects
+	itemsXML.pushTag("times");
+	int objCount = 0;
+	for (int i = 0; i < (int)dir.size(); i++) {
+		string objPath = objDir.getPath(i);
+		string objName = objDir.getName(i);
+		objName = objName.substr(0, objName.find_last_of(".") - 1);
+		ofImage objImg = ofImage(path);
+		int objTimes = 0;
+
+		if (isVideo) {
+			ofVideoPlayer auxObjVideo;
+			auxObjVideo.load(path);
+
+			for (int i = 0; i <= 1; i += 0.25) {
+				ofImage auxObjImg;
+
+				auxObjImg.setFromPixels(auxObjVideo.getPixels());
+				int thisObjTimes = objectTimesFilter(auxObjImg, objImg);
+				if (thisObjTimes > objTimes) objTimes = thisObjTimes;
+
+				auxObjVideo.setPosition(i);
+			}
+		}
+		else objTimes = objectTimesFilter(image, objImg);
+		if (objTimes > 0) {
+			itemsXML.pushTag("time", objCount);
+			itemsXML.setValue("name", objName);
+			itemsXML.setValue("numTimes", objTimes);
+			objCount++;
+			itemsXML.popTag(); //time
+		}
+	}
+	itemsXML.popTag();//times
+
 	// rhythm
 	if (isVideo) {
 		double rhythm = rhythmFilter(path);
 		(void)ofLog(OF_LOG_NOTICE, "rhythm: " + ofToString(rhythm));
 		itemsXML.setValue("rhythm", rhythm);
 	}
+
+
+	
+	
 	itemsXML.popTag(); // item
 }
 
@@ -766,6 +806,43 @@ void Gallery::changeItems(ofxDatGuiButtonEvent e)
 	im2->setIndex(im2->getIndex() + inc * 2);
 	im3->setIndex(im3->getIndex() + inc * 3);
 }
+
+int Gallery::objectTimesFilter(ofImage image, ofImage objImage) {
+	ofImage  tempImg = image;
+	tempImg.setImageType(OF_IMAGE_GRAYSCALE);
+	Mat img1 = ofxCv::toCv(tempImg.getPixels());
+	objImage.setImageType(OF_IMAGE_GRAYSCALE);
+	Mat img2 = ofxCv::toCv(objImage.getPixels());
+	if (!img1.empty() && !img2.empty())
+	{
+		if (img1.channels() != 1) {
+			cvtColor(img1, img1, cv::COLOR_RGB2GRAY);
+		}
+
+		if (img2.channels() != 1) {
+			cvtColor(img2, img2, cv::COLOR_RGB2GRAY);
+		}
+		vector<KeyPoint> keyP1;
+		vector<KeyPoint> keyP2;
+		Mat desc1;
+		Mat desc2;
+		vector<cv::DMatch> matches;
+		Ptr<ORB> detector = ORB::create();
+		detector->detectAndCompute(img1, Mat(), keyP1, desc1);
+		detector->detectAndCompute(img2, Mat(), keyP2, desc2);
+		matches.clear();
+		BFMatcher bruteMatcher(cv::NORM_L2, true);
+		bruteMatcher.match(desc1, desc2, matches, Mat());
+		int k1s = keyP1.size();
+		int k2s = keyP2.size();
+		int ms = matches.size();
+		if (ms >= min(k1s, k2s) * 2 / 5) {
+			
+		}
+	}
+	return 0;
+}
+
 
 void Gallery::openInWMP(ofxDatGuiButtonEvent e)
 {
