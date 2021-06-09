@@ -33,8 +33,8 @@ private:
 	void initXmlObjects();
 	void handleUserItems(int userId, vector<Item*> items_input, bool useItemsInput);
 	void generateMetadata(string itemName, string path, ofImage image, bool isVideo);
-	string edgesFilter(ofImage image);
-	string textureFilter(ofImage image);
+	string edgesFilter(string itemName, ofImage image);
+	string textureFilter(string itemName, ofImage image);
 	int objectTimesFilter(ofImage image, ofImage objImage);
 	double rhythmFilter(string path);
 

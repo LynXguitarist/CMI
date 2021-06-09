@@ -1,13 +1,35 @@
 <items>
     <item>
+        <id>DSC09302</id>
+        <luminance>188.393585205</luminance>
+        <color>0.000000000</color>
+        <faces>0</faces>
+        <edges>data/textures_edges/DSC09302-edges.jpeg</edges>
+        <texture>data/textures_edges/DSC09302-texture.jpeg</texture>
+    </item>
+    <item>
         <id>DSC09305</id>
-        <tags />
-        <luminace />
-        <color>1</color>
+        <luminance>197.343460083</luminance>
+        <color>0.000000000</color>
+        <faces>0</faces>
+        <edges>textures_edges/DSC09305-edges.jpeg</edges>
+        <texture>textures_edges/DSC09305-texture.jpeg</texture>
+    </item>
+    <item>
+        <id>fingers</id>
+        <luminance>157.272216797</luminance>
+        <color>0.000000000</color>
+        <faces>0</faces>
+        <edges>data/textures_edges/fingers-edges.jpeg</edges>
+        <texture>data/textures_edges/fingers-texture.jpeg</texture>
+        <rhythm>5.985970360</rhythm>
+    </item>
+    <item>
+        <id>garrafa</id>
+        <luminance>255.994491577</luminance>
+        <color>0.000000000</color>
         <faces>3</faces>
-        <edge />
-        <texture />
-        <times />
-        <rhythm />
+        <edges>data/textures_edges/garrafa-edges.jpeg</edges>
+        <texture>data/textures_edges/garrafa-texture.jpeg</texture>
     </item>
 </items>

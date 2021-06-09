@@ -476,7 +476,7 @@ void Gallery::handleUserItems(int userId, vector<Item*> items_input, bool useIte
 		for (int i = 0; i < (int)dir.size(); i++) {
 			// checks if user has the item
 			string fileName = dir.getName(i);
-			string itemName = fileName.substr(0, fileName.find('.'));
+			string itemName = ofFilePath().getBaseName(fileName);
 
 			if (find(user_items.begin(), user_items.end(), itemName) != user_items.end()) {
 				string path = dir.getPath(i);
@@ -496,6 +496,8 @@ void Gallery::handleUserItems(int userId, vector<Item*> items_input, bool useIte
 				items[counter] = item;
 
 				auxItems[counter++] = item;
+
+				(void)ofLog(OF_LOG_NOTICE, "Generating metadata for : " + itemName);
 
 				// generate metadata if not already generated
 				generateMetadata(itemName, path, img, isVideo);
@@ -518,7 +520,10 @@ void Gallery::generateMetadata(string itemName, string path, ofImage image, bool
 
 	for (int i = 0; i < numberOfItems; i++) {
 		itemsXML.pushTag("item", i);
-		string id = itemsXML.getValue("id", "", i);
+		string id = itemsXML.getValue("id", "");
+
+		(void)ofLog(OF_LOG_NOTICE, "Current Id : " + ofToString(id));
+
 		// verify if item exists in xml
 		if (id == itemName) {
 			itemsXML.popTag(); // item
@@ -583,19 +588,17 @@ void Gallery::generateMetadata(string itemName, string path, ofImage image, bool
 
 	itemsXML.setValue("faces", faces, numberOfItems);
 	// edges - filter2D
-	string edges = edgesFilter(image);
-	(void)ofLog(OF_LOG_NOTICE, "edges: " + edges);
+	string edges = edgesFilter(itemName, image);
+	
 	if (edges != "")
 		itemsXML.setValue("edges", edges, numberOfItems);
 	// texture
-	string texture = textureFilter(image);
-	(void)ofLog(OF_LOG_NOTICE, "texture: " + texture);
+	string texture = textureFilter(itemName, image);
 	if (texture != "")
 		itemsXML.setValue("texture", texture, numberOfItems);
 	// rhythm
 	if (isVideo) {
 		double rhythm = rhythmFilter(path);
-		(void)ofLog(OF_LOG_NOTICE, "rhythm: " + ofToString(rhythm));
 		itemsXML.setValue("rhythm", rhythm, numberOfItems);
 	}
 
@@ -604,7 +607,7 @@ void Gallery::generateMetadata(string itemName, string path, ofImage image, bool
 	itemsXML.saveFile();
 }
 
-string Gallery::edgesFilter(ofImage image)
+string Gallery::edgesFilter(string itemName, ofImage image)
 {
 	double kernel_size;
 	Mat kernel;
@@ -625,19 +628,25 @@ string Gallery::edgesFilter(ofImage image)
 
 	filter2D(src, dst, CV_32F, kernel);
 
-	string result = "";
+	/*string result = "";
 	for (int i = 0; i < dst.rows; i++)
 	{
 		for (int j = 0; j < dst.cols; j++)
 		{
 			result += to_string(dst.at<float>(i, j)) + ", ";
 		}
-	}
-	// returns the matrix in string format
-	return result;
+	}*/
+
+	ofImage saveEdges;
+	toOf(dst, saveEdges);
+
+	string path = "textures_edges/" + itemName + "-edges.jpg";
+	saveEdges.save(path);
+
+	return path;
 }
 
-string Gallery::textureFilter(ofImage image)
+string Gallery::textureFilter(string itemName, ofImage image)
 {
 	Mat src, dst;
 	int kernel_size = 31;
@@ -653,16 +662,23 @@ string Gallery::textureFilter(ofImage image)
 	Mat kernel = cv::getGaborKernel(cv::Size(kernel_size, kernel_size), sigma, theta, lambda, gamma, psi);
 	filter2D(src, dst, CV_32F, kernel);
 
-	string result = "";
+
+	/*string result = "";
 	for (int i = 0; i < dst.rows; i++)
 	{
 		for (int j = 0; j < dst.cols; j++)
 		{
 			result += to_string(dst.at<float>(i, j)) + ", ";
 		}
-	}
-	// returns the matrix in string format
-	return result;
+	}*/
+
+	ofImage saveTexture;
+	toOf(dst, saveTexture);
+
+	string path = "textures_edges/" + itemName + "-texture.jpg";
+	saveTexture.save(path);
+
+	return path;
 }
 
 int Gallery::objectTimesFilter(ofImage image, ofImage objImage) {
@@ -898,7 +914,7 @@ void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 	map<string, int> mapTimes;
 
 	for (int i = 0; i < numberTimes; i++) {
-		ofFileDialogResult result = ofSystemLoadDialog("Load file", false, "/data/object_items/");
+		ofFileDialogResult result = ofSystemLoadDialog("Load file", false, "object_items/");
 
 		if (result.bSuccess) {
 			string path = result.getPath();
