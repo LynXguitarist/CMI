@@ -600,12 +600,12 @@ void Gallery::generateMetadata(string itemName, string path, ofImage image, bool
 	if (texture != "")
 		itemsXML.setValue("texture", texture);
 	//objects
-	itemsXML.pushTag("times");
+/*	itemsXML.pushTag("times");
 	int objCount = 0;
 	for (int i = 0; i < (int)dir.size(); i++) {
 		string objPath = objDir.getPath(i);
 		string objName = objDir.getName(i);
-		objName = objName.substr(0, objName.find_last_of(".") - 1);
+		objName = objName.substr(0, objName.find_last_of("."));
 		ofImage objImg = ofImage(path);
 		int objTimes = 0;
 
@@ -625,6 +625,7 @@ void Gallery::generateMetadata(string itemName, string path, ofImage image, bool
 		}
 		else objTimes = objectTimesFilter(image, objImg);
 		if (objTimes > 0) {
+			itemsXML.addTag("time");
 			itemsXML.pushTag("time", objCount);
 			itemsXML.setValue("name", objName);
 			itemsXML.setValue("numTimes", objTimes);
@@ -633,7 +634,7 @@ void Gallery::generateMetadata(string itemName, string path, ofImage image, bool
 		}
 	}
 	itemsXML.popTag();//times
-
+*/
 	// rhythm
 	if (isVideo) {
 		double rhythm = rhythmFilter(path);
@@ -836,9 +837,7 @@ int Gallery::objectTimesFilter(ofImage image, ofImage objImage) {
 		int k1s = keyP1.size();
 		int k2s = keyP2.size();
 		int ms = matches.size();
-		if (ms >= min(k1s, k2s) * 2 / 5) {
-			
-		}
+		int numberOfMatches = ms / (k2s * 3 / 5);
 	}
 	return 0;
 }

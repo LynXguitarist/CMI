@@ -70,6 +70,7 @@ void VideoPlayer::update()
         grayscale = color;
         haar.findHaarObjects(grayscale);
         numberOfFaces = haar.blobs.size();
+       // numberOfFaces=2;
         
     }
 

@@ -37,7 +37,7 @@ void ofApp::update() {
 		videoPlayer.update();
 		if (videoPlayer.toNavigate() == 1) {
 			currentUserId = videoPlayer.getSelectedId();
-			isUser = videoPlayer.isNavigateProject();
+			isUser = !videoPlayer.isNavigateProject();
 			items = gallery.setup(currentUserId, isUser, vector<Item*>(),false);
 			galleryUI();
 			view = 1;

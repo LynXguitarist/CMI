@@ -36,6 +36,7 @@ private:
 	string edgesFilter(ofImage image);
 	string textureFilter(ofImage image);
 	double rhythmFilter(string path);
+	int objectTimesFilter(ofImage image, ofImage objImage);
 
 	//----------------------Events---------------//
 	void changeItems(ofxDatGuiButtonEvent e); // change the items being previewed
