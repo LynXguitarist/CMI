@@ -1,7 +1,7 @@
 #include "ObjectMode.h"
 
 
-
+using namespace cv;
 using cv::Mat;
 using cv::Point2f;
 using cv::KeyPoint;
@@ -167,10 +167,10 @@ void ObjectMode::searchFunction(ofxDatGuiButtonEvent e)
 			detector->detectAndCompute(img1, Mat(), keyP1, desc1);
 			detector->detectAndCompute(img2, Mat(), keyP2, desc2);
 			goodMatches.clear();
-			BFMatcher matcher(cv::NORM_L2, true);
+			Ptr<cv::DescriptorMatcher> matcher = DescriptorMatcher::create(DescriptorMatcher::FLANNBASED);
 			vector< vector<cv::DMatch> > matches;
 			matches.clear();
-			matcher.knnMatch(desc1, desc2, matches, 1);
+			matcher->knnMatch(desc1, desc2, matches, 1);
 			int k1s = keyP1.size();
 			int k2s = keyP2.size();
 			
