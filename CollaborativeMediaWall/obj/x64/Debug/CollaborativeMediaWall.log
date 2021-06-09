@@ -20,10 +20,10 @@ D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaW
 D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(311,31): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(509,35): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(485,13): warning C4996: 'ofImage_<unsigned char>::bAllocated': Use isAllocated()
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(548,31): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(711,25): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(712,25): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(713,26): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(546,31): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(692,25): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(693,25): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(694,26): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\include\ofxCv\Tracker.h(168,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\include\ofxCv\Tracker.h(166): message : while compiling class template member function 'const std::vector<std::_Vbase,std::allocator<std::_Vbase>> &ofxCv::Tracker<cv::Rect>::track(const std::vector<cv::Rect,std::allocator<cv::Rect>> &)'
 D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\include\ofxCv\Tracker.h(324): message : see reference to function template instantiation 'const std::vector<std::_Vbase,std::allocator<std::_Vbase>> &ofxCv::Tracker<cv::Rect>::track(const std::vector<cv::Rect,std::allocator<cv::Rect>> &)' being compiled
@@ -32,11 +32,11 @@ D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\include\ofx
 D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\include\ofxCv\Tracker.h(202,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\include\ofxCv\Tracker.h(214,1): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
 D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\include\ofxCv\Utilities.h(245,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(654): message : see reference to function template instantiation 'cv::Mat ofxCv::toCv<unsigned char>(ofPixels_<unsigned char> &)' being compiled
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(643): message : see reference to function template instantiation 'cv::Mat ofxCv::toCv<unsigned char>(ofPixels_<unsigned char> &)' being compiled
 D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\include\ofxCv\Utilities.h(249,1): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
 D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\include\ofxCv\Utilities.h(257): message : see reference to function template instantiation 'cv::Mat ofxCv::toCv<unsigned char>(const ofPixels_<unsigned char> &)' being compiled
 D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\include\ofxCv\Wrappers.h(280): message : see reference to function template instantiation 'cv::Mat ofxCv::toCv<unsigned char>(const ofBaseHasPixels_<unsigned char> &)' being compiled
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(627): message : see reference to function template instantiation 'void ofxCv::Canny<ofImage,cv::Mat>(const S &,D &,double,double,int,bool)' being compiled
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(625): message : see reference to function template instantiation 'void ofxCv::Canny<ofImage,cv::Mat>(const S &,D &,double,double,int,bool)' being compiled
           with
           [
               S=ofImage,
@@ -49,7 +49,7 @@ D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\addons\ofxCv\libs\ofxCv\include\ofx
           [
               T=ofPixels_<unsigned char>
           ]
-D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(654): message : see reference to function template instantiation 'cv::Mat ofxCv::toCv<unsigned char>(ofPixels_<unsigned char> &)' being compiled
+D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\src\gallery\Gallery.cpp(643): message : see reference to function template instantiation 'cv::Mat ofxCv::toCv<unsigned char>(ofPixels_<unsigned char> &)' being compiled
   CollaborativeMediaWall.vcxproj -> D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\apps\myApps\CMI\CollaborativeMediaWall\bin\CollaborativeMediaWall_debug.exe
   
   	                   2	D:\FCT\CM\PRATICAS\of_v0.11.2_vs2017_release\libs\fmod\lib\vs\x64\

@@ -522,8 +522,6 @@ void Gallery::generateMetadata(string itemName, string path, ofImage image, bool
 		itemsXML.pushTag("item", i);
 		string id = itemsXML.getValue("id", "");
 
-		(void)ofLog(OF_LOG_NOTICE, "Current Id : " + ofToString(id));
-
 		// verify if item exists in xml
 		if (id == itemName) {
 			itemsXML.popTag(); // item
@@ -548,8 +546,8 @@ void Gallery::generateMetadata(string itemName, string path, ofImage image, bool
 	int pixelSize = pixels.size();
 	for (int i = 0; i < pixelSize; i++) {
 		avgRed += pixels.getColor(pixels[i]).r;
-		avgGreen += pixels.getColor(pixels[i]).r;
-		avgBlue += pixels.getColor(pixels[i]).r;
+		avgGreen += pixels.getColor(pixels[i]).g;
+		avgBlue += pixels.getColor(pixels[i]).b;
 		avgLuminance += pixels.getColor(pixels[i]).getBrightness();
 	}
 	avgRed /= pixelSize;
@@ -589,7 +587,7 @@ void Gallery::generateMetadata(string itemName, string path, ofImage image, bool
 	itemsXML.setValue("faces", faces, numberOfItems);
 	// edges - filter2D
 	string edges = edgesFilter(itemName, image);
-	
+
 	if (edges != "")
 		itemsXML.setValue("edges", edges, numberOfItems);
 	// texture
@@ -628,15 +626,6 @@ string Gallery::edgesFilter(string itemName, ofImage image)
 
 	filter2D(src, dst, CV_32F, kernel);
 
-	/*string result = "";
-	for (int i = 0; i < dst.rows; i++)
-	{
-		for (int j = 0; j < dst.cols; j++)
-		{
-			result += to_string(dst.at<float>(i, j)) + ", ";
-		}
-	}*/
-
 	ofImage saveEdges;
 	toOf(dst, saveEdges);
 
@@ -662,16 +651,6 @@ string Gallery::textureFilter(string itemName, ofImage image)
 	Mat kernel = cv::getGaborKernel(cv::Size(kernel_size, kernel_size), sigma, theta, lambda, gamma, psi);
 	filter2D(src, dst, CV_32F, kernel);
 
-
-	/*string result = "";
-	for (int i = 0; i < dst.rows; i++)
-	{
-		for (int j = 0; j < dst.cols; j++)
-		{
-			result += to_string(dst.at<float>(i, j)) + ", ";
-		}
-	}*/
-
 	ofImage saveTexture;
 	toOf(dst, saveTexture);
 
@@ -685,9 +664,10 @@ int Gallery::objectTimesFilter(ofImage image, ofImage objImage) {
 	int numberOfMatches = 0;
 	ofImage  tempImg = image;
 	tempImg.setImageType(OF_IMAGE_GRAYSCALE);
-	Mat img1 = ofxCv::toCv(tempImg.getPixels());
+	Mat img1 = toCv(tempImg);
 	objImage.setImageType(OF_IMAGE_GRAYSCALE);
-	Mat img2 = ofxCv::toCv(objImage.getPixels());
+	Mat img2 = toCv(objImage);
+
 	if (!img1.empty() && !img2.empty())
 	{
 		if (img1.channels() != 1) {
@@ -697,6 +677,7 @@ int Gallery::objectTimesFilter(ofImage image, ofImage objImage) {
 		if (img2.channels() != 1) {
 			cvtColor(img2, img2, cv::COLOR_RGB2GRAY);
 		}
+
 		vector<KeyPoint> keyP1;
 		vector<KeyPoint> keyP2;
 		Mat desc1;
@@ -789,24 +770,22 @@ void Gallery::changeItems(ofxDatGuiButtonEvent e)
 	if (index == 0) {
 		if (currentItem < itemsSize - 3) {
 			currentItem++;
-			//currentItem %= itemsSize;
 		}
 	}
 	else if (e.target->getIndex() == 1) {
 		if (currentItem >= 1) {
 			currentItem--;
-			//currentItem %= itemsSize;
 			inc = -1;
 		}
 	}
 
 	ex1->setIndex(ex1->getIndex() + inc);
-	ex2->setIndex(ex2->getIndex() + inc * 2);
-	ex3->setIndex(ex3->getIndex() + inc * 3);
+	ex2->setIndex(ex2->getIndex() + inc);
+	ex3->setIndex(ex3->getIndex() + inc);
 
 	im1->setIndex(im1->getIndex() + inc);
-	im2->setIndex(im2->getIndex() + inc * 2);
-	im3->setIndex(im3->getIndex() + inc * 3);
+	im2->setIndex(im2->getIndex() + inc);
+	im3->setIndex(im3->getIndex() + inc);
 }
 
 void Gallery::openInWMP(ofxDatGuiButtonEvent e)
@@ -921,50 +900,51 @@ void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 			object.load(path);
 			// Number of times the object appears
 			int numberOfTimes = objectTimesFilter(auxImg, object);
-			mapTimes.insert({ result.fileName, numberOfTimes });
+			mapTimes.insert({ ofFilePath().getBaseName(result.filePath), numberOfTimes });
 		}
 		else {
 			ofSystemTextBoxDialog("Error loading file...");
 		}
 	}
 
-	int numberOfItems = itemsXML.getNumTags("item");
-	for (int i = 0; i < numberOfItems; i++) {
-		itemsXML.pushTag("item", i);
-		if (i == index) {
-			itemsXML.pushTag("tags");
-			int numExTags = itemsXML.getNumTags("tag"); // number of existing tags
+	(void)ofLog(OF_LOG_NOTICE, "index: " + ofToString(index));
 
-			for (int j = 0; j < numberOfTags; j++) {
-				itemsXML.setValue("tag", listTags[j], j + numExTags);
-			}
-			itemsXML.popTag(); // tags
+	itemsXML.pushTag("item", index);
+	if (itemsXML.getNumTags("tags") == 0)
+		itemsXML.addTag("tags");
 
-			int j = 0;
-			itemsXML.pushTag("times");
-			int numExTimes = itemsXML.getNumTags("time"); // number of existing times
+	itemsXML.pushTag("tags");
+	int numExTags = itemsXML.getNumTags("tag"); // number of existing tags
 
-			for (map<string, int>::iterator itr = mapTimes.begin(); itr != mapTimes.end(); ++itr) {
-				itemsXML.addTag("time");
-				itemsXML.pushTag("time", j + numExTimes);
-
-				itemsXML.addValue("name", itr->first);
-				itemsXML.addValue("numTime", itr->second);
-				itemsXML.popTag(); // time
-
-				j++;
-			}
-			itemsXML.popTag(); // times
-
-			itemsXML.popTag(); // item
-			break;
-		}
-		itemsXML.popTag(); // item
+	for (int j = 0; j < numberOfTags; j++) {
+		itemsXML.addValue("tag", listTags[j]);
 	}
+	itemsXML.popTag(); // tags
+
+	if (itemsXML.getNumTags("times") == 0)
+		itemsXML.addTag("times");
+
+	itemsXML.pushTag("times");
+	int numExTimes = itemsXML.getNumTags("time"); // number of existing times
+
+	int j = numExTimes;
+	for (map<string, int>::iterator itr = mapTimes.begin(); itr != mapTimes.end(); ++itr) {
+		itemsXML.addTag("time");
+		itemsXML.pushTag("time", j);
+
+		itemsXML.addValue("name", itr->first);
+		itemsXML.addValue("numTime", itr->second);
+
+		itemsXML.popTag(); // time
+		j++;
+	}
+	itemsXML.popTag(); // times
+
+	itemsXML.popTag(); // item
+
 	// Saves file
 	if (itemsXML.saveFile())
 		(void)ofLog(OF_LOG_NOTICE, "Saved!");
 	else
 		(void)ofLog(OF_LOG_NOTICE, "Didn't save!");
 }
-
