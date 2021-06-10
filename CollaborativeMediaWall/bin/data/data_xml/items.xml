@@ -1,13 +1,79 @@
 <items>
     <item>
+        <id>Ball2</id>
+        <luminance>228.883117676</luminance>
+        <color>20.069444656</color>
+        <faces>1</faces>
+        <edges>textures_edges/Ball2-edges.jpg</edges>
+        <texture>textures_edges/Ball2-texture.jpg</texture>
+    </item>
+    <item>
+        <id>Ball3</id>
+        <luminance>228.640182495</luminance>
+        <color>19.527027130</color>
+        <faces>0</faces>
+        <edges>textures_edges/Ball3-edges.jpg</edges>
+        <texture>textures_edges/Ball3-texture.jpg</texture>
+    </item>
+    <item>
+        <id>Ball4</id>
+        <luminance>221.636840820</luminance>
+        <color>19.402173996</color>
+        <faces>0</faces>
+        <edges>textures_edges/Ball4-edges.jpg</edges>
+        <texture>textures_edges/Ball4-texture.jpg</texture>
+    </item>
+    <item>
+        <id>Ball9</id>
+        <luminance>222.795471191</luminance>
+        <color>19.318181992</color>
+        <faces>0</faces>
+        <edges>textures_edges/Ball9-edges.jpg</edges>
+        <texture>textures_edges/Ball9-texture.jpg</texture>
+    </item>
+    <item>
+        <id>BallSmall</id>
+        <luminance>238.171463013</luminance>
+        <color>19.479166031</color>
+        <faces>0</faces>
+        <edges>textures_edges/BallSmall-edges.jpg</edges>
+        <texture>textures_edges/BallSmall-texture.jpg</texture>
+    </item>
+    <item>
+        <id>DSC09302</id>
+        <luminance>188.702758789</luminance>
+        <color>21.250000000</color>
+        <faces>0</faces>
+        <edges>textures_edges/DSC09302-edges.jpg</edges>
+        <texture>textures_edges/DSC09302-texture.jpg</texture>
+    </item>
+    <item>
         <id>DSC09305</id>
-        <tags />
-        <luminace />
-        <color>1</color>
+        <luminance>194.754425049</luminance>
+        <color>22.606382370</color>
+        <faces>0</faces>
+        <edges>textures_edges/DSC09305-edges.jpg</edges>
+        <texture>textures_edges/DSC09305-texture.jpg</texture>
+    </item>
+    <item>
+        <id>fingers</id>
+        <luminance>132.500350952</luminance>
+        <color>7.327586651</color>
+        <faces>0</faces>
+        <edges>textures_edges/fingers-edges.jpg</edges>
+        <texture>textures_edges/fingers-texture.jpg</texture>
+        <rhythm>6.016451413</rhythm>
+    </item>
+    <item>
+        <id>garrafa</id>
+        <luminance>249.916198730</luminance>
+        <color>148.750000000</color>
         <faces>3</faces>
-        <edge />
-        <texture />
-        <times />
-        <rhythm />
+        <edges>textures_edges/garrafa-edges.jpg</edges>
+        <texture>textures_edges/garrafa-texture.jpg</texture>
     </item>
 </items>
+<tags>
+    <tag></tag>
+</tags>
+<times></times>

@@ -33,10 +33,10 @@ private:
 	void initXmlObjects();
 	void handleUserItems(int userId, vector<Item*> items_input, bool useItemsInput);
 	void generateMetadata(string itemName, string path, ofImage image, bool isVideo);
-	string edgesFilter(ofImage image);
-	string textureFilter(ofImage image);
-	double rhythmFilter(string path);
+	string edgesFilter(string itemName, ofImage image);
+	string textureFilter(string itemName, ofImage image);
 	int objectTimesFilter(ofImage image, ofImage objImage);
+	double rhythmFilter(string path);
 
 	//----------------------Events---------------//
 	void changeItems(ofxDatGuiButtonEvent e); // change the items being previewed

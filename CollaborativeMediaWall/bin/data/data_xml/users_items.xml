@@ -14,6 +14,21 @@
 			<item>
 				<id>garrafa</id>
 			</item>
+			<item>
+				<id>Ball2</id>
+			</item>
+			<item>
+				<id>Ball3</id>
+			</item>
+			<item>
+				<id>Ball4</id>
+			</item>
+			<item>
+				<id>Ball9</id>
+			</item>
+			<item>
+				<id>BallSmall</id>
+			</item>
 		</items>
 	</user_items>
 </users_items>

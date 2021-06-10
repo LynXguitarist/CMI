@@ -185,7 +185,6 @@ void ObjectMode::searchFunction(ofxDatGuiButtonEvent e)
 				}
 			}
 		}
-
 	}
 	searchedObject = matchName;
 	if (matchName.compare("") != 0) {
