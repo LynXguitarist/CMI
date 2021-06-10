@@ -142,8 +142,7 @@ void ObjectMode::searchFunction(ofxDatGuiButtonEvent e)
 	grayscale = color;
 	Mat img1 = ofxCv::toCv(grayscale.getPixels());
 	string matchName = "";
-	int maxMatches = -1;
-
+	float minDistances = numeric_limits<float>::max();
 	for (int i = 0; i < (int)dir.size(); i++) {
 		string path = dir.getPath(i);
 		ofImage img = ofImage(path);
@@ -167,16 +166,21 @@ void ObjectMode::searchFunction(ofxDatGuiButtonEvent e)
 			detector->detectAndCompute(img2, Mat(), keyP2, desc2);
 			BFMatcher matcher(cv::NORM_L2, true);
 			vector<cv::DMatch>  matches;
-			matches.clear();
+			//matches.clear();
 			matcher.match(desc1, desc2, matches, Mat());
 			int k1s = keyP1.size();
 			int k2s = keyP2.size();
 			
 			
 			int ms = matches.size();
+			float distances;
+			for (int j = 0; j < matches.size(); j++) {
+				distances += matches[j].distance;
+			}
+			float distanceAvg = distances / matches.size();
 			if (ms >= min(k1s, k2s) * 1 / 5) {
-				if (ms > maxMatches) {
-					maxMatches = ms;
+				if (distanceAvg<minDistances) {
+					minDistances = distanceAvg;
 					matchName = dir.getName(i);
 				}
 			}
