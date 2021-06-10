@@ -177,7 +177,7 @@ void ObjectMode::searchFunction(ofxDatGuiButtonEvent e)
 			for (int j = 0; j < matches.size(); j++) {
 				distances += matches[j].distance;
 			}
-			float distanceAvg = distances / matches.size();
+			float distanceAvg = distances / ms;
 			if (ms >= min(k1s, k2s) * 1 / 4) {
 				if (distanceAvg<minDistances) {
 					minDistances = distanceAvg;

@@ -693,7 +693,14 @@ int Gallery::objectTimesFilter(ofImage image, ofImage objImage) {
 		int k1s = keyP1.size();
 		int k2s = keyP2.size();
 		int ms = matches.size();
-		numberOfMatches = ms / (k2s * 3 / 5);
+		float distances = 0;
+		for (int j = 0; j < matches.size(); j++) {
+			distances += matches[j].distance;
+		}
+		float distanceAvg = distances / ms;
+		if (distanceAvg < 340) {
+			numberOfMatches = 1;
+		}
 	}
 	return numberOfMatches;
 }
@@ -901,7 +908,8 @@ void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 			object.load(path);
 			// Number of times the object appears
 			int numberOfTimes = objectTimesFilter(auxImg, object);
-			mapTimes.insert({ ofFilePath().getBaseName(result.filePath), numberOfTimes });
+			if(numberOfTimes!=0)
+				mapTimes.insert({ ofFilePath().getBaseName(result.filePath), numberOfTimes });
 		}
 		else {
 			ofSystemTextBoxDialog("Error loading file...");
