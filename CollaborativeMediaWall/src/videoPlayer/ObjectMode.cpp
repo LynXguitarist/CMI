@@ -173,12 +173,12 @@ void ObjectMode::searchFunction(ofxDatGuiButtonEvent e)
 			
 			
 			int ms = matches.size();
-			float distances;
+			float distances = 0;
 			for (int j = 0; j < matches.size(); j++) {
 				distances += matches[j].distance;
 			}
 			float distanceAvg = distances / matches.size();
-			if (ms >= min(k1s, k2s) * 1 / 5) {
+			if (ms >= min(k1s, k2s) * 1 / 4) {
 				if (distanceAvg<minDistances) {
 					minDistances = distanceAvg;
 					matchName = dir.getName(i);
