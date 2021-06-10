@@ -38,6 +38,8 @@
         <faces>0</faces>
         <edges>textures_edges/BallSmall-edges.jpg</edges>
         <texture>textures_edges/BallSmall-texture.jpg</texture>
+        <tags></tags>
+        <times></times>
     </item>
     <item>
         <id>DSC09302</id>
@@ -63,6 +65,8 @@
         <edges>textures_edges/fingers-edges.jpg</edges>
         <texture>textures_edges/fingers-texture.jpg</texture>
         <rhythm>6.016451413</rhythm>
+        <tags />
+        <times />
     </item>
     <item>
         <id>garrafa</id>
@@ -71,9 +75,18 @@
         <faces>3</faces>
         <edges>textures_edges/garrafa-edges.jpg</edges>
         <texture>textures_edges/garrafa-texture.jpg</texture>
+        <tags>
+            <tag>garrafa</tag>
+        </tags>
+        <times>
+            <time>
+                <name>garrafa</name>
+                <numTime>1</numTime>
+            </time>
+        </times>
     </item>
 </items>
 <tags>
-    <tag></tag>
+    <tag />
 </tags>
-<times></times>
+<times />

@@ -930,13 +930,26 @@ void Gallery::importMetadata(ofxDatGuiButtonEvent e)
 
 	int j = numExTimes;
 	for (map<string, int>::iterator itr = mapTimes.begin(); itr != mapTimes.end(); ++itr) {
-		itemsXML.addTag("time");
-		itemsXML.pushTag("time", j);
+		bool found = false;
 
-		itemsXML.addValue("name", itr->first);
-		itemsXML.addValue("numTime", itr->second);
+		int numTimesTag = itemsXML.getNumTags("time");
+		for (int i = 0; i < numTimesTag; i++) {
+			itemsXML.pushTag("time", i);
+			if (itemsXML.getValue("name", "") == itr->first)
+				found = true;
+			
+			itemsXML.popTag(); // time
+		}
 
-		itemsXML.popTag(); // time
+		if (!found) {
+			itemsXML.addTag("time");
+			itemsXML.pushTag("time", j);
+
+			itemsXML.addValue("name", itr->first);
+			itemsXML.addValue("numTime", itr->second);
+
+			itemsXML.popTag(); // time
+		}
 		j++;
 	}
 	itemsXML.popTag(); // times
