@@ -27,21 +27,34 @@ public:
 	void reset();
 
 private:
+	// init the buttons
 	void initButtons();
+	// returns the nextFrame for movieIcon
 	void nextFrame();
 
+	// init xml files
 	void initXmlObjects();
+	// handles items for the users
 	void handleUserItems(int userId, vector<Item*> items_input, bool useItemsInput);
+	// generates the metadata
 	void generateMetadata(string itemName, string path, ofImage image, bool isVideo);
+	// gets the path where the edge image was saved
 	string edgesFilter(string itemName, ofImage image);
+	// gets the path where the texture image was saved
 	string textureFilter(string itemName, ofImage image);
+	// gets the number of times an object appears in an item
 	int objectTimesFilter(ofImage image, ofImage objImage);
+	// gets the rhythm
 	double rhythmFilter(string path);
 
 	//----------------------Events---------------//
-	void changeItems(ofxDatGuiButtonEvent e); // change the items being previewed
+	// change the items being previewed
+	void changeItems(ofxDatGuiButtonEvent e);
+	// opens item in windows media player
 	void openInWMP(ofxDatGuiButtonEvent e);
+	// exports metadata
 	void extractMetadata(ofxDatGuiButtonEvent e);
+	// imports tags and number of times an object appears in an item
 	void importMetadata(ofxDatGuiButtonEvent e);
 
 

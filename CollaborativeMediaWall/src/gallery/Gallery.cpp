@@ -35,7 +35,7 @@ vector<Item*> Gallery::setup(int id, bool isUser, vector<Item*> items_input, boo
 	// Buttons
 	initButtons();
 
-	if (auxItems.empty())
+	if (auxItems.empty() || items.empty())
 		ofSystemAlertDialog("No items to preview!");
 
 	return auxItems;
@@ -155,13 +155,17 @@ void Gallery::keyPressed(int key) {
 		}
 	}
 
+	openWMB1->setIndex(openWMB1->getIndex() + inc);
+	openWMB2->setIndex(openWMB2->getIndex() + inc);
+	openWMB3->setIndex(openWMB3->getIndex() + inc);
+
 	ex1->setIndex(ex1->getIndex() + inc);
-	ex2->setIndex(ex2->getIndex() + inc * 2);
-	ex3->setIndex(ex3->getIndex() + inc * 3);
+	ex2->setIndex(ex2->getIndex() + inc);
+	ex3->setIndex(ex3->getIndex() + inc);
 
 	im1->setIndex(im1->getIndex() + inc);
-	im2->setIndex(im2->getIndex() + inc * 2);
-	im3->setIndex(im3->getIndex() + inc * 3);
+	im2->setIndex(im2->getIndex() + inc);
+	im3->setIndex(im3->getIndex() + inc);
 }
 
 //--------------------------------------------------------------
@@ -321,57 +325,57 @@ void Gallery::initButtons()
 {
 	//---------Open Media player
 	openWMB1 = new ofxDatGuiButton("MediaPlayer");
-	openWMB1->setPosition(250, 375);
+	openWMB1->setPosition(250, imageSize + 100);
 	openWMB1->setIndex(0);
 	openWMB1->setWidth(75);
 	openWMB1->onButtonEvent(this, &Gallery::openInWMP);
 
 	openWMB2 = new ofxDatGuiButton("MediaPlayer");
-	openWMB2->setPosition(300 + imageSize, 375);
+	openWMB2->setPosition(300 + imageSize, imageSize + 100);
 	openWMB2->setIndex(1);
 	openWMB2->setWidth(75);
 	openWMB2->onButtonEvent(this, &Gallery::openInWMP);
 
 	openWMB3 = new ofxDatGuiButton("MediaPlayer");
-	openWMB3->setPosition(350 + imageSize * 2, 375);
+	openWMB3->setPosition(350 + imageSize * 2, imageSize + 100);
 	openWMB3->setIndex(2);
 	openWMB3->setWidth(75);
 	openWMB3->onButtonEvent(this, &Gallery::openInWMP);
 
 	//---------Export
 	ex1 = new ofxDatGuiButton("Extract Metadata");
-	ex1->setPosition(50, 375);
+	ex1->setPosition(50, imageSize + 100);
 	ex1->setIndex(0);
 	ex1->setWidth(100);
 	ex1->onButtonEvent(this, &Gallery::extractMetadata);
 
 	ex2 = new ofxDatGuiButton("Extract Metadata");
-	ex2->setPosition(100 + imageSize, 375);
+	ex2->setPosition(100 + imageSize, imageSize + 100);
 	ex2->setIndex(1);
 	ex2->setWidth(100);
 	ex2->onButtonEvent(this, &Gallery::extractMetadata);
 
 	ex3 = new ofxDatGuiButton("Extract Metadata");
-	ex3->setPosition(150 + imageSize * 2, 375);
+	ex3->setPosition(150 + imageSize * 2, imageSize + 100);
 	ex3->setIndex(2);
 	ex3->setWidth(100);
 	ex3->onButtonEvent(this, &Gallery::extractMetadata);
 
 	//---------Import
 	im1 = new ofxDatGuiButton("Import Metadata");
-	im1->setPosition(150, 375);
+	im1->setPosition(150, imageSize + 100);
 	im1->setIndex(0);
 	im1->setWidth(100);
 	im1->onButtonEvent(this, &Gallery::importMetadata);
 
 	im2 = new ofxDatGuiButton("Import Metadata");
-	im2->setPosition(200 + imageSize, 375);
+	im2->setPosition(200 + imageSize, imageSize + 100);
 	im2->setIndex(1);
 	im2->setWidth(100);
 	im2->onButtonEvent(this, &Gallery::importMetadata);
 
 	im3 = new ofxDatGuiButton("Import Metadata");
-	im3->setPosition(250 + imageSize * 2, 375);
+	im3->setPosition(250 + imageSize * 2, imageSize + 100);
 	im3->setIndex(2);
 	im3->setWidth(100);
 	im3->onButtonEvent(this, &Gallery::importMetadata);
@@ -684,12 +688,15 @@ int Gallery::objectTimesFilter(ofImage image, ofImage objImage) {
 		Mat desc1;
 		Mat desc2;
 		vector<cv::DMatch> matches;
+
 		Ptr<ORB> detector = ORB::create();
 		detector->detectAndCompute(img1, Mat(), keyP1, desc1);
 		detector->detectAndCompute(img2, Mat(), keyP2, desc2);
 		matches.clear();
+
 		BFMatcher bruteMatcher(cv::NORM_L2, true);
 		bruteMatcher.match(desc1, desc2, matches, Mat());
+
 		int k1s = keyP1.size();
 		int k2s = keyP2.size();
 		int ms = matches.size();
@@ -786,6 +793,9 @@ void Gallery::changeItems(ofxDatGuiButtonEvent e)
 			inc = -1;
 		}
 	}
+	openWMB1->setIndex(openWMB1->getIndex() + inc);
+	openWMB2->setIndex(openWMB2->getIndex() + inc);
+	openWMB3->setIndex(openWMB3->getIndex() + inc);
 
 	ex1->setIndex(ex1->getIndex() + inc);
 	ex2->setIndex(ex2->getIndex() + inc);
@@ -800,7 +810,7 @@ void Gallery::openInWMP(ofxDatGuiButtonEvent e)
 {
 	int index = e.target->getIndex();
 
-	(void)ofLog(OF_LOG_NOTICE, "will play video...");
+	(void)ofLog(OF_LOG_NOTICE, "will play video... Index: " + ofToString(index));
 
 	string moviePath = ofFilePath::getAbsolutePath(ofToDataPath(items[index]->getPath()));
 	string mode = "";

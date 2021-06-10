@@ -11,24 +11,16 @@ public:
     void update();
     void draw();
 
-    void keyPressed(int key);
-    void keyReleased(int key);
-    void mouseMoved(int x, int y);
-    void mouseDragged(int x, int y, int button);
-    void mousePressed(int x, int y, int button);
-    void mouseReleased(int x, int y, int button);
-    void mouseEntered(int x, int y);
-    void mouseExited(int x, int y);
-    void windowResized(int w, int h);
-    void dragEvent(ofDragInfo dragInfo);
-    void gotMessage(ofMessage msg);
-
     //---- VIDEO PLAYER---
-
+    // init buttons
     void setupButtons();
+    // navigate to gallery
     int toNavigate();
+    // gets the user/project selected
     int getSelectedId();
+    // displays password input
     void showUserPassInput(ofxDatGuiButtonEvent e);
+    // displays password input
     void showProjectPassInput(ofxDatGuiButtonEvent e);
     void setNavigation(ofxDatGuiButtonEvent e);
     void onTextInputEvent(ofxDatGuiTextInputEvent e);

@@ -10,58 +10,52 @@
 class ColorMode : public ofBaseApp
 {
 public:
-    void setup(vector<Item*> thisItems);
-    void update();
-    void draw();
+	void setup(vector<Item*> thisItems);
+	void update();
+	void draw();
 
-    void keyPressed(int key);
-    void keyReleased(int key);
-    void mouseMoved(int x, int y);
-    void mouseDragged(int x, int y, int button);
-    void mousePressed(int x, int y, int button);
-    void mouseReleased(int x, int y, int button);
-    void mouseEntered(int x, int y);
-    void mouseExited(int x, int y);
-    void windowResized(int w, int h);
-    void dragEvent(ofDragInfo dragInfo);
-    void gotMessage(ofMessage msg);
-    void initXmlObjects();
-    void closeCam();
+	// inits the xml files
+	void initXmlObjects();
+	// closes the cam
+	void closeCam();
 
-    void searchFunction(ofxDatGuiButtonEvent e);
-    void submitFunction(ofxDatGuiButtonEvent e);
-    vector<Item*> getFilteredItems();
-    bool getToReturn();
+	// processes the color finder function
+	void searchFunction(ofxDatGuiButtonEvent e);
+	// filters the items from an user/project based on the previous color finder
+	void submitFunction(ofxDatGuiButtonEvent e);
+	// gets the items
+	vector<Item*> getFilteredItems();
+	bool getToReturn();
 
-    float cameraPosX;
-    float cameraPosY;
+	float cameraPosX;
+	float cameraPosY;
 
-    float camW;
-    float camH;
+	float camW;
+	float camH;
 
 
-    float cropSize;
+	float cropSize;
 
-    float searchedHue;
+	float searchedHue;
 
 
 
-    ofVideoGrabber camera;
-    ofxCvColorImage color;
-    ofxCvGrayscaleImage grayscale;
-    ofPixels pixelsCropped;
-    ofTexture textureCropped;
-    ofRectangle selectedArea;
-    ofxDatGuiButton* searchButton;
-    ofxDatGuiButton* submitButton;
+	ofVideoGrabber camera;
+	ofxCvColorImage color;
+	ofxCvGrayscaleImage grayscale;
+	ofPixels pixelsCropped;
+	ofTexture textureCropped;
+	ofRectangle selectedArea;
+	ofxDatGuiButton* searchButton;
+	ofxDatGuiButton* submitButton;
 
-    ofxXmlSettings user_itemsXML;
-    ofxXmlSettings itemsXML;
+	ofxXmlSettings user_itemsXML;
+	ofxXmlSettings itemsXML;
 
-    vector<Item*> items;
-    vector<Item*> filteredItems;
+	vector<Item*> items;
+	vector<Item*> filteredItems;
 
-    bool toReturn;
+	bool toReturn;
 
 
 };

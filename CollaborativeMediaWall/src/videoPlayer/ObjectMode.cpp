@@ -83,50 +83,6 @@ void ObjectMode::draw()
 
 }
 
-void ObjectMode::keyPressed(int key)
-{
-}
-
-void ObjectMode::keyReleased(int key)
-{
-}
-
-void ObjectMode::mouseMoved(int x, int y)
-{
-}
-
-void ObjectMode::mouseDragged(int x, int y, int button)
-{
-}
-
-void ObjectMode::mousePressed(int x, int y, int button)
-{
-}
-
-void ObjectMode::mouseReleased(int x, int y, int button)
-{
-}
-
-void ObjectMode::mouseEntered(int x, int y)
-{
-}
-
-void ObjectMode::mouseExited(int x, int y)
-{
-}
-
-void ObjectMode::windowResized(int w, int h)
-{
-}
-
-void ObjectMode::dragEvent(ofDragInfo dragInfo)
-{
-}
-
-void ObjectMode::gotMessage(ofMessage msg)
-{
-}
-
 void ObjectMode::searchFunction(ofxDatGuiButtonEvent e)
 {
 	//string tempPath = dir.getAbsolutePath() + "/temp.jpg";

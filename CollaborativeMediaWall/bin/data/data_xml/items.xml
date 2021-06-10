@@ -38,8 +38,8 @@
         <faces>0</faces>
         <edges>textures_edges/BallSmall-edges.jpg</edges>
         <texture>textures_edges/BallSmall-texture.jpg</texture>
-        <tags></tags>
-        <times></times>
+        <tags />
+        <times />
     </item>
     <item>
         <id>DSC09302</id>
@@ -56,6 +56,15 @@
         <faces>0</faces>
         <edges>textures_edges/DSC09305-edges.jpg</edges>
         <texture>textures_edges/DSC09305-texture.jpg</texture>
+        <tags>
+            <tag>this is a normal image</tag>
+        </tags>
+        <times>
+            <time>
+                <name>Obj1</name>
+                <numTime>0</numTime>
+            </time>
+        </times>
     </item>
     <item>
         <id>fingers</id>
@@ -65,8 +74,15 @@
         <edges>textures_edges/fingers-edges.jpg</edges>
         <texture>textures_edges/fingers-texture.jpg</texture>
         <rhythm>6.016451413</rhythm>
-        <tags />
-        <times />
+        <tags>
+            <tag>moving finger</tag>
+        </tags>
+        <times>
+            <time>
+                <name>garrafa</name>
+                <numTime>0</numTime>
+            </time>
+        </times>
     </item>
     <item>
         <id>garrafa</id>
@@ -88,5 +104,12 @@
 </items>
 <tags>
     <tag />
+    <tag>basketballs</tag>
+    <tag>orange</tag>
 </tags>
-<times />
+<times>
+    <time>
+        <name>Ball</name>
+        <numTime>0</numTime>
+    </time>
+</times>

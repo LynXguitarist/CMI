@@ -2,6 +2,8 @@
 
 //--------------------------------------------------------------
 void ofApp::setup() {
+	ofSetWindowTitle("Collaborative MediaWall - Francisco and Frederico");
+
 	// makes the logs log in console
 	ofLogToConsole();
 

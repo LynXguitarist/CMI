@@ -72,50 +72,6 @@ void ColorMode::draw()
    
 }
 
-void ColorMode::keyPressed(int key)
-{
-}
-
-void ColorMode::keyReleased(int key)
-{
-}
-
-void ColorMode::mouseMoved(int x, int y)
-{
-}
-
-void ColorMode::mouseDragged(int x, int y, int button)
-{
-}
-
-void ColorMode::mousePressed(int x, int y, int button)
-{
-}
-
-void ColorMode::mouseReleased(int x, int y, int button)
-{
-}
-
-void ColorMode::mouseEntered(int x, int y)
-{
-}
-
-void ColorMode::mouseExited(int x, int y)
-{
-}
-
-void ColorMode::windowResized(int w, int h)
-{
-}
-
-void ColorMode::dragEvent(ofDragInfo dragInfo)
-{
-}
-
-void ColorMode::gotMessage(ofMessage msg)
-{
-}
-
 void ColorMode::searchFunction(ofxDatGuiButtonEvent e)
 {
     float redSum = 0;

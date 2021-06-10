@@ -119,63 +119,6 @@ void VideoPlayer::draw()
 
     if (showConfirm)
         confirmButton->draw();
-    
-    
-}
-
-void VideoPlayer::keyPressed(int key)
-{
-
-}
-
-void VideoPlayer::keyReleased(int key) {
-
-}
-
-//--------------------------------------------------------------
-void VideoPlayer::mouseMoved(int x, int y) {
-
-}
-
-//--------------------------------------------------------------
-void VideoPlayer::mouseDragged(int x, int y, int button) {
-
-}
-
-//--------------------------------------------------------------
-void VideoPlayer::mousePressed(int x, int y, int button) {
-
-
-}
-
-//--------------------------------------------------------------
-void VideoPlayer::mouseReleased(int x, int y, int button) {
-
-}
-
-//--------------------------------------------------------------
-void VideoPlayer::mouseEntered(int x, int y) {
-
-}
-
-//--------------------------------------------------------------
-void VideoPlayer::mouseExited(int x, int y) {
-
-}
-
-//--------------------------------------------------------------
-void VideoPlayer::windowResized(int w, int h) {
-
-}
-
-//--------------------------------------------------------------
-void VideoPlayer::gotMessage(ofMessage msg) {
-
-}
-
-//--------------------------------------------------------------
-void VideoPlayer::dragEvent(ofDragInfo dragInfo) {
-
 }
 
 void VideoPlayer::setupButtons() {

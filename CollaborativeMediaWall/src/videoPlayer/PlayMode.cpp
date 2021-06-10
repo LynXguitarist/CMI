@@ -14,19 +14,19 @@ void PlayMode::setup(vector<Item*> items)
 
 	// buttons setup
 	previousButton = new ofxDatGuiButton("<");
-	previousButton->setPosition(270, ofGetViewportHeight() / 4 + 50);
+	previousButton->setPosition(ofGetViewportWidth() / 3 - 30, ofGetViewportHeight() / 4 + 300);
 	previousButton->setIndex(0);
 	previousButton->setWidth(30);
 	previousButton->onButtonEvent(this, &PlayMode::onButtonEvent);
 
 	nextButton = new ofxDatGuiButton(">");
-	nextButton->setPosition(700, ofGetViewportHeight() / 4 + 50);
+	nextButton->setPosition(ofGetViewportWidth() / 3 + 600, ofGetViewportHeight() / 4 + 300);
 	nextButton->setIndex(1);
 	nextButton->setWidth(30);
 	nextButton->onButtonEvent(this, &PlayMode::onButtonEvent);
 
 	stopButton = new ofxDatGuiButton("||");
-	stopButton->setPosition(500, 450);
+	stopButton->setPosition(ofGetViewportWidth() / 3 + 300, ofGetViewportHeight() / 4 + 600);
 	stopButton->setIndex(2);
 	stopButton->setWidth(30);
 	stopButton->onButtonEvent(this, &PlayMode::onButtonEvent);
@@ -218,7 +218,7 @@ void PlayMode::draw()
 		<< "press ' ' to capture bg" << endl
 		<< "threshold " << threshold << " (press: +/-)" << endl
 		<< "num blobs found " << contourFinder.nBlobs << ", fps: " << ofGetFrameRate();
-	ofDrawBitmapString(reportStr.str(), 20, 600);
+	ofDrawBitmapString(reportStr.str(), 20, ofGetViewportHeight() - 100);
 
 	if (!isGestureMode) {
 		previousButton->draw();
@@ -229,13 +229,13 @@ void PlayMode::draw()
 	// Items
 	if (items[currentItem]->getIsVideo()) {
 		setFadeOut(true);
-		video.draw(300, 50, 400, 400);
+		video.draw(ofGetViewportWidth() / 3, ofGetViewportHeight() / 4, 600, 600);
 		if (!isGestureMode)
 			stopButton->draw();
 	}
 	else {
 		setFadeOut(false);
-		image.draw(300, 50, 400, 400);
+		image.draw(ofGetViewportWidth() / 3, ofGetViewportHeight() / 4, 600, 600);
 	}
 
 }
@@ -255,56 +255,6 @@ void PlayMode::keyPressed(int key)
 		if (threshold < 0) threshold = 0;
 		break;
 	}
-}
-
-void PlayMode::keyReleased(int key) {
-
-}
-
-//--------------------------------------------------------------
-void PlayMode::mouseMoved(int x, int y) {
-
-}
-
-//--------------------------------------------------------------
-void PlayMode::mouseDragged(int x, int y, int button) {
-
-}
-
-//--------------------------------------------------------------
-void PlayMode::mousePressed(int x, int y, int button) {
-
-
-}
-
-//--------------------------------------------------------------
-void PlayMode::mouseReleased(int x, int y, int button) {
-
-}
-
-//--------------------------------------------------------------
-void PlayMode::mouseEntered(int x, int y) {
-
-}
-
-//--------------------------------------------------------------
-void PlayMode::mouseExited(int x, int y) {
-
-}
-
-//--------------------------------------------------------------
-void PlayMode::windowResized(int w, int h) {
-
-}
-
-//--------------------------------------------------------------
-void PlayMode::gotMessage(ofMessage msg) {
-
-}
-
-//--------------------------------------------------------------
-void PlayMode::dragEvent(ofDragInfo dragInfo) {
-
 }
 
 void PlayMode::setFadeOut(bool isVideo)
